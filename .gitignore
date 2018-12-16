@@ -1,0 +1,11 @@
+# directory for project venv
+.venv
+
+# develop database
+db.sqlite3
+
+#cache
+__pycache__/
+
+#some weird shit
+.idea
