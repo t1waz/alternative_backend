@@ -2,26 +2,28 @@ from rest_framework import serializers
 from .models import BoardCompany, BoardModel, Board, BoardScan
 
 
-class BoardCompanySerializer(serializers.HyperlinkedModelSerializer):
+class BoardCompanySerializer(serializers.ModelSerializer):
 	class Meta:
 		model = BoardCompany
 		fields = ('id', 'description', 'company_name')
 
 
-class BoardModelSerializer(serializers.HyperlinkedModelSerializer):
+class BoardModelSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = BoardModel
 		fields = ('id', 'description', 'year', 'company')
 
 
-class BoardSerializer(serializers.HyperlinkedModelSerializer):
+class BoardSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Board
 		fields = ('id', 'model', 'barcode', 'company')
 
 
-class BoardScanSerializer(serializers.HyperlinkedModelSerializer):
+class BoardScanSerializer(serializers.ModelSerializer):
+	barcode_scan = serializers.PrimaryKeyRelatedField(many=False, 
+													  queryset=Board.objects.all())
 	class Meta:
 		model = BoardScan
-		fields = ('id', 'board', 'worker', 'station', 'timestamp')
+		fields = ('worker','station', 'barcode_scan', 'timestamp')
 

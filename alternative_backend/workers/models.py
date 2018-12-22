@@ -6,6 +6,11 @@ class Worker(models.Model):
 	surname = models.CharField(max_length=30)
 	barcode = models.IntegerField()
 
+	@property
+	def username(self):
+		return '%s %s' % (self.name, self.surname)
+	
+
 	def __str__(self):
 		return '%s %s' % (self.name, self.surname)
 

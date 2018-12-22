@@ -29,8 +29,8 @@ class BoardModel(models.Model):
 
 class Board(models.Model):
 	model = models.ForeignKey('BoardModel',
-							on_delete=models.CASCADE )
-	barcode = models.IntegerField()
+							on_delete=models.CASCADE)
+	barcode = models.IntegerField(primary_key=True)
 	company = models.ForeignKey('BoardCompany',
 							on_delete=models.CASCADE )
 
@@ -42,8 +42,8 @@ class Board(models.Model):
 
 
 class BoardScan(models.Model):
-	board = models.ForeignKey('Board',
-							on_delete=models.CASCADE )
+	barcode_scan = models.ForeignKey('Board',
+							on_delete=models.CASCADE)
 	worker = models.ForeignKey('workers.Worker',
 							on_delete=models.CASCADE )
 	timestamp = models.DateTimeField(auto_now_add=True)
