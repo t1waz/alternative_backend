@@ -21,7 +21,6 @@ from boards.views import BoardScanViewSet
 
 router = DefaultRouter()
 router.register(r'workers', WorkerViewSet, basename='workers')
-router.register(r'scans', BoardScanViewSet, basename='scans')
 
 urlpatterns = [
     path('admin/', admin.site.urls),

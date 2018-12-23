@@ -6,7 +6,7 @@ class Station(models.Model):
 	description = models.CharField(max_length=200)
 
 	def __str__(self):
-		return self.name
+		return '%s %s' % (self.id, self.name)
 
 	class Meta:
 		db_table = 'station'

@@ -45,13 +45,13 @@ class BoardScan(models.Model):
 	barcode_scan = models.ForeignKey('Board',
 							on_delete=models.CASCADE)
 	worker = models.ForeignKey('workers.Worker',
-							on_delete=models.CASCADE )
+							on_delete=models.CASCADE)
 	timestamp = models.DateTimeField(auto_now_add=True)
 	station = models.ForeignKey('stations.Station',
 							on_delete=models.CASCADE )
 
 	def __str__(self):
-		return '%s %s %s' % (self.board, self.worker, self.timestamp)
+		return '%s %s %s' % (self.barcode_scan, self.worker, self.timestamp)
 
 	class Meta:
 		db_table = 'board_scan'

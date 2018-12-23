@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import BoardCompany, BoardModel, Board, BoardScan
+from workers.models import Worker
 
 
 class BoardCompanySerializer(serializers.ModelSerializer):
@@ -23,7 +24,10 @@ class BoardSerializer(serializers.ModelSerializer):
 class BoardScanSerializer(serializers.ModelSerializer):
 	barcode_scan = serializers.PrimaryKeyRelatedField(many=False, 
 													  queryset=Board.objects.all())
+	worker = serializers.SlugRelatedField(many=False,
+										  queryset=Worker.objects.all(),
+										  slug_field='username')
 	class Meta:
 		model = BoardScan
-		fields = ('worker','station', 'barcode_scan', 'timestamp')
+		fields = ('worker', 'station', 'barcode_scan', 'timestamp')
 
