@@ -4,6 +4,7 @@ from django.db import models
 class BoardCompany(models.Model):
 	description = models.CharField(max_length=500)
 	company_name = models.CharField(max_length=200)
+	company_code = models.IntegerField()
 
 	def __str__(self):
 		return '%s %s' % (self.id, self.company_name)
@@ -30,7 +31,7 @@ class BoardModel(models.Model):
 class Board(models.Model):
 	model = models.ForeignKey('BoardModel',
 							on_delete=models.CASCADE)
-	barcode = models.IntegerField(primary_key=True)
+	barcode = models.BigIntegerField()
 	company = models.ForeignKey('BoardCompany',
 							on_delete=models.CASCADE )
 
