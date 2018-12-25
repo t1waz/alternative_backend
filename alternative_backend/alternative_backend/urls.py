@@ -17,11 +17,12 @@ from django.contrib import admin
 from django.urls import path
 from rest_framework.routers import DefaultRouter
 from workers.views import WorkerViewSet
-from boards.views import BoardScanViewSet
+from boards.views import BoardScanAPIView
 
 router = DefaultRouter()
 router.register(r'workers', WorkerViewSet, basename='workers')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path(r'scans/', BoardScanAPIView.as_view()),
 ] + router.urls
