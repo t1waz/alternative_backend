@@ -9,4 +9,3 @@ class WorkerViewSet(viewsets.ModelViewSet):
 	serializer_class = WorkerSerializer
 	queryset = Worker.objects.all()
 	permission_classes = [BaseAccess]
-

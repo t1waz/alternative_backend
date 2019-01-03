@@ -18,14 +18,17 @@ from django.urls import path
 from rest_framework.routers import DefaultRouter
 from workers.views import WorkerViewSet
 from boards.views import BoardScanAPIView, ProductionAPIView
-from orders.views import OrderViewSet
+from orders.views import OrderViewSet, OrderRecordViewSet, OrderInfo, CompanyOrderInfo
 
 router = DefaultRouter()
 router.register(r'workers', WorkerViewSet, basename='workers')
 router.register(r'orders', OrderViewSet, basename='orders')
+router.register(r'records', OrderRecordViewSet, basename='records')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path(r'scans/', BoardScanAPIView.as_view()),
     path(r'production/', ProductionAPIView.as_view()),
+    path(r'order_info/', OrderInfo.as_view()),
+    path(r'order_info/<int:code>/',CompanyOrderInfo.as_view()),
 ] + router.urls

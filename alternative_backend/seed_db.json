@@ -180,4 +180,34 @@
 				"date_joined": "2018-12-16T22:10:14.987Z", 
 				"groups": [], 
 				"user_permissions": [] }
+},
+{	"model": "orders.order", 
+	"pk": 1, 
+	"fields": {	"client": 1, 
+				"timestamp": "2019-01-05T23:00:18.292Z", 
+				"completed": false }
+}, 
+{	"model": "orders.order", 
+	"pk": 2, 
+	"fields": {	"client": 2, 
+				"timestamp": "2019-01-05T23:00:23.029Z", 
+				"completed": false }
+}, 
+{	"model": "orders.orderrecord", 
+	"pk": 1, 
+	"fields": {	"order": 1, 
+				"board_model": 1, 
+				"quantity": 12 }
+}, 
+{	"model": "orders.orderrecord", 
+	"pk": 2, 
+	"fields": {	"order": 2, 
+				"board_model": 2, 
+				"quantity": 14 }
+}, 
+{	"model": "orders.orderrecord", 
+	"pk": 3, 
+	"fields": {	"order": 2, 
+				"board_model": 1, 
+				"quantity": 50 }
 }]

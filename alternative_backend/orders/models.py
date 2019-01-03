@@ -16,12 +16,20 @@ class Client(models.Model):
 		db_table = 'client'
 
 
+class ActiveOrderManager(models.Manager):
+	def get_queryset(self):
+		return super().get_queryset().filter(completed=False)
+
+
 class Order(models.Model):
 	client = models.ForeignKey('Client',
 								on_delete=models.CASCADE)
 	timestamp = models.DateTimeField(auto_now_add=True)
 	completed = models.BooleanField(default=False,
 									blank=True)
+
+	objects = models.Manager()
+	active_orders = ActiveOrderManager()
 
 	def __str__(self):
 		return '%s %s' %(self.id, self.client)
@@ -38,6 +46,11 @@ class OrderRecord(models.Model):
 									 on_delete=models.CASCADE)
 	quantity = models.IntegerField()
 
+	@property
+	def order_position(self):
+		position = {self.board_model.name: self.quantity}
+		return position
+
 	def __str__(self):
 		return '%s %s %s' %(self. order, self.board_model, self.quantity)
 
@@ -45,11 +58,12 @@ class OrderRecord(models.Model):
 		db_table = 'order_record'
 
 
+
 class SendedBoard(models.Model):
 	board = models.ForeignKey('boards.board',
-							   on_delete=models.CASCADE)
-	order = models.ForeignKey('Order',
-							   on_delete=models.CASCADE)
+							  on_delete=models.CASCADE)
+	order_name = models.ForeignKey('Order',
+								   on_delete=models.CASCADE)
 	timestamp = models.DateTimeField(auto_now_add=True)
 	
 	def __str__(self):

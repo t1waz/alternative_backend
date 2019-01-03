@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Client, Order, OrderRecord, SendedBoard
+from .services import order_service
 
 
 class ClientSerializer(serializers.ModelSerializer):
@@ -11,32 +12,36 @@ class ClientSerializer(serializers.ModelSerializer):
 class OrderRecordSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = OrderRecord
-		fields = ('id', 'order', 'board_model', 'quantity')
+		fields = ('id', 'order', 'board_model', 'quantity', 'order_position')
 
-
-class OrderRecords(serializers.RelatedField):
-	def to_representation(self, value):
-		board_name = value.board_model.name
-		board_quantity = value.quantity
-		boards = { board_name: board_quantity}
-		return boards
-
-	def to_internal_value(self, data):
-
-		board_model = data.keys()
-		print(board_model)
-		client_name = self.context['request'].data['client']
-		order = Order.objects.get(pk=1)
-		return OrderRecord(order=order, board_model=board_model, quantity=data[board_model])
 
 class OrderSerializer(serializers.ModelSerializer):
 	client = serializers.SlugRelatedField(many=False,
 										  queryset=Client.objects.all(),
 										  slug_field='name')
-	boards = OrderRecords(many=True,queryset=Order.objects.all())
+	boards = serializers.SlugRelatedField(many=True,
+										  read_only=True,
+										  slug_field='order_position')
+
+	def create(self, validated_data):
+		order = Order.objects.create(**validated_data)
+		order_service.update_order_records(order_id=order.id, 
+										   order_records=self.context['boards'])
+
+		return order
+
+	def update(self, instance, validated_data):
+		if self.context['boards']:
+			OrderRecord.objects.filter(order=instance.pk).delete()
+			order_service.update_order_records(order_id=instance.pk,
+											   order_records=self.context['boards'])
+
+		return super().update(instance, validated_data)
+
 	class Meta:
 		model = Order
 		fields = ('id', 'client', 'timestamp', 'completed', 'boards') 
+
 
 class SendedBoardSerializer(serializers.ModelSerializer):
 	class Meta:

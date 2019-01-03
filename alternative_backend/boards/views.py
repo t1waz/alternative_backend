@@ -24,4 +24,3 @@ class ProductionAPIView(APIView):
 		response = board_production_service.get_production()
 		return Response(response)
 
-
