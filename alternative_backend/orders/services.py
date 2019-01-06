@@ -1,5 +1,5 @@
 from .models import OrderRecord, Order, Client
-from boards.models import BoardModel, BoardCompany
+from boards.models import BoardModel, BoardCompany, Board
 from django.db.models import Prefetch
 
 
@@ -37,11 +37,13 @@ class OrderService:
 		companies_list = list()
 		for company in companies:
 			orders = self.return_order_info(company_code=company.company_code)
-			companies_list.append(orders)
+			if not orders[list(orders.keys())[0]] == {}:
+				companies_list.append(orders)
 
 		return companies_list
 
-
+	def add_order_record(barcode, order_id):
+		
 
 order_service = OrderService()
 		

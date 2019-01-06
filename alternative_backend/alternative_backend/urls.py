@@ -17,13 +17,12 @@ from django.contrib import admin
 from django.urls import path
 from rest_framework.routers import DefaultRouter
 from workers.views import WorkerViewSet
-from boards.views import BoardScanAPIView, ProductionAPIView
-from orders.views import OrderViewSet, OrderRecordViewSet, OrderInfo, CompanyOrderInfo
+from boards.views import BoardScanAPIView, ProductionAPIView, BarcodeDetailAPIView
+from orders.views import OrderViewSet, OrderInfo, CompanyOrderInfo
 
 router = DefaultRouter()
 router.register(r'workers', WorkerViewSet, basename='workers')
 router.register(r'orders', OrderViewSet, basename='orders')
-router.register(r'records', OrderRecordViewSet, basename='records')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -31,4 +30,5 @@ urlpatterns = [
     path(r'production/', ProductionAPIView.as_view()),
     path(r'order_info/', OrderInfo.as_view()),
     path(r'order_info/<int:code>/',CompanyOrderInfo.as_view()),
+    path(r'boards/<int:barcode>/', BarcodeDetailAPIView.as_view())
 ] + router.urls

@@ -119,3 +119,14 @@ class BoardProductionService:
 
 
 board_production_service = BoardProductionService()
+
+
+class BoardService:
+
+	def get_board(self, barcode):
+		board = Board.objects.get(barcode=barcode)
+		
+		return board
+
+
+board_service = BoardService()

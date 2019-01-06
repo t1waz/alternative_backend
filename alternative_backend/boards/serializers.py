@@ -16,9 +16,15 @@ class BoardModelSerializer(serializers.ModelSerializer):
 
 
 class BoardSerializer(serializers.ModelSerializer):
+	model = serializers.SlugRelatedField(many=False,
+										 read_only=True,
+										 slug_field='name')
+	company = serializers.SlugRelatedField(many=False,
+										   read_only=True,
+										   slug_field='company_name')
 	class Meta:
 		model = Board
-		fields = ('model','company', 'barcode')
+		fields = ('model', 'year', 'company', 'barcode')
 
 
 class BoardScanSerializer(serializers.ModelSerializer):

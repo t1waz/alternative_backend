@@ -20,7 +20,7 @@ class BoardModel(models.Model):
 	code = models.IntegerField()
 	company = models.ForeignKey('BoardCompany',
 								on_delete=models.CASCADE )
-
+	
 	def __str__(self):
 		return '%s %s %s' % (self.code, self.company, self.year)
 
@@ -30,10 +30,14 @@ class BoardModel(models.Model):
 
 class Board(models.Model):
 	model = models.ForeignKey('BoardModel',
-							on_delete=models.CASCADE)
+							  on_delete=models.CASCADE)
 	barcode = models.BigIntegerField()
 	company = models.ForeignKey('BoardCompany',
-							on_delete=models.CASCADE )
+								on_delete=models.CASCADE )
+
+	@property
+	def year(self):
+		return self.model.year
 
 	def __str__(self):
 		return '%s' % (self.barcode)
@@ -44,12 +48,12 @@ class Board(models.Model):
 
 class BoardScan(models.Model):
 	barcode_scan = models.ForeignKey('Board',
-							on_delete=models.CASCADE)
+									 on_delete=models.CASCADE)
 	worker = models.ForeignKey('workers.Worker',
-							on_delete=models.CASCADE)
+							   on_delete=models.CASCADE)
 	timestamp = models.DateTimeField(auto_now_add=True)
 	station = models.ForeignKey('stations.Station',
-							on_delete=models.CASCADE )
+								on_delete=models.CASCADE )
 
 	def __str__(self):
 		return '%s %s %s' % (self.barcode_scan, self.worker, self.timestamp)

@@ -18,13 +18,6 @@ class OrderViewSet(viewsets.ModelViewSet):
 		return {"boards": self.request.data.get('boards',[])}
 
 
-class OrderRecordViewSet(viewsets.ModelViewSet):
-
-	serializer_class = OrderRecordSerializer
-	queryset = OrderRecord.objects.all()
-	permission_classes = [BaseAccess]
-
-
 class OrderInfo(APIView):
 	permission_classes = [BaseAccess]
 
@@ -38,4 +31,15 @@ class CompanyOrderInfo(APIView):
 
 	def get(self, request, code, format=None):
 		response = order_service.return_order_info(company_code=code)
+		return Response(response)
+
+
+class OrderRecordAPIView(APIView):
+	permission_classes = [BaseAccess]
+
+	def post(self, request, format=None):
+		barcode = request.data['barcode']
+		order_id = request.data['order']
+		response = order_service.add_order_record(barcode=barcode,
+												  order_id=order_id)
 		return Response(response)
