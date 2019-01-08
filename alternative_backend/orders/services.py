@@ -43,6 +43,7 @@ class OrderService:
 		return companies_list
 
 	def add_order_record(barcode, order_id):
+		pass
 		
 
 order_service = OrderService()

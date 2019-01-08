@@ -11,14 +11,14 @@
 {	"model": "boards.boardcompany", 
 	"pk": 1, 
 	"fields": {	"description": "firma matka", 
-				"company_name": "Alternative Longboards",
-				"company_code": 1 }
+				"name": "Alternative Longboards",
+				"code": 1 }
 },
 {	"model": "boards.boardcompany", 
 	"pk": 2, 
 	"fields": {	"description": "niemiecka firma", 
-				"company_name": "Bastl Boards",
-				"company_code": 2 }
+				"name": "Bastl Boards",
+				"code": 2 }
 },
 {	"model": "boards.boardmodel", 
 	"pk": 1, 
@@ -54,39 +54,27 @@
 },
 {	"model": "boards.board", 
 	"pk": 1, 
-	"fields": {	"barcode": 18100200000001,
-				"model": 3, 
-				"company": 2 }
+	"fields": {	"barcode": 18100200000001 }
 }, 
 {	"model": "boards.board", 
 	"pk": 2, 
-	"fields": {	"barcode": 18300200000002,
-				"model": 4, 
-				"company": 2 }
+	"fields": {	"barcode": 18300200000002 }
 }, 
 {	"model": "boards.board", 
 	"pk": 3, 
-	"fields": {	"barcode": 18700100000003,
-				"model": 2, 
-				"company": 1 }
+	"fields": {	"barcode": 18700100000003 }
 }, 
 {	"model": "boards.board", 
 	"pk": 4, 
-	"fields": {	"barcode": 18700100000004,
-				"model": 2, 
-				"company": 1 }
+	"fields": {	"barcode": 18700100000004 }
 }, 
 {	"model": "boards.board", 
 	"pk": 5, 
-	"fields": {	"barcode": 18800100000005,
-				"model": 1, 
-				"company": 1 }
+	"fields": {	"barcode": 18800100000005 }
 }, 
 {	"model": "boards.board", 
 	"pk": 6, 
-	"fields": {	"barcode": 18800100000006,
-				"model": 1, 
-				"company": 1 }
+	"fields": {	"barcode": 18800100000006 }
 }, 
 {	"model": "stations.station", 
 	"pk": 1, 
@@ -128,7 +116,8 @@
 {	"model": "boards.boardscan", 
 	"pk": 4, 
 	"fields": {	"barcode_scan": 2, 
-				"worker": 1111, "timestamp": "2018-12-23T22:03:56.496Z", 
+				"worker": 1111,
+				"timestamp": "2018-12-23T22:03:56.496Z",
 				"station": 1 }
 }, 
 {	"model": "boards.boardscan", 
@@ -180,6 +169,24 @@
 				"date_joined": "2018-12-16T22:10:14.987Z", 
 				"groups": [], 
 				"user_permissions": [] }
+},
+{	"model": "orders.client", 
+	"pk": 1, 
+	"fields": {	"name": "Lukasz Tomkiel", 
+				"country": "Poland", 
+				"city": "Nowy Sacz", 
+				"post_code": "33-300", 
+				"adress": "Pietaszka 3/4", 
+				"is_company": false	}
+}, 
+{	"model": "orders.client", 
+	"pk": 2, 
+	"fields": {	"name": "Heiko", 
+				"country": "Germany", 
+				"city": "Berlin", 
+				"post_code": "02-123", 
+				"adress": "Das Hitler Street 1", 
+				"is_company": false	}
 },
 {	"model": "orders.order", 
 	"pk": 1, 

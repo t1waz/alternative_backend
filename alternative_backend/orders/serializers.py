@@ -15,6 +15,12 @@ class OrderRecordSerializer(serializers.ModelSerializer):
 		fields = ('id', 'order', 'board_model', 'quantity', 'order_position')
 
 
+class SendedBoardSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = SendedBoard
+		fields = ('id', 'order', 'timestamp')
+
+
 class OrderSerializer(serializers.ModelSerializer):
 	client = serializers.SlugRelatedField(many=False,
 										  queryset=Client.objects.all(),
@@ -22,6 +28,11 @@ class OrderSerializer(serializers.ModelSerializer):
 	boards = serializers.SlugRelatedField(many=True,
 										  read_only=True,
 										  slug_field='order_position')
+	sended = serializers.SerializerMethodField('sended_boards')
+
+	def sended_boards(self,obj):
+		sended_boards = SendedBoard.objects.filter(order=obj.id)
+		print(sended_boards)
 
 	def create(self, validated_data):
 		order = Order.objects.create(**validated_data)
@@ -40,10 +51,4 @@ class OrderSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Order
-		fields = ('id', 'client', 'timestamp', 'completed', 'boards') 
-
-
-class SendedBoardSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = SendedBoard
-		fields = ('id', 'order', 'timestamp')
+		fields = ('id', 'client', 'timestamp', 'completed', 'boards', 'sended') 

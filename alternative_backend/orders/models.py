@@ -38,6 +38,20 @@ class Order(models.Model):
 		db_table = 'order'
 
 
+class SendedBoard(models.Model):
+	board = models.ForeignKey('boards.board',
+							  on_delete=models.CASCADE, related_name='send_boards')
+	order = models.ForeignKey('Order',
+							  on_delete=models.CASCADE)
+	timestamp = models.DateTimeField(auto_now_add=True)
+	
+	def __str__(self):
+		return '%s %s' %(self.board, self.order)
+
+	class Meta:
+		db_table = 'sended_board'
+
+
 class OrderRecord(models.Model):
 	order = models.ForeignKey('Order',
 							   on_delete=models.CASCADE,
@@ -45,6 +59,7 @@ class OrderRecord(models.Model):
 	board_model = models.ForeignKey('boards.boardmodel',
 									 on_delete=models.CASCADE)
 	quantity = models.IntegerField()
+
 
 	@property
 	def order_position(self):
@@ -56,18 +71,3 @@ class OrderRecord(models.Model):
 
 	class Meta:
 		db_table = 'order_record'
-
-
-
-class SendedBoard(models.Model):
-	board = models.ForeignKey('boards.board',
-							  on_delete=models.CASCADE)
-	order_name = models.ForeignKey('Order',
-								   on_delete=models.CASCADE)
-	timestamp = models.DateTimeField(auto_now_add=True)
-	
-	def __str__(self):
-		return '%s %s' %(self.board, self.order)
-
-	class Meta:
-		db_table = 'sended_board'
