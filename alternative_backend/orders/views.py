@@ -18,7 +18,7 @@ class OrderViewSet(viewsets.ModelViewSet):
 		return {"boards": self.request.data.get('boards',[])}
 
 
-class OrderInfo(APIView):
+class CompanyOrderInfo(APIView):
 	permission_classes = [BaseAccess]
 
 	def get(self, request, format=None):
@@ -26,7 +26,7 @@ class OrderInfo(APIView):
 		return Response(response)
 
 
-class CompanyOrderInfo(APIView):
+class CompanyOrderInfoDetail(APIView):
 	permission_classes = [BaseAccess]
 
 	def get(self, request, code, format=None):

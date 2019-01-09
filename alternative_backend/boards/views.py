@@ -3,6 +3,7 @@ from common.auth import BaseAccess
 from rest_framework.response import Response
 from .services import board_scan_service
 from .serializers import BoardSerializer, BoardScanSerializer
+from .models import Board
 
 
 class BoardScanAPIView(APIView):
@@ -40,9 +41,19 @@ class ProductionAPIView(APIView):
         return Response(response)
 
 
-class BarcodeDetailAPIView(APIView):
+class BarcodeInfoAPIView(APIView):
+    permission_classes = (BaseAccess,)
+
+    def get(self, request, format=None):
+        boards = Board.objects.all()
+        response = BoardSerializer(boards, many=True).data
+        return Response(response)
+
+
+class BarcodeInfoDetailAPIView(APIView):
     permission_classes = (BaseAccess,)
 
     def get(self, request, barcode, format=None):
+        board = Board.objects.get(barcode=barcode)
         response = BoardSerializer(board).data
         return Response(response)

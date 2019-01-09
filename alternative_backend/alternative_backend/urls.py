@@ -17,8 +17,9 @@ from django.contrib import admin
 from django.urls import path
 from rest_framework.routers import DefaultRouter
 from workers.views import WorkerViewSet
-from boards.views import BoardScanAPIView, ProductionAPIView, BarcodeDetailAPIView, NewBoardScanAPIView
-from orders.views import OrderViewSet, OrderInfo, CompanyOrderInfo
+from boards.views import BoardScanAPIView, ProductionAPIView, BarcodeInfoDetailAPIView, \
+    NewBoardScanAPIView, BarcodeInfoAPIView
+from orders.views import OrderViewSet, CompanyOrderInfo, CompanyOrderInfoDetail
 
 router = DefaultRouter()
 router.register(r'workers', WorkerViewSet, basename='workers')
@@ -29,7 +30,8 @@ urlpatterns = [
     path(r'new_barcode/', NewBoardScanAPIView.as_view()),
     path(r'scans/', BoardScanAPIView.as_view()),
     path(r'production/', ProductionAPIView.as_view()),
-    path(r'order_info/', OrderInfo.as_view()),
-    path(r'order_info/<int:code>/',CompanyOrderInfo.as_view()),
-    path(r'boards/<int:barcode>/', BarcodeDetailAPIView.as_view())
+    path(r'order_info/', CompanyOrderInfo.as_view()),
+    path(r'order_info/<int:code>/',CompanyOrderInfoDetail.as_view()),
+    path(r'boards/', BarcodeInfoAPIView.as_view()),
+    path(r'boards/<int:barcode>/', BarcodeInfoDetailAPIView.as_view())
 ] + router.urls

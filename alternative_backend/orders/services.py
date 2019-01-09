@@ -18,14 +18,14 @@ class OrderService:
 	def return_order_info(self, company_code):
 		boards_count = dict()
 		orders = Order.active_orders.all()
-		company_name = BoardCompany.objects.get(company_code=company_code).company_name
+		company_name = BoardCompany.objects.get(code=company_code).name
 		for order in orders:
 			client_name = order.client.name
 			order_records = OrderRecord.objects.filter(order=order)
 			for record in order_records:
 				model = record.board_model.name
 				qty = record.quantity
-				code = BoardModel.objects.get(name=model).company.company_code
+				code = BoardModel.objects.get(name=model).company.code
 				if company_code == code:
 					actual_value = boards_count.get(model, 0)
 					boards_count[model] = actual_value + int(qty)
@@ -36,7 +36,7 @@ class OrderService:
 		companies = BoardCompany.objects.all()
 		companies_list = list()
 		for company in companies:
-			orders = self.return_order_info(company_code=company.company_code)
+			orders = self.return_order_info(company_code=company.code)
 			if not orders[list(orders.keys())[0]] == {}:
 				companies_list.append(orders)
 

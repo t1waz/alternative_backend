@@ -45,7 +45,8 @@ class Board(models.Model):
 
     @property
     def year(self):
-        return self.model.year
+        model = BoardModel.objects.get(code=int(str(self.barcode)[2:4]))
+        return model.year
 
     def __str__(self):
         return '%s' % (self.barcode)
