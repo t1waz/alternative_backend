@@ -69,3 +69,4 @@ class BoardScan(models.Model):
 
     class Meta:
         db_table = 'board_scan'
+

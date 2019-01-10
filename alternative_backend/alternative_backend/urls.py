@@ -21,9 +21,13 @@ from boards.views import BoardScanAPIView, ProductionAPIView, BarcodeInfoDetailA
     NewBoardScanAPIView, BarcodeInfoAPIView
 from orders.views import OrderViewSet, CompanyOrderInfo, CompanyOrderInfoDetail
 
+
+
+
 router = DefaultRouter()
 router.register(r'workers', WorkerViewSet, basename='workers')
 router.register(r'orders', OrderViewSet, basename='orders')
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),

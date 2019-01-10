@@ -3,6 +3,8 @@ from .models import Client, Order, OrderRecord, SendedBoard
 from .services import order_service
 
 
+
+
 class ClientSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Client

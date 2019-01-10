@@ -4,9 +4,9 @@ from stations.models import Station
 from .models import Board, BoardScan
 
 
-class BoardScansService:
 
 
+class BoardService:
     def _save_scan(self, _scan_data):
         new_scan = BoardScanSerializer(data=_scan_data)
         if new_scan.is_valid():
@@ -25,8 +25,14 @@ class BoardScansService:
                 _request_data['station'] = Station.objects.get(id=station_number).name
                 self._save_scan(_request_data)
 
+    def get_all_barcodes_info(self):
+        return Board.objects.all()
 
-board_scan_service = BoardScansService()
+    def get_barcode_info(self, barcode):
+        return Board.objects.get(barcode=barcode)
+
+
+board_service = BoardService()
 
 
 class BoardProductionService:

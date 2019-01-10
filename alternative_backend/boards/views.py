@@ -1,9 +1,10 @@
 from rest_framework.views import APIView
 from common.auth import BaseAccess
 from rest_framework.response import Response
-from .services import board_scan_service
+from .services import board_service
 from .serializers import BoardSerializer, BoardScanSerializer
-from .models import Board
+
+
 
 
 class BoardScanAPIView(APIView):
@@ -14,7 +15,7 @@ class BoardScanAPIView(APIView):
         if new_scan.is_valid():
             new_scan.save()
             response = "added barcode scan"
-            board_scan_service.add_missing_scan(request.data)
+            board_service.add_missing_scan(request.data)
         else:
             response = "scan data not valid"
         return Response(response)
@@ -45,7 +46,7 @@ class BarcodeInfoAPIView(APIView):
     permission_classes = (BaseAccess,)
 
     def get(self, request, format=None):
-        boards = Board.objects.all()
+        boards = board_service.get_all_barcodes_info()
         response = BoardSerializer(boards, many=True).data
         return Response(response)
 
@@ -54,6 +55,6 @@ class BarcodeInfoDetailAPIView(APIView):
     permission_classes = (BaseAccess,)
 
     def get(self, request, barcode, format=None):
-        board = Board.objects.get(barcode=barcode)
+        board = board_service.get_barcode_info(barcode)
         response = BoardSerializer(board).data
         return Response(response)

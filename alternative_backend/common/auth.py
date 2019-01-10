@@ -1,6 +1,10 @@
 from rest_framework import permissions
 
+
+
+
 ACCESS_KEY = "123dupachujpietaszekalternativelongboards"
+
 
 class BaseAccess(permissions.BasePermission):
 	"""

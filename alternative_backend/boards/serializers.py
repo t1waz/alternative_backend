@@ -7,6 +7,7 @@ from rest_framework.validators import UniqueTogetherValidator
 
 
 
+
 class BoardCompanySerializer(serializers.ModelSerializer):
     class Meta:
         model = BoardCompany
@@ -52,5 +53,6 @@ class BoardScanSerializer(serializers.ModelSerializer):
         fields = ('worker', 'station', 'barcode_scan', 'timestamp')
         validators = [ UniqueTogetherValidator(queryset=BoardScan.objects.all(),
                                                fields=('barcode_scan', 'station')) ]
+
 
 

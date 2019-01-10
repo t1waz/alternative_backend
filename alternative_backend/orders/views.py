@@ -8,8 +8,8 @@ from .services import order_service
 
 
 
+
 class OrderViewSet(viewsets.ModelViewSet):
-	
 	serializer_class = OrderSerializer
 	queryset = Order.objects.all()
 	permission_classes = [BaseAccess]
