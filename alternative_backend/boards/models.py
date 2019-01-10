@@ -63,6 +63,7 @@ class BoardScan(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     station = models.ForeignKey('stations.Station',
                                 on_delete=models.CASCADE )
+    # comment = models.CharField(max_length=100)
 
     def __str__(self):
         return '%s %s %s' % (self.barcode_scan, self.worker, self.timestamp)

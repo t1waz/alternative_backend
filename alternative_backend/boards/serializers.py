@@ -4,7 +4,7 @@ from workers.models import Worker
 from stations.models import Station
 from alternative_backend.exceptions import AppException
 from rest_framework.validators import UniqueTogetherValidator
-
+from orders.models import SendedBoard
 
 
 
@@ -33,7 +33,33 @@ class BoardSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Board
-        fields = ('model', 'year', 'company', 'barcode')
+        fields = ('model', 'company', 'barcode')
+
+
+class BoardPresentationSerializer(serializers.ModelSerializer):
+    customer = serializers.SerializerMethodField()
+    production_history = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Board
+        fields = ('model', 'year', 'company', 'barcode', 'customer', 'production_history')
+
+    def get_customer(self, obj):
+        try:
+            sended = SendedBoard.objects.select_related(
+                'order').filter(board=obj.id)
+            client = sended[0].order.client.name
+        except:
+            client = ""
+        return client
+
+    def get_production_history(self, obj):
+        scans = BoardScan.objects.filter(barcode_scan=obj.id).select_related('station')
+        production_list = list()
+        for each in scans:
+            production_record = "%s : %s" %(each.station.name, each.timestamp)
+            production_list.append(production_record)
+        return production_list
 
 
 class BoardScanSerializer(serializers.ModelSerializer):
@@ -47,10 +73,11 @@ class BoardScanSerializer(serializers.ModelSerializer):
                                            queryset=Station.objects.all(),
                                            slug_field='name')
     timestamp = serializers.DateTimeField(required=False)
+    comment = serializers.CharField(required=False)
 
     class Meta:
         model = BoardScan
-        fields = ('worker', 'station', 'barcode_scan', 'timestamp')
+        fields = ('worker', 'station', 'barcode_scan', 'timestamp', 'comment')
         validators = [ UniqueTogetherValidator(queryset=BoardScan.objects.all(),
                                                fields=('barcode_scan', 'station')) ]
 
