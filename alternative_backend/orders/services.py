@@ -1,4 +1,4 @@
-from .models import OrderRecord, Order, Client
+from .models import OrderRecord, Order, Client, SendedBoard
 from boards.models import BoardModel, BoardCompany, Board
 from django.db.models import Prefetch
 
@@ -21,8 +21,8 @@ class OrderService:
         orders = Order.active_orders.all()
         company_name = BoardCompany.objects.get(code=company_code).name
         for order in orders:
-            client_name = order.client.name
-            order_records = OrderRecord.objects.filter(order=order)
+            order_records = OrderRecord.objects.filter(order=order).select_related(
+                'board_model')
             for record in order_records:
                 model = record.board_model.name
                 qty = record.quantity
@@ -30,6 +30,12 @@ class OrderService:
                 if company_code == code:
                     actual_value = boards_count.get(model, 0)
                     boards_count[model] = actual_value + int(qty)
+        sended_boards = SendedBoard.objects.all().select_related('board')
+        for sended_board in sended_boards:
+            if sended_board.board.company == company_name:
+                if sended_board.board.model in boards_count:
+                    actual_value = boards_count.get(model, 1)
+                    boards_count[sended_board.board.model] = actual_value - 1
         return {company_name: boards_count}
 
     def return_order_info_for_all_companies(self):
