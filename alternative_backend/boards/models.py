@@ -34,6 +34,12 @@ class Board(models.Model):
     barcode = models.BigIntegerField(unique=True)
 
     @property
+    def company_code(self):
+        company = BoardCompany.objects.get(code=int(str(self.barcode)[4:6]))
+        return company.code
+
+
+    @property
     def model(self):
         model = BoardModel.objects.get(code=int(str(self.barcode)[2:4]))
         return model.name
