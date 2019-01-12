@@ -3,7 +3,7 @@ from rest_framework import permissions
 
 
 
-ACCESS_KEY = "123dupachujpietaszekalternativelongboards"
+ACCESS_KEY = "123dupachujpietaszekalternativelongboardspiotrekkurwa"
 
 
 class BaseAccess(permissions.BasePermission):

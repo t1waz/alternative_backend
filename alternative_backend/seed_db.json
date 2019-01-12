@@ -54,42 +54,54 @@
 },
 {	"model": "boards.board", 
 	"pk": 1, 
-	"fields": {	"barcode": 18100200000001 }
+	"fields": {	"barcode": 18100200000001,
+				"model": 3,
+				"company":2 }
 }, 
 {	"model": "boards.board", 
 	"pk": 2, 
-	"fields": {	"barcode": 18300200000002 }
+	"fields": {	"barcode": 18300200000002,
+				"model": 4,
+				"company":2 }
 }, 
 {	"model": "boards.board", 
 	"pk": 3, 
-	"fields": {	"barcode": 18700100000003 }
+	"fields": {	"barcode": 18700100000003,
+				"model": 2,
+				"company":1 }
 }, 
 {	"model": "boards.board", 
 	"pk": 4, 
-	"fields": {	"barcode": 18700100000004 }
+	"fields": {	"barcode": 18700100000004,
+				"model": 2,
+				"company":1 }
 }, 
 {	"model": "boards.board", 
 	"pk": 5, 
-	"fields": {	"barcode": 18800100000005 }
+	"fields": {	"barcode": 18800100000005,
+				"model": 1,
+				"company":1 }
 }, 
 {	"model": "boards.board", 
 	"pk": 6, 
-	"fields": {	"barcode": 18800100000006 }
-}, 
+	"fields": {	"barcode": 18800100000006,
+				"model": 1,
+				"company":1 }
+},  
 {	"model": "stations.station", 
 	"pk": 1, 
-	"fields": {	"name": "PREPARING",
+	"fields": {	"name": "PREPARE",
 				"description": "stacja przygotowawcza" }
 },
 {	"model": "stations.station", 
 	"pk": 2, 
-	"fields": {	"name": "PRESSING",
+	"fields": {	"name": "PRESS",
 				"description": "stacja prasujaca" }
 },
 {
 	"model": "stations.station",
 	"pk": 3,
-	"fields": {	"name": "CUTTING",
+	"fields": {	"name": "CUT",
 				"description": "stacja CNC"	}
 },
 {	"model": "boards.boardscan", 

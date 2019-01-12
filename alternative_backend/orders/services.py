@@ -32,10 +32,11 @@ class OrderService:
                     boards_count[model] = actual_value + int(qty)
         sended_boards = SendedBoard.objects.all().select_related('board')
         for sended_board in sended_boards:
-            if sended_board.board.company == company_name:
-                if sended_board.board.model in boards_count:
-                    actual_value = boards_count.get(model, 1)
-                    boards_count[sended_board.board.model] = actual_value - 1
+            if sended_board.board.company.name == company_name:
+                sended_model = sended_board.board.model.name
+                if sended_model in boards_count:
+                    actual_value = boards_count.get(sended_model, 1)
+                    boards_count[sended_model] = actual_value - 1
         return {company_name: boards_count}
 
     def return_order_info_for_all_companies(self):

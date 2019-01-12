@@ -34,24 +34,24 @@ class BoardService:
     def get_production_for_company(self, company_code):
         production_dict = dict()
         stations = list(Station.objects.all().values_list('name', flat=True))
-        for station in stations:
+        company_id = BoardCompany.objects.get(code=company_code)
+        for station in stations[1:]:
             production_dict[station] = {}
-        scans = BoardScan.objects.all().select_related('barcode_scan','station')
+        scans = BoardScan.objects.filter(
+            barcode_scan__company=company_id).select_related(
+            'barcode_scan','station').exclude(station__id=len(stations))
         for scan in scans:
-            if scan.barcode_scan.company_code == company_code:
-                current_station_name = scan.station.name
-                current_station_id = scan.station.id
-                can_add = True
-                if current_station_id > 1:
-                    previous_station_id = Station.objects.get(id=current_station_id-1).id
-                    if BoardScan.objects.filter(station=previous_station_id, barcode_scan=scan.barcode_scan.id).exists():
-                        can_add = False
-                current_dict = production_dict[current_station_name]
-                current_value = current_dict.get(scan.barcode_scan.model, 0)
-                if can_add:
-                    current_dict[scan.barcode_scan.model] = current_value + 1
+            current_station_scan = scan.station
+            next_station_scan = Station.objects.get(id=current_station_scan.id+1)
+            next_scan_exists = BoardScan.objects.filter(station=next_station_scan.id,
+                                                        barcode_scan=scan.barcode_scan).exists()
 
-        print(production_dict)
+            if not next_scan_exists:
+                current_dict = production_dict[next_station_scan.name]
+                current_value = current_dict.get(scan.barcode_scan.model.name, 0)
+                current_dict[scan.barcode_scan.model.name] = current_value + 1
+
+        return production_dict
 
 
 board_service = BoardService()

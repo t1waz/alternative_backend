@@ -32,7 +32,7 @@ router.register(r'orders', OrderViewSet, basename='orders')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path(r'new_barcode/', NewBoardScanAPIView.as_view()),
-    path(r'scans/', BoardScanAPIView.as_view()),
+    path(r'add_scan/', BoardScanAPIView.as_view()),
     path(r'production/', ProductionAPIView.as_view()),
     path(r'order_info/', CompanyOrderInfo.as_view()),
     path(r'order_info/<int:code>/',CompanyOrderInfoDetail.as_view()),

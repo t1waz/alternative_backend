@@ -31,7 +31,7 @@ class NewBoardScanAPIView(APIView):
             new_board.save()
             response = "added barcode: %s" % (new_board.data['barcode'])
         else:
-            response = "barcode already exist"
+            response = "barcode meta data not is_valid"
         return Response(response)
 
 
@@ -39,8 +39,7 @@ class ProductionAPIView(APIView):
     permission_classes = (BaseAccess,)
 
     def get(self, request, format=None):
-        board_service.get_production_for_company(company_code=1)
-        response = "AAA"
+        response = board_service.get_production_for_company(company_code=1)
         return Response(response)
 
 
