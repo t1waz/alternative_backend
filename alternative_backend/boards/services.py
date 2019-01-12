@@ -37,6 +37,7 @@ class BoardService:
         company_id = BoardCompany.objects.get(code=company_code)
         for station in stations[1:]:
             production_dict[station] = {}
+
         scans = BoardScan.objects.filter(
             barcode_scan__company=company_id).select_related(
             'barcode_scan','station').exclude(station__id=len(stations))
