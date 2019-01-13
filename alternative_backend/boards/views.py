@@ -52,10 +52,16 @@ class ProductionDetailAPIView(APIView):
         print(response)
         return Response(response)
 
+
 class StockAPIView(APIView):
     def get(self, request, format=None):
-        board_service.get_stock_for_company()
-        response = 'BBB'
+        response = board_service.get_stock()
+        return Response(response)
+
+
+class StockDetailAPIView(APIView):
+    def get(self, request, code, format=None):
+        response = board_service.get_stock_for_company(company_code=code)
         return Response(response)
 
 

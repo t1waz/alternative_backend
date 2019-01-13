@@ -8,6 +8,7 @@ from django.db.models import Prefetch
 class OrderService:
     def update_order_records(self, order_id, order_records):
         order = Order.objects.get(id=order_id)
+
         for order_record in order_records:
             board_name = list(order_record.keys())[0]
             board = BoardModel.objects.get(name=board_name)
@@ -20,6 +21,7 @@ class OrderService:
         boards_count = dict()
         orders = Order.active_orders.all()
         company_name = BoardCompany.objects.get(code=company_code).name
+
         for order in orders:
             order_records = OrderRecord.objects.filter(order=order).select_related(
                 'board_model')
@@ -27,9 +29,11 @@ class OrderService:
                 model = record.board_model.name
                 qty = record.quantity
                 code = BoardModel.objects.get(name=model).company.code
+
                 if company_code == code:
                     actual_value = boards_count.get(model, 0)
                     boards_count[model] = actual_value + int(qty)
+                    
         sended_boards = SendedBoard.objects.all().select_related('board')
         for sended_board in sended_boards:
             if sended_board.board.company.name == company_name:

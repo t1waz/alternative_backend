@@ -1,7 +1,8 @@
 from alternative_backend.exceptions import AppException
 from .serializers import BoardScanSerializer
 from stations.models import Station
-from .models import Board, BoardScan, BoardCompany
+from .models import Board, BoardScan, BoardCompany, BoardModel
+from orders.models import SendedBoard
 
 
 
@@ -31,16 +32,15 @@ class BoardService:
     def get_barcode(self, barcode):
         return Board.objects.get(barcode=barcode)
 
-    def get_production_for_company(self, company_id):
+    def get_production_for_company(self, company_code):
         production_dict = dict()
         stations = list(Station.objects.all().values_list('name', flat=True))
-        company_id = BoardCompany.objects.get(id=company_id)
+        company = BoardCompany.objects.get(code=company_code)
         for station in stations[1:]:
             production_dict[station] = {}
 
-        scans = BoardScan.objects.filter(
-            barcode_scan__company=company_id).select_related(
-            'barcode_scan','station').exclude(station__id=len(stations))
+        scans = BoardScan.objects.filter(barcode_scan__company=company).select_related(
+                                         'barcode_scan','station').exclude(station__id=len(stations))
         for scan in scans:
             current_station_scan = scan.station
             next_station_scan = Station.objects.get(id=current_station_scan.id+1)
@@ -57,10 +57,45 @@ class BoardService:
     def get_production(self):
         companies = BoardCompany.objects.all()
         production_dict = dict()
+
         for company in companies:
-            production_dict[company.name] = self.get_production_for_company(company.id)
+            production_dict[company.name] = self.get_production_for_company(company.code)
 
         return production_dict
+
+    def get_stock_for_company(self, company_code):
+        stock_dict = dict()
+        company = BoardCompany.objects.get(code=company_code)
+        board_models = BoardModel.objects.filter(company=company_code).values_list(
+                                                 'name', flat=True)
+
+        for model in board_models:
+            stock_dict[model] = 0
+        last_station_id = max(list(Station.objects.all().values_list('id', flat=True)))
+        finisied_boards = BoardScan.objects.filter(station=last_station_id,
+                                                   barcode_scan__company=company).values_list(
+                                                   'barcode_scan', flat=True)
+        sended_boards = SendedBoard.objects.all().values_list('board')
+
+        stock_boards = finisied_boards.difference(sended_boards)
+        
+        for board in stock_boards:
+            current_board = Board.objects.get(id=board)
+            current_model = current_board.model.name
+            current_dict_value = stock_dict.get(current_model,0)
+            stock_dict[current_model] = current_dict_value + 1
+   
+        return stock_dict
+
+    def get_stock(self):
+        companies = BoardCompany.objects.all()
+        production_dict = dict()
+        for company in companies:
+            production_dict[company.name] = self.get_stock_for_company(company.code)
+
+        return production_dict
+
+
 
 
 board_service = BoardService()

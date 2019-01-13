@@ -22,9 +22,9 @@ class BoardModelSerializer(serializers.ModelSerializer):
 
 class BoardSerializer(serializers.ModelSerializer):
     def is_valid(self, raise_exception=False):
-        model_code = int(str(self.initial_data['barcode'])[2:4])
-        company_code = int(str(self.initial_data['barcode'])[4:6])
         try:
+            model_code = int(str(self.initial_data['barcode'])[2:4])
+            company_code = int(str(self.initial_data['barcode'])[4:6])
             model_id = BoardModel.objects.get(code=model_code).id
             company_id = BoardCompany.objects.get(code=company_code).id
         except:
@@ -42,8 +42,8 @@ class BoardSerializer(serializers.ModelSerializer):
         if not BoardModel.objects.filter(code=board_code,
                                          company__code=company_code).exists():
             raise AppException("barcode model or company not valid")
-        return barcode
 
+        return barcode
 
     class Meta:
         model = Board
