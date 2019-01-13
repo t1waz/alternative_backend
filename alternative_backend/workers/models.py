@@ -24,3 +24,15 @@ class Worker(models.Model):
 
 	class Meta:
 		db_table = 'workers'
+
+
+class WorkerScan(models.Model):
+	worker_barcode = models.ForeignKey('Worker', 
+									   on_delete=models.CASCADE)
+	timestamp = models.DateTimeField(auto_now_add=True)
+
+	def __str__(self):
+		return '%s: %s' % (self.worker_barcode, self.timestamp)
+
+	class Meta:
+		db_table = 'worker_scan'

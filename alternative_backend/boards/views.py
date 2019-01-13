@@ -39,7 +39,23 @@ class ProductionAPIView(APIView):
     permission_classes = (BaseAccess,)
 
     def get(self, request, format=None):
-        response = board_service.get_production_for_company(company_code=1)
+        response = board_service.get_production()
+        print(response)
+        return Response(response)
+
+
+class ProductionDetailAPIView(APIView):
+    permission_classes = (BaseAccess,)
+
+    def get(self, request, company, format=None):
+        response = board_service.get_production_for_company(company_id=company) 
+        print(response)
+        return Response(response)
+
+class StockAPIView(APIView):
+    def get(self, request, format=None):
+        board_service.get_stock_for_company()
+        response = 'BBB'
         return Response(response)
 
 
@@ -47,7 +63,7 @@ class BarcodeInfoAPIView(APIView):
     permission_classes = (BaseAccess,)
 
     def get(self, request, format=None):
-        boards = board_service.get_all_barcodes_info()
+        boards = board_service.get_all_barcodes()
         response = BoardPresentationSerializer(boards, many=True).data
         return Response(response)
 
@@ -56,6 +72,6 @@ class BarcodeInfoDetailAPIView(APIView):
     permission_classes = (BaseAccess,)
 
     def get(self, request, barcode, format=None):
-        board = board_service.get_barcode_info(barcode)
+        board = board_service.get_barcode(barcode)
         response = BoardPresentationSerializer(board).data
         return Response(response)

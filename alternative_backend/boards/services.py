@@ -25,16 +25,16 @@ class BoardService:
                 _request_data['station'] = Station.objects.get(id=station_number).name
                 self._save_scan(_request_data)
 
-    def get_all_barcodes_info(self):
+    def get_all_barcodes(self):
         return Board.objects.all()
 
-    def get_barcode_info(self, barcode):
+    def get_barcode(self, barcode):
         return Board.objects.get(barcode=barcode)
 
-    def get_production_for_company(self, company_code):
+    def get_production_for_company(self, company_id):
         production_dict = dict()
         stations = list(Station.objects.all().values_list('name', flat=True))
-        company_id = BoardCompany.objects.get(code=company_code)
+        company_id = BoardCompany.objects.get(id=company_id)
         for station in stations[1:]:
             production_dict[station] = {}
 
@@ -51,6 +51,14 @@ class BoardService:
                 current_dict = production_dict[next_station_scan.name]
                 current_value = current_dict.get(scan.barcode_scan.model.name, 0)
                 current_dict[scan.barcode_scan.model.name] = current_value + 1
+
+        return production_dict
+
+    def get_production(self):
+        companies = BoardCompany.objects.all()
+        production_dict = dict()
+        for company in companies:
+            production_dict[company.name] = self.get_production_for_company(company.id)
 
         return production_dict
 
