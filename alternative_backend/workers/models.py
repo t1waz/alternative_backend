@@ -30,6 +30,11 @@ class WorkerScan(models.Model):
 	worker_barcode = models.ForeignKey('Worker', 
 									   on_delete=models.CASCADE)
 	timestamp = models.DateTimeField(auto_now_add=True)
+	year = models.IntegerField()
+	month = models.IntegerField()
+	week = models.IntegerField()
+	day_name = models.CharField(max_length=80)
+	seconds = models.BigIntegerField()
 
 	def __str__(self):
 		return '%s: %s' % (self.worker_barcode, self.timestamp)
