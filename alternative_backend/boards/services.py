@@ -56,22 +56,20 @@ class BoardService:
         return production_dict
 
     def get_stock_for_company(self, company_code):
-        company = BoardCompany.objects.get(code=company_code)
-        stock_dict = dict.fromkeys([model.name for model in BoardModel.objects.filter(company=company_code)],0)
+        stock_dict = dict.fromkeys([model.name for model in 
+                                    BoardModel.objects.filter(company=company_code)],0)
 
         last_station_id = Station.objects.latest('id').id
-        finisied_boards = BoardScan.objects.filter(station=last_station_id,
-                                                   barcode__company=company).values_list(
-                                                   'barcode', flat=True)
-        sended_boards = SendedBoard.objects.all().values_list('board', flat=True)
 
-        stock_boards = finisied_boards.difference(sended_boards)
+        for model in stock_dict.keys():
+            finisied_boards = BoardScan.objects.filter(station=last_station_id,
+                                                       barcode__company__code=company_code,
+                                                       barcode__model__name=model).count() or 0
 
-        for board in stock_boards:
-            current_board = Board.objects.get(id=board)
-            current_model = current_board.model.name
-            current_dict_value = stock_dict.get(current_model,0)
-            stock_dict[current_model] = current_dict_value + 1
+            sended_boards = SendedBoard.objects.filter(board__company__code=company_code,
+                                                       board__model__name=model).count() or 0
+
+            stock_dict[model] = finisied_boards - sended_boards
    
         return stock_dict
 

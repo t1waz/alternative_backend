@@ -18,9 +18,12 @@ class OrderRecordSerializer(serializers.ModelSerializer):
 
 
 class SendedBoardSerializer(serializers.ModelSerializer):
+	def validate_if_can_be_added(self, board):
+		#tutaj zajebac kod
+
 	class Meta:
 		model = SendedBoard
-		fields = ('id', 'order', 'timestamp')
+		fields = ('id', 'board', 'order', 'timestamp')
 
 
 class OrderSerializer(serializers.ModelSerializer):
@@ -33,8 +36,9 @@ class OrderSerializer(serializers.ModelSerializer):
 	sended = serializers.SerializerMethodField('sended_boards')
 
 	def sended_boards(self,obj):
-		sended_boards = SendedBoard.objects.filter(order=obj.id)
-		print(sended_boards)
+		sended_boards = SendedBoard.objects.filter(
+			order=obj.id).values_list('board__barcode', flat=True)
+		return sended_boards
 
 	def create(self, validated_data):
 		order = Order.objects.create(**validated_data)

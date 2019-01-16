@@ -1,3 +1,5 @@
 djangorestframework==3.9.0
 django==2.1.4
 flake8==3.6.0
+pyflakes==2.0.0
+setuptools==39.0.1
