@@ -14,9 +14,9 @@ class BoardScanAPIView(APIView):
     def post(self, request, format=None):
         new_scan = BoardScanSerializer(data=request.data)
         if new_scan.is_valid():
+            board_service.add_missing_scan(request.data)
             new_scan.save()
             response = "added barcode scan"
-            board_service.add_missing_scan(request.data)
         else:
             response = "scan data not valid"
         return Response(response)

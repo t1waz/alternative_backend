@@ -45,8 +45,8 @@ class Board(models.Model):
 
 
 class BoardScan(models.Model):
-    barcode_scan = models.ForeignKey('Board',
-                                     on_delete=models.CASCADE)
+    barcode = models.ForeignKey('Board',
+                                on_delete=models.CASCADE)
     worker = models.ForeignKey('workers.Worker',
                                on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add=True)
@@ -55,7 +55,7 @@ class BoardScan(models.Model):
     comment = models.CharField(max_length=100)
 
     def __str__(self):
-        return '%s %s %s' % (self.barcode_scan, self.worker, self.timestamp)
+        return '%s %s %s' % (self.barcode, self.worker, self.timestamp)
 
     class Meta:
         db_table = 'board_scan'

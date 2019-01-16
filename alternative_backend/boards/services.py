@@ -1,30 +1,26 @@
-from alternative_backend.exceptions import AppException
-from .serializers import BoardScanSerializer
 from stations.models import Station
-from .models import Board, BoardScan, BoardCompany, BoardModel
 from orders.models import SendedBoard
-
+from workers.models import Worker
+from .models import Board, BoardScan, BoardCompany, BoardModel
 
 
 
 class BoardService:
-    def _save_scan(self, _scan_data):
-        new_scan = BoardScanSerializer(data=_scan_data)
-        if new_scan.is_valid():
-            new_scan.save()
-        else:
-            raise AppException("request data is not valid")
-
     def add_missing_scan(self, _request_data):
-        station_id = Station.objects.get(name=_request_data['station']).id
-        board = Board.objects.filter(barcode=_request_data['barcode_scan']).first()
+        station = Station.objects.get(name=_request_data['station'])
+        board = Board.objects.get(barcode=_request_data['barcode'])
+        worker = Worker.objects.get(username=_request_data['worker'])
 
-        for station_number in range(station_id-1,0,-1):
-            scan = BoardScan.objects.filter(barcode_scan=board,
-                                            station=station_number).first()
+        previous_stations = Station.objects.filter(id__in=range(station.id-1,0,-1))
+
+        for station in previous_stations:
+            scan = BoardScan.objects.filter(barcode=board,
+                                            station=station).exists()
             if not scan:
-                _request_data['station'] = Station.objects.get(id=station_number).name
-                self._save_scan(_request_data)
+                BoardScan.objects.create(barcode=board,
+                                         worker=worker,
+                                         station=station,
+                                         comment="added automatic")
 
     def get_all_barcodes(self):
         return Board.objects.all()
@@ -39,13 +35,13 @@ class BoardService:
         for station in stations[1:]:
             production_dict[station] = {}
 
-        scans = BoardScan.objects.filter(barcode_scan__company=company).select_related(
+        scans = BoardScan.objects.filter(barcode__company=company).select_related(
                                          'barcode_scan','station').exclude(station__id=len(stations))
         for scan in scans:
             current_station_scan = scan.station
             next_station_scan = Station.objects.get(id=current_station_scan.id+1)
             next_scan_exists = BoardScan.objects.filter(station=next_station_scan.id,
-                                                        barcode_scan=scan.barcode_scan).exists()
+                                                        barcode=scan.barcode_scan).exists()
 
             if not next_scan_exists:
                 current_dict = production_dict[next_station_scan.name]
@@ -73,7 +69,7 @@ class BoardService:
             stock_dict[model] = 0
         last_station_id = max(list(Station.objects.all().values_list('id', flat=True)))
         finisied_boards = BoardScan.objects.filter(station=last_station_id,
-                                                   barcode_scan__company=company).values_list(
+                                                   barcode__company=company).values_list(
                                                    'barcode_scan', flat=True)
         sended_boards = SendedBoard.objects.all().values_list('board')
 

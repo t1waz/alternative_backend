@@ -48,6 +48,7 @@ class BoardSerializer(serializers.ModelSerializer):
     class Meta:
         model = Board
         fields = ('barcode', 'model', 'company')
+        write_only_fields = ('model', 'company')
 
 
 class BoardPresentationSerializer(serializers.ModelSerializer):
@@ -81,9 +82,9 @@ class BoardPresentationSerializer(serializers.ModelSerializer):
 
 
 class BoardScanSerializer(serializers.ModelSerializer):
-    barcode_scan = serializers.SlugRelatedField(many=False,
-                                                queryset=Board.objects.all(),
-                                                slug_field='barcode')
+    barcode = serializers.SlugRelatedField(many=False,
+                                           queryset=Board.objects.all(),
+                                           slug_field='barcode')
     worker = serializers.SlugRelatedField(many=False,
                                           queryset=Worker.objects.all(),
                                           slug_field='username')
@@ -95,10 +96,9 @@ class BoardScanSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BoardScan
-        fields = ('worker', 'station', 'barcode_scan', 'timestamp', 'comment')
-        write_only_fields = ('model', 'company')
+        fields = ('worker', 'station', 'barcode', 'timestamp', 'comment')
         validators = [ UniqueTogetherValidator(queryset=BoardScan.objects.all(),
-                                               fields=('barcode_scan', 'station')) ]
+                                               fields=('barcode', 'station')) ]
 
 
 
