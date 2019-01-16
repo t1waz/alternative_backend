@@ -29,24 +29,20 @@ class BoardService:
         return Board.objects.get(barcode=barcode)
 
     def get_production_for_company(self, company_code):
-        production_dict = dict()
-        stations = list(Station.objects.all().values_list('name', flat=True))
         company = BoardCompany.objects.get(code=company_code)
-        for station in stations[1:]:
-            production_dict[station] = {}
-
+        production_dict = dict.fromkeys([station.name for station in Station.objects.all()[1:]],{})
+        last_station_id = Station.objects.latest('id').id
         scans = BoardScan.objects.filter(barcode__company=company).select_related(
-                                         'barcode_scan','station').exclude(station__id=len(stations))
+                                         'barcode','station').exclude(
+                                         station__id=last_station_id)
         for scan in scans:
-            current_station_scan = scan.station
-            next_station_scan = Station.objects.get(id=current_station_scan.id+1)
+            next_station_scan = Station.objects.get(id=scan.station.id+1)
             next_scan_exists = BoardScan.objects.filter(station=next_station_scan.id,
-                                                        barcode=scan.barcode_scan).exists()
-
+                                                        barcode=scan.barcode).exists()
             if not next_scan_exists:
                 current_dict = production_dict[next_station_scan.name]
-                current_value = current_dict.get(scan.barcode_scan.model.name, 0)
-                current_dict[scan.barcode_scan.model.name] = current_value + 1
+                current_value = current_dict.get(scan.barcode.model.name, 0)
+                current_dict[scan.barcode.model.name] = current_value + 1
 
         return production_dict
 
@@ -60,21 +56,17 @@ class BoardService:
         return production_dict
 
     def get_stock_for_company(self, company_code):
-        stock_dict = dict()
         company = BoardCompany.objects.get(code=company_code)
-        board_models = BoardModel.objects.filter(company=company_code).values_list(
-                                                 'name', flat=True)
+        stock_dict = dict.fromkeys([model.name for model in BoardModel.objects.filter(company=company_code)],0)
 
-        for model in board_models:
-            stock_dict[model] = 0
-        last_station_id = max(list(Station.objects.all().values_list('id', flat=True)))
+        last_station_id = Station.objects.latest('id').id
         finisied_boards = BoardScan.objects.filter(station=last_station_id,
                                                    barcode__company=company).values_list(
-                                                   'barcode_scan', flat=True)
-        sended_boards = SendedBoard.objects.all().values_list('board')
+                                                   'barcode', flat=True)
+        sended_boards = SendedBoard.objects.all().values_list('board', flat=True)
 
         stock_boards = finisied_boards.difference(sended_boards)
-        
+
         for board in stock_boards:
             current_board = Board.objects.get(id=board)
             current_model = current_board.model.name
@@ -86,6 +78,7 @@ class BoardService:
     def get_stock(self):
         companies = BoardCompany.objects.all()
         production_dict = dict()
+
         for company in companies:
             production_dict[company.name] = self.get_stock_for_company(company.code)
 

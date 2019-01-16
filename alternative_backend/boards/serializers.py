@@ -66,7 +66,7 @@ class BoardPresentationSerializer(serializers.ModelSerializer):
         return client
 
     def get_production_history(self, obj):
-        scans = BoardScan.objects.filter(barcode_scan=obj.id).select_related('station')
+        scans = BoardScan.objects.filter(barcode=obj.id).select_related('station')
         production_list = list()
         for each in scans:
             production_record = "%s : %s" %(each.station.name, each.timestamp)

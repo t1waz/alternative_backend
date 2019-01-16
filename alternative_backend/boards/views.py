@@ -48,8 +48,7 @@ class ProductionDetailAPIView(APIView):
     permission_classes = (BaseAccess,)
 
     def get(self, request, company, format=None):
-        response = board_service.get_production_for_company(company_id=company) 
-        print(response)
+        response = board_service.get_production_for_company(company_code=company)
         return Response(response)
 
 
