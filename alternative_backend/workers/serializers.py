@@ -29,4 +29,4 @@ class WorkerScanSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = WorkerScan
-        fields = ('worker_barcode', 'week', 'day_name', 'year', 'month', 'seconds')
+        fields = ('worker_barcode', 'week', 'day_name', 'year', 'month', 'seconds', 'started')

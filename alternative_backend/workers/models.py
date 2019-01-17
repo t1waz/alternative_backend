@@ -28,6 +28,7 @@ class WorkerScan(models.Model):
     worker_barcode = models.ForeignKey('Worker',
                                        on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add=True)
+    started = models.BooleanField()
     year = models.IntegerField()
     month = models.IntegerField()
     week = models.IntegerField()
