@@ -38,7 +38,6 @@ class ProductionAPIView(APIView):
 
     def get(self, request, format=None):
         response = board_service.get_production()
-        print(response)
         return Response(response)
 
 

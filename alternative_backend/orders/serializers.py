@@ -1,6 +1,8 @@
 from rest_framework import serializers
+from boards.models import Board, BoardModel
 from .models import Client, Order, OrderRecord, SendedBoard
 from .services import order_service
+from alternative_backend.exceptions import AppException
 
 
 class ClientSerializer(serializers.ModelSerializer):
@@ -16,13 +18,29 @@ class OrderRecordSerializer(serializers.ModelSerializer):
 
 
 class SendedBoardSerializer(serializers.ModelSerializer):
-    def validate_if_can_be_added(self, board):
-        # tutaj zajebac kod
-        pass
+    board = serializers.SlugRelatedField(many=False,
+                                         queryset=Board.objects.all(),
+                                         slug_field='barcode')
+
+    def is_valid(self, raise_exception=False):
+        board_model = BoardModel.objects.get(code=int(str(self.initial_data['board'])[2:4]))
+        try:
+            order_qty = OrderRecord.objects.get(order=self.initial_data['order'],
+                                                board_model=board_model).quantity
+            sended_qty = SendedBoard.objects.filter(order=self.initial_data['order'],
+                                                    board__model=board_model).count()
+            already_sended =SendedBoard.objects.filter(order=self.initial_data['order'],
+                                                       board__barcode=self.initial_data['board']).exists()
+            if sended_qty >= order_qty or already_sended:
+                raise AppException("cannot add board to order")
+        except:
+            raise AppException("cannot add board to order")
+
+        return super().is_valid(raise_exception=True)
 
     class Meta:
         model = SendedBoard
-        fields = ('id', 'board', 'order', 'timestamp')
+        fields = ('id', 'board', 'order')
 
 
 class OrderSerializer(serializers.ModelSerializer):

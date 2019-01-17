@@ -20,7 +20,8 @@ from workers.views import WorkerViewSet, NewWorkerScanAPIView
 from boards.views import BoardScanAPIView, ProductionAPIView, BarcodeInfoDetailAPIView, \
     NewBoardScanAPIView, BarcodeInfoAPIView, ProductionDetailAPIView, StockAPIView, \
     StockDetailAPIView
-from orders.views import OrderViewSet, CompanyOrderInfo, CompanyOrderInfoDetail
+from orders.views import OrderViewSet, CompanyOrderInfoAPIView, CompanyOrderInfoDetailAPIView, \
+    SendedBoardRecordAPIView
 
 
 router = DefaultRouter()
@@ -33,12 +34,13 @@ urlpatterns = [
     path(r'add_barcode/', NewBoardScanAPIView.as_view()),
     path(r'add_scan/', BoardScanAPIView.as_view()),
     path(r'add_worker_scan/', NewWorkerScanAPIView.as_view()),
+    path(r'add_sended_board/', SendedBoardRecordAPIView.as_view()),
     path(r'production/', ProductionAPIView.as_view()),
     path(r'production/<int:company>', ProductionDetailAPIView.as_view()),
     path(r'stock/', StockAPIView.as_view()),
     path(r'stock/<int:code>', StockDetailAPIView.as_view()),
-    path(r'order_info/', CompanyOrderInfo.as_view()),
-    path(r'order_info/<int:code>/', CompanyOrderInfoDetail.as_view()),
+    path(r'order_info/', CompanyOrderInfoAPIView.as_view()),
+    path(r'order_info/<int:code>/', CompanyOrderInfoDetailAPIView.as_view()),
     path(r'boards/', BarcodeInfoAPIView.as_view()),
     path(r'boards/<int:barcode>/', BarcodeInfoDetailAPIView.as_view())
 ] + router.urls
