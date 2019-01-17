@@ -29,9 +29,11 @@ class BoardService:
 
     def get_production_for(self, company_code):
         company = BoardCompany.objects.get(code=company_code)
-        production_dict = dict.fromkeys([station.name for station in
-                                         Station.objects.all()[1:]], {})
         last_station_id = Station.objects.latest('id').id
+        models = dict.fromkeys([model.name for model in
+                                BoardModel.objects.filter(company=company)],0)
+        production_dict = dict.fromkeys([station.name for station in
+                                         Station.objects.all()[1:]], models)
         scans = BoardScan.objects.filter(barcode__company=company).select_related(
             'barcode', 'station').exclude(station__id=last_station_id)
 
