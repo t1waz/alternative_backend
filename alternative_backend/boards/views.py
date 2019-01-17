@@ -6,8 +6,6 @@ from .serializers import BoardSerializer, BoardScanSerializer, \
     BoardPresentationSerializer
 
 
-
-
 class BoardScanAPIView(APIView):
     permission_classes = (BaseAccess,)
 
@@ -48,7 +46,7 @@ class ProductionDetailAPIView(APIView):
     permission_classes = (BaseAccess,)
 
     def get(self, request, company, format=None):
-        response = board_service.get_production_for_company(company_code=company)
+        response = board_service.get_production_for(company_code=company)
         return Response(response)
 
 
@@ -60,7 +58,7 @@ class StockAPIView(APIView):
 
 class StockDetailAPIView(APIView):
     def get(self, request, code, format=None):
-        response = board_service.get_stock_for_company(company_code=code)
+        response = board_service.get_stock_for(company_code=code)
         return Response(response)
 
 

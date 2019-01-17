@@ -1,8 +1,6 @@
 from django.db import models
 
 
-
-
 class Client(models.Model):
     name = models.CharField(max_length=100)
     country = models.CharField(max_length=50)
@@ -34,7 +32,7 @@ class Order(models.Model):
     active_orders = ActiveOrderManager()
 
     def __str__(self):
-        return '%s %s' %(self.id, self.client)
+        return '%s %s' % (self.id, self.client)
 
     class Meta:
         db_table = 'order'
@@ -49,7 +47,7 @@ class SendedBoard(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return '%s %s' %(self.board, self.order)
+        return '%s %s' % (self.board, self.order)
 
     class Meta:
         db_table = 'sended_board'
@@ -69,7 +67,7 @@ class OrderRecord(models.Model):
         return position
 
     def __str__(self):
-        return '%s %s %s' %(self. order, self.board_model, self.quantity)
+        return '%s %s %s' % (self. order, self.board_model, self.quantity)
 
     class Meta:
         db_table = 'order_record'

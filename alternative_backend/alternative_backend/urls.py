@@ -23,8 +23,6 @@ from boards.views import BoardScanAPIView, ProductionAPIView, BarcodeInfoDetailA
 from orders.views import OrderViewSet, CompanyOrderInfo, CompanyOrderInfoDetail
 
 
-
-
 router = DefaultRouter()
 router.register(r'workers', WorkerViewSet, basename='workers')
 router.register(r'orders', OrderViewSet, basename='orders')
@@ -38,9 +36,9 @@ urlpatterns = [
     path(r'production/', ProductionAPIView.as_view()),
     path(r'production/<int:company>', ProductionDetailAPIView.as_view()),
     path(r'stock/', StockAPIView.as_view()),
-    path(r'stock/<int:code>',StockDetailAPIView.as_view()),
+    path(r'stock/<int:code>', StockDetailAPIView.as_view()),
     path(r'order_info/', CompanyOrderInfo.as_view()),
-    path(r'order_info/<int:code>/',CompanyOrderInfoDetail.as_view()),
+    path(r'order_info/<int:code>/', CompanyOrderInfoDetail.as_view()),
     path(r'boards/', BarcodeInfoAPIView.as_view()),
     path(r'boards/<int:barcode>/', BarcodeInfoDetailAPIView.as_view())
 ] + router.urls

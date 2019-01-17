@@ -1,11 +1,12 @@
 from rest_framework import serializers
-from .models import BoardCompany, BoardModel, Board, BoardScan
+from rest_framework.validators import UniqueTogetherValidator
+from alternative_backend.exceptions import AppException
+from alternative_backend.settings import BARCODE_LENGHT
 from workers.models import Worker
 from stations.models import Station
-from alternative_backend.exceptions import AppException
-from rest_framework.validators import UniqueTogetherValidator
 from orders.models import SendedBoard
-from alternative_backend.settings import BARCODE_LENGHT
+from .models import BoardCompany, BoardModel, Board, BoardScan
+
 
 
 class BoardCompanySerializer(serializers.ModelSerializer):
@@ -66,10 +67,11 @@ class BoardPresentationSerializer(serializers.ModelSerializer):
         return client
 
     def get_production_history(self, obj):
-        scans = BoardScan.objects.filter(barcode=obj.id).select_related('station')
+        scans = BoardScan.objects.filter(barcode=obj.id).select_related(
+            'station')
         production_list = list()
         for each in scans:
-            production_record = "%s : %s" %(each.station.name, each.timestamp)
+            production_record = "%s : %s" % (each.station.name, each.timestamp)
             production_list.append(production_record)
         return production_list
 
@@ -78,7 +80,8 @@ class BoardPresentationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Board
-        fields = ('company', 'model', 'year', 'barcode', 'customer', 'production_history')
+        fields = ('company', 'model', 'year', 'barcode', 'customer',
+                  'production_history')
 
 
 class BoardScanSerializer(serializers.ModelSerializer):
@@ -97,8 +100,5 @@ class BoardScanSerializer(serializers.ModelSerializer):
     class Meta:
         model = BoardScan
         fields = ('worker', 'station', 'barcode', 'timestamp', 'comment')
-        validators = [ UniqueTogetherValidator(queryset=BoardScan.objects.all(),
-                                               fields=('barcode', 'station')) ]
-
-
-
+        validators = [UniqueTogetherValidator(queryset=BoardScan.objects.all(),
+                                              fields=('barcode', 'station'))]
