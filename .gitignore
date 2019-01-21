@@ -4,8 +4,18 @@
 # develop database
 db.sqlite3
 
-#cache
+# cache
 __pycache__/
 
-#some weird shit
+# some weird shit
 .idea
+
+# no .pyc in my project
+*.pyc
+
+# Django stuff:
+*.log
+local_settings.py
+
+# no migrations:
+*/migrations
