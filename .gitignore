@@ -18,4 +18,7 @@ __pycache__/
 local_settings.py
 
 # no migrations:
-*/migrations
+alternative_backend/boards/migrations/
+alternative_backend/orders/migrations/
+alternative_backend/workers/migrations/
+alternative_backend/stations/migrations/

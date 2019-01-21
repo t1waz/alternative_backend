@@ -10,6 +10,16 @@ from .serializers import (
 
 
 class BoardScanAPIView(APIView):
+    """
+    request data structure: 
+                            {
+                                "barcode": barcode:int,
+                                "worker": worker:str,      (username)
+                                "station": station:str,    (name)
+                                "comment": comment:str
+                            } 
+    comment key is not required
+    """
     permission_classes = (BaseAccess,)
 
     def post(self, request, format=None):
@@ -17,23 +27,29 @@ class BoardScanAPIView(APIView):
         if new_scan.is_valid():
             BoardService().add_missing_scan(request.data)
             new_scan.save()
-            response = "added barcode scan"
+            return Response("ADDED")
         else:
-            response = "scan data not valid"
-        return Response(response)
+            return Response("DUPLICATED/INCORRECT", status=400)
 
 
 class NewBoardScanAPIView(APIView):
+    """
+    request data structure: 
+                            {
+                                "barcode": barcode:int
+                            } 
+    all keys are required
+    """
     permission_classes = (BaseAccess,)
 
     def post(self, request, format=None):
+        print(request.data)
         new_board = BoardSerializer(data=request.data)
         if new_board.is_valid():
             new_board.save()
-            response = "added barcode: {}".format(new_board.data['barcode'])
+            return Response("added barcode: {}".format(new_board.data['barcode']))
         else:
-            response = "barcode meta data not is_valid"
-        return Response(response)
+            return Response("barcode meta data not valid",status=400)
 
 
 class ProductionAPIView(APIView):

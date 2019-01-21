@@ -13,8 +13,15 @@ Activate venv env:
 	source .venv/bin/activate
 
 Install packages:
-	pip install -r requirements.txt
+    pip install -r requirements.txt
+
+Deploy project:
+    python manage.py makemigrations
+    python manage.py migrate
 
 Load fixtures:
 	python manage.py loaddata utils/dump.json
+
+Run project:
+	python manage.py runserver
 

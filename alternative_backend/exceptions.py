@@ -6,5 +6,5 @@ class CustomException(APIException):
     info = None
 
     def __init__(self, status_code, info):
-        CustomException.status_code = status_code
+        CustomException.status_code = info
         CustomException.info = info

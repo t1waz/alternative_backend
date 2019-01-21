@@ -1,5 +1,6 @@
 import datetime
 from rest_framework import serializers
+from rest_framework.validators import UniqueTogetherValidator
 from .models import (
     Worker,
     WorkerScan
@@ -10,6 +11,8 @@ class WorkerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Worker
         fields = ('name', 'surname', 'username', 'barcode')
+        validators = [UniqueTogetherValidator(queryset=Worker.objects.all(),
+                                              fields=('username', 'barcode'))]
 
 
 class WorkerScanSerializer(serializers.ModelSerializer):
