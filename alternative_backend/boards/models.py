@@ -7,10 +7,10 @@ class BoardCompany(models.Model):
     code = models.IntegerField()
 
     def __str__(self):
-        return '%s %s' % (self.id, self.name)
+        return "{} {}".format(self.id, self.name)
 
     class Meta:
-        db_table = 'board_company'
+        db_table = "board_company"
 
 
 class BoardModel(models.Model):
@@ -22,10 +22,10 @@ class BoardModel(models.Model):
                                 on_delete=models.CASCADE)
 
     def __str__(self):
-        return '%s %s %s' % (self.code, self.company, self.year)
+        return "{} {} {}".format(self.code, self.company, self.year)
 
     class Meta:
-        db_table = 'board_model'
+        db_table = "board_model"
 
 
 class Board(models.Model):
@@ -36,10 +36,10 @@ class Board(models.Model):
                                 on_delete=models.CASCADE)
 
     def __str__(self):
-        return '%s' % (self.barcode)
+        return "{}".format(self.barcode)
 
     class Meta:
-        db_table = 'board'
+        db_table = "board"
 
 
 class BoardScan(models.Model):
@@ -53,7 +53,7 @@ class BoardScan(models.Model):
     comment = models.CharField(max_length=100)
 
     def __str__(self):
-        return '%s %s %s' % (self.barcode, self.worker, self.timestamp)
+        return "{} {} {}".format(self.barcode, self.worker, self.timestamp)
 
     class Meta:
-        db_table = 'board_scan'
+        db_table = "board_scan"

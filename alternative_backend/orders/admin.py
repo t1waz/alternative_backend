@@ -1,5 +1,10 @@
 from django.contrib import admin
-from .models import Client, Order, OrderRecord, SendedBoard
+from .models import (
+    Client,
+    Order,
+    OrderRecord,
+    SendedBoard
+)
 
 
 admin.site.register(Client)

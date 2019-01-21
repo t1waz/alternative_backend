@@ -1,5 +1,8 @@
 from django.db.models import Sum
-from boards.models import BoardModel, BoardCompany
+from boards.models import (
+    BoardModel,
+    BoardCompany
+)
 from .models import OrderRecord, Order, SendedBoard
 
 
@@ -39,6 +42,3 @@ class OrderService:
             if not orders[list(orders.keys())[0]] == {}:
                 companies_list.append(orders)
         return companies_list
-
-
-order_service = OrderService()

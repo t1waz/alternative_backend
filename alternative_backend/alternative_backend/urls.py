@@ -16,13 +16,26 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from rest_framework.routers import DefaultRouter
-from workers.views import WorkerViewSet, NewWorkerScanAPIView
-from boards.views import BoardScanAPIView, ProductionAPIView, BarcodeInfoDetailAPIView, \
-    NewBoardScanAPIView, BarcodeInfoAPIView, ProductionDetailAPIView, StockAPIView, \
+from workers.views import (
+    WorkerViewSet,
+    NewWorkerScanAPIView
+)
+from boards.views import (
+    BoardScanAPIView,
+    ProductionAPIView,
+    BarcodeInfoDetailAPIView,
+    NewBoardScanAPIView,
+    BarcodeInfoAPIView,
+    ProductionDetailAPIView,
+    StockAPIView,
     StockDetailAPIView
-from orders.views import OrderViewSet, CompanyOrderInfoAPIView, CompanyOrderInfoDetailAPIView, \
+)
+from orders.views import (
+    OrderViewSet,
+    CompanyOrderInfoAPIView,
+    CompanyOrderInfoDetailAPIView,
     SendedBoardRecordAPIView
-
+)
 
 router = DefaultRouter()
 router.register(r'workers', WorkerViewSet, basename='workers')

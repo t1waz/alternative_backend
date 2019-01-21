@@ -1,10 +1,13 @@
 from rest_framework import viewsets
 from .models import Order
-from .serializers import OrderSerializer, SendedBoardSerializer
 from common.auth import BaseAccess
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .services import order_service
+from .services import OrderService
+from .serializers import (
+    OrderSerializer,
+    SendedBoardSerializer
+)
 
 
 class OrderViewSet(viewsets.ModelViewSet):
@@ -20,7 +23,7 @@ class CompanyOrderInfoAPIView(APIView):
     permission_classes = [BaseAccess]
 
     def get(self, request, format=None):
-        response = order_service.return_order_info_for_all_companies()
+        response = OrderService().return_order_info_for_all_companies()
         return Response(response)
 
 
@@ -28,7 +31,7 @@ class CompanyOrderInfoDetailAPIView(APIView):
     permission_classes = [BaseAccess]
 
     def get(self, request, code, format=None):
-        response = order_service.return_order_info(company_code=code)
+        response = OrderService().return_order_info(company_code=code)
         return Response(response)
 
 

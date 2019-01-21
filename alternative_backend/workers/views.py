@@ -3,7 +3,10 @@ from common.auth import BaseAccess
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Worker
-from .serializers import WorkerSerializer, WorkerScanSerializer
+from .serializers import (
+    WorkerSerializer,
+    WorkerScanSerializer
+)
 
 
 class WorkerViewSet(viewsets.ModelViewSet):
@@ -19,7 +22,7 @@ class NewWorkerScanAPIView(APIView):
         new_worker_scan = WorkerScanSerializer(data=request.data)
         if new_worker_scan.is_valid():
             new_worker_scan.save()
-            response = "added worker barcode: %s" % (new_worker_scan.data['worker_barcode'])
+            response = "added worker barcode: {}".format(new_worker_scan.data['worker_barcode'])
         else:
             response = "worker barcode meta data not is_valid"
         return Response(response)

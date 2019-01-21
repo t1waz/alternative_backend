@@ -5,8 +5,12 @@ from alternative_backend.settings import BARCODE_LENGHT
 from workers.models import Worker
 from stations.models import Station
 from orders.models import SendedBoard
-from .models import BoardCompany, BoardModel, Board, BoardScan
-
+from .models import (
+    BoardCompany,
+    BoardModel,
+    Board,
+    BoardScan
+)
 
 
 class BoardCompanySerializer(serializers.ModelSerializer):
@@ -22,6 +26,11 @@ class BoardModelSerializer(serializers.ModelSerializer):
 
 
 class BoardSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Board
+        fields = ('barcode', 'model', 'company')
+        write_only_fields = ('model', 'company')
+
     def is_valid(self, raise_exception=False):
         try:
             model_code = int(str(self.initial_data['barcode'])[2:4])
@@ -46,13 +55,12 @@ class BoardSerializer(serializers.ModelSerializer):
 
         return barcode
 
-    class Meta:
-        model = Board
-        fields = ('barcode', 'model', 'company')
-        write_only_fields = ('model', 'company')
-
 
 class BoardPresentationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Board
+        fields = ('company', 'model', 'year', 'barcode', 'customer', 'production_history')
+
     customer = serializers.SerializerMethodField()
     production_history = serializers.SerializerMethodField()
     year = serializers.SerializerMethodField()
@@ -69,22 +77,19 @@ class BoardPresentationSerializer(serializers.ModelSerializer):
     def get_production_history(self, obj):
         scans = BoardScan.objects.filter(barcode=obj.id).select_related(
             'station')
-        production_list = list()
-        for each in scans:
-            production_record = "%s : %s" % (each.station.name, each.timestamp)
-            production_list.append(production_record)
-        return production_list
+        return ["{} : {}".format(e.station.name, e.timestamp) for e in scans]
 
     def get_year(self, obj):
         return obj.model.year
 
-    class Meta:
-        model = Board
-        fields = ('company', 'model', 'year', 'barcode', 'customer',
-                  'production_history')
-
 
 class BoardScanSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BoardScan
+        fields = ('worker', 'station', 'barcode', 'timestamp', 'comment')
+        validators = [UniqueTogetherValidator(queryset=BoardScan.objects.all(),
+                                              fields=('barcode', 'station'))]
+
     barcode = serializers.SlugRelatedField(many=False,
                                            queryset=Board.objects.all(),
                                            slug_field='barcode')
@@ -96,9 +101,3 @@ class BoardScanSerializer(serializers.ModelSerializer):
                                            slug_field='name')
     timestamp = serializers.DateTimeField(required=False)
     comment = serializers.CharField(required=False)
-
-    class Meta:
-        model = BoardScan
-        fields = ('worker', 'station', 'barcode', 'timestamp', 'comment')
-        validators = [UniqueTogetherValidator(queryset=BoardScan.objects.all(),
-                                              fields=('barcode', 'station'))]

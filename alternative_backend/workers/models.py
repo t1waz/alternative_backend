@@ -18,7 +18,7 @@ class Worker(models.Model):
         return surname
 
     def __str__(self):
-        return '%s %s' % (self.username, self.barcode)
+        return '{} {}'.format(self.username, self.barcode)
 
     class Meta:
         db_table = 'workers'
@@ -36,7 +36,7 @@ class WorkerScan(models.Model):
     seconds = models.BigIntegerField()
 
     def __str__(self):
-        return '%s: %s' % (self.worker_barcode, self.timestamp)
+        return '{}: {}'.format(self.worker_barcode, self.timestamp)
 
     class Meta:
         db_table = 'worker_scan'

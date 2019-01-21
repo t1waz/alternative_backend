@@ -1,7 +1,12 @@
 from stations.models import Station
 from orders.models import SendedBoard
 from workers.models import Worker
-from .models import Board, BoardScan, BoardCompany, BoardModel
+from .models import (
+    Board,
+    BoardScan,
+    BoardCompany,
+    BoardModel
+)
 
 
 class BoardService:
@@ -31,7 +36,7 @@ class BoardService:
         company = BoardCompany.objects.get(code=company_code)
         last_station_id = Station.objects.latest('id').id
         models = dict.fromkeys([model.name for model in
-                                BoardModel.objects.filter(company=company)],0)
+                                BoardModel.objects.filter(company=company)], 0)
         production_dict = dict.fromkeys([station.name for station in
                                          Station.objects.all()[1:]], models)
         scans = BoardScan.objects.filter(barcode__company=company).select_related(
@@ -77,13 +82,4 @@ class BoardService:
         return stock_dict
 
     def get_stock(self):
-        companies = BoardCompany.objects.all()
-        stock = dict()
-
-        for company in companies:
-            stock[company.name] = self.get_stock_for(company.code)
-
-        return stock
-
-
-board_service = BoardService()
+        return {c.name: self.get_stock_for(c.code) for c in BoardCompany.objects.all()}

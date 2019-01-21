@@ -1,6 +1,9 @@
 import datetime
 from rest_framework import serializers
-from .models import Worker, WorkerScan
+from .models import (
+    Worker,
+    WorkerScan
+)
 
 
 class WorkerSerializer(serializers.ModelSerializer):
@@ -10,6 +13,10 @@ class WorkerSerializer(serializers.ModelSerializer):
 
 
 class WorkerScanSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WorkerScan
+        fields = ('worker_barcode', 'week', 'day_name', 'year', 'month', 'seconds', 'started')
+
     worker_barcode = serializers.SlugRelatedField(many=False,
                                                   queryset=Worker.objects.all(),
                                                   slug_field='barcode')
@@ -26,7 +33,3 @@ class WorkerScanSerializer(serializers.ModelSerializer):
         self.initial_data.update(time_values)
 
         return super().is_valid(raise_exception=True)
-
-    class Meta:
-        model = WorkerScan
-        fields = ('worker_barcode', 'week', 'day_name', 'year', 'month', 'seconds', 'started')
