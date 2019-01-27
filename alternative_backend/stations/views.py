@@ -11,3 +11,11 @@ class StationAPIView(APIView):
 		stations = StationService().get_stations()
 		response = StationSerializer(stations, many=True).data
 		return Response(response)
+
+
+class StationDetailAPIView(APIView):
+	permission_classes = (BaseAccess,)
+	def get(self, request, station, format=None):
+		station = StationService().get_station(station)
+		response = StationSerializer(station).data
+		return Response(response)

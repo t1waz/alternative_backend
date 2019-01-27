@@ -59,10 +59,15 @@ class OrderSerializer(serializers.ModelSerializer):
     client = serializers.SlugRelatedField(many=False,
                                           queryset=Client.objects.all(),
                                           slug_field='name')
-    boards = serializers.SlugRelatedField(many=True,
-                                          read_only=True,
-                                          slug_field='order_position')
     sended = serializers.SerializerMethodField('sended_boards')
+    boards = serializers.SerializerMethodField('order_boards')
+
+    def order_boards(self, obj):
+        ordered_boards = {}
+        orders = OrderRecord.objects.filter(order=obj.id)
+        for order in orders:
+            ordered_boards[order.board_model.name] = order.quantity
+        return ordered_boards
 
     def sended_boards(self, obj):
         sended_boards = SendedBoard.objects.filter(order=obj.id).values_list(
