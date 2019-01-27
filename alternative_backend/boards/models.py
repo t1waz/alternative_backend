@@ -34,6 +34,7 @@ class Board(models.Model):
                               on_delete=models.CASCADE)
     company = models.ForeignKey('BoardCompany',
                                 on_delete=models.CASCADE)
+    second_category = models.BooleanField()
 
     def __str__(self):
         return "{}".format(self.barcode)

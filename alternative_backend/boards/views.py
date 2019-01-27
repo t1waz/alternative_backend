@@ -5,8 +5,10 @@ from .services import BoardService
 from .serializers import (
     BoardSerializer,
     BoardScanSerializer,
-    BoardPresentationSerializer
+    BoardPresentationSerializer,
+    BoardSecondCategorySerializer,
 )
+from .models import Board
 
 
 class BoardScanAPIView(APIView):
@@ -16,7 +18,7 @@ class BoardScanAPIView(APIView):
                                 "barcode": barcode:int,
                                 "worker": worker:str,      (username)
                                 "station": station:str,    (name)
-                                "comment": comment:str
+                                "comment": comment:str,
                             } 
     comment key is not required
     """
@@ -43,7 +45,6 @@ class NewBoardScanAPIView(APIView):
     permission_classes = (BaseAccess,)
 
     def post(self, request, format=None):
-        print(request.data)
         new_board = BoardSerializer(data=request.data)
         if new_board.is_valid():
             new_board.save()
@@ -51,6 +52,26 @@ class NewBoardScanAPIView(APIView):
         else:
             return Response("barcode meta data not valid",status=400)
 
+
+class BoardSecondCategoryAPIView(APIView):
+    """
+    request data structure: 
+                            {
+                                "barcode": barcode:int,
+                                "second_category": category:boolean
+                            } 
+    all keys are required
+    """
+    permission_classes = (BaseAccess,)
+
+    def post(self, request, format=None):
+        board = BoardService().get_board(request.data['barcode'])
+        new_second_board = BoardSecondCategorySerializer(board, data=request.data, )
+        if new_second_board.is_valid():
+            new_second_board.save()
+            return Response("added {}".format(request.data['barcode']))
+        else:
+            return Response("INCORRECT DATA", status=400)
 
 class ProductionAPIView(APIView):
     permission_classes = (BaseAccess,)

@@ -83,6 +83,12 @@ class BoardPresentationSerializer(serializers.ModelSerializer):
         return obj.model.year
 
 
+class BoardSecondCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Board
+        fields = ('barcode', 'second_category')
+
+
 class BoardScanSerializer(serializers.ModelSerializer):
     class Meta:
         model = BoardScan
