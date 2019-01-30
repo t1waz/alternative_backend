@@ -61,6 +61,10 @@ class BoardPresentationSerializer(serializers.ModelSerializer):
         model = Board
         fields = ('company', 'model', 'year', 'barcode', 'customer', 'production_history')
 
+    model = serializers.SlugRelatedField(many=False,
+                                         queryset=BoardModel.objects.all(),
+                                         slug_field='name')
+
     customer = serializers.SerializerMethodField()
     production_history = serializers.SerializerMethodField()
     year = serializers.SerializerMethodField()
