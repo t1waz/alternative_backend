@@ -35,20 +35,22 @@ class SendedBoardSerializer(serializers.ModelSerializer):
                                          slug_field='barcode')
 
     def is_valid(self, raise_exception=False):
-        board_model = BoardModel.objects.get(code=int(str(self.initial_data['board'])[2:4]))
         try:
+            board_model = BoardModel.objects.get(code=int(str(self.initial_data['board'])[2:4]))
             order_qty = OrderRecord.objects.get(order=self.initial_data['order'],
                                                 board_model=board_model).quantity
-            sended_qty = SendedBoard.objects.filter(order=self.initial_data['order'],
-                                                    board__model=board_model).count()
-            ifsend = SendedBoard.objects.filter(order=self.initial_data['order'],
-                                                board__barcode=self.initial_data['board']).exists()
-            if sended_qty >= order_qty or ifsend:
-                raise AppException("cannot add board to order")
         except:
-            raise AppException("cannot add board to order")
+            raise AppException("CANNOT ADD")
+        sended_qty = SendedBoard.objects.filter(order=self.initial_data['order'],
+                                                board__model=board_model).count()
+        ifsend = SendedBoard.objects.filter(order=self.initial_data['order'],
+                                            board__barcode=self.initial_data['board']).exists()
+        if sended_qty >= order_qty:
+            raise AppException("FULL")
+        if ifsend:
+            raise AppException("ALREADY SENDED")
 
-        return super().is_valid(raise_exception=True)
+        return super().is_valid(raise_exception=False)
 
 
 class OrderSerializer(serializers.ModelSerializer):

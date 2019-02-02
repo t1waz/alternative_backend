@@ -40,5 +40,5 @@ class OrderService:
         for company in companies:
             orders = self.return_order_info(company_code=company.code)
             if not orders[list(orders.keys())[0]] == {}:
-                companies_list.append(orders)
+                companies_list.append({company.name: orders})
         return companies_list
