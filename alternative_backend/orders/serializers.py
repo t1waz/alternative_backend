@@ -43,8 +43,7 @@ class SendedBoardSerializer(serializers.ModelSerializer):
             raise AppException("CANNOT ADD")
         sended_qty = SendedBoard.objects.filter(order=self.initial_data['order'],
                                                 board__model=board_model).count()
-        ifsend = SendedBoard.objects.filter(order=self.initial_data['order'],
-                                            board__barcode=self.initial_data['board']).exists()
+        ifsend = SendedBoard.objects.filter(board__barcode=self.initial_data['board']).exists()
         if sended_qty >= order_qty:
             raise AppException("FULL")
         if ifsend:

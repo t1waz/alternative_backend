@@ -16,6 +16,14 @@ class WorkerViewSet(viewsets.ModelViewSet):
 
 
 class NewWorkerScanAPIView(APIView):
+    """
+    request data structure: 
+                            {
+                                "worker_barcode": barcode:int,
+                                "started": true/false is started:boolean
+                            } 
+    comment key is not required
+    """
     permission_classes = (BaseAccess,)
 
     def post(self, request, format=None):

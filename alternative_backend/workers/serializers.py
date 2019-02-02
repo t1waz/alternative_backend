@@ -22,7 +22,7 @@ class WorkerScanSerializer(serializers.ModelSerializer):
 
     worker_barcode = serializers.SlugRelatedField(many=False,
                                                   queryset=Worker.objects.all(),
-                                                  slug_field='barcode')
+                                                  slug_field='username')
 
     def is_valid(self, raise_exception=False):
         now = datetime.datetime.now()
