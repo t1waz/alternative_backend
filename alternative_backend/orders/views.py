@@ -59,13 +59,15 @@ class SendedBoardRecordAPIView(APIView):
     request data structure: 
                             {
                                 "board": barcode:int,
+                                "order": order pk:int,
                             } 
     comment key is not required
     """
     def delete(self, request, format=None):
         try:
             sended_board = SendedBoard.objects.get(
-                board__barcode=request.data.get('board',0))
+                board__barcode=request.data.get('board',0),
+                order=request.data.get('order',0))
             sended_board.delete()
             response = 'barcode removed from order'
         except:
