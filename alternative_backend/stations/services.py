@@ -6,4 +6,9 @@ class StationService:
 		return Station.objects.all()
 
 	def get_station(self, station_id):
-		return Station.objects.get(id=station_id)
+		try:
+			station = Station.objects.get(id=station_id)
+		except:
+			station = ''
+
+		return station
