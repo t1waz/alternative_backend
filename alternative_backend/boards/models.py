@@ -22,7 +22,7 @@ class BoardModel(models.Model):
                                 on_delete=models.CASCADE)
 
     def __str__(self):
-        return "{} {} {}".format(self.code, self.company, self.year)
+        return "{} {} {} {}".format(self.code, self.company, self.year, self.name)
 
     class Meta:
         db_table = "board_model"
