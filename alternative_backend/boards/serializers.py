@@ -35,7 +35,8 @@ class BoardSerializer(serializers.ModelSerializer):
         try:
             model_code = int(str(self.initial_data['barcode'])[2:4])
             company_code = int(str(self.initial_data['barcode'])[4:6])
-            model_id = BoardModel.objects.get(code=model_code).id
+            model_id = BoardModel.objects.get(code=model_code,
+                                              company__code=company_code).id
             company_id = BoardCompany.objects.get(code=company_code).id
         except:
             return False
