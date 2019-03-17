@@ -4,7 +4,7 @@ from django.db import models
 class BoardCompany(models.Model):
     description = models.CharField(max_length=500)
     name = models.CharField(max_length=200)
-    code = models.IntegerField()
+    code = models.IntegerField(unique=True)
 
     def __str__(self):
         return "{} {}".format(self.id, self.name)
