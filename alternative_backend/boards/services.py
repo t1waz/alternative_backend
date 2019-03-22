@@ -37,19 +37,22 @@ class BoardService:
         last_station_id = Station.objects.latest('id').id
         models = dict.fromkeys([model.name for model in
                                 BoardModel.objects.filter(company=company)], 0)
-        production_dict = dict.fromkeys([station.name for station in
-                                         Station.objects.all()[1:]], models)
+
+        production_dict = dict()
+        for station in [station.name for station in Station.objects.all()[1:]]:
+            production_dict[station] = deepcopy(models)
+
         scans = BoardScan.objects.filter(barcode__company=company).select_related(
-            'barcode', 'station').exclude(station__id=last_station_id)
+            'barcode', 'station').exclude(station__id=last_station_id).order_by(
+            'station_id')
 
         for scan in scans:
             next_station_scan = Station.objects.get(id=scan.station.id + 1)
             next_scan_exists = BoardScan.objects.filter(station=next_station_scan.id,
                                                         barcode=scan.barcode).exists()
             if not next_scan_exists:
-                current_dict = production_dict[next_station_scan.name]
-                current_value = current_dict.get(scan.barcode.model.name, 0)
-                current_dict[scan.barcode.model.name] = current_value + 1
+                production_dict[next_station_scan.name][scan.barcode.model.name] = \
+                    production_dict[next_station_scan.name].get(scan.barcode.model.name) + 1
 
         return production_dict
 
