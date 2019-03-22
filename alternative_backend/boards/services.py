@@ -1,6 +1,7 @@
 from stations.models import Station
 from orders.models import SendedBoard
 from workers.models import Worker
+from copy import deepcopy
 from .models import (
     Board,
     BoardScan,
