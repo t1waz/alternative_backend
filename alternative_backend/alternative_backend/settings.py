@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'boards',
     'stations',
     'orders',
+    'presses',
+    'events',
 ]
 
 MIDDLEWARE = [

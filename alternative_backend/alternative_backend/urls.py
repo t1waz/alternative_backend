@@ -41,6 +41,10 @@ from stations.views import (
     StationAPIView,
     StationDetailAPIView
 )
+from presses.views import (
+    PressAPIView,
+    PressDetailAPIView
+)
 
 router = DefaultRouter()
 router.register(r'workers', WorkerViewSet, basename='workers')
@@ -64,4 +68,6 @@ urlpatterns = [
     path(r'boards/<int:barcode>/', BarcodeInfoDetailAPIView.as_view()),
     path(r'stations/', StationAPIView.as_view()),
     path(r'stations/<int:station>/', StationDetailAPIView.as_view()),
+    path(r'presses/', PressAPIView.as_view()),
+    path(r'presses/<int:id>/', PressDetailAPIView.as_view()),
 ] + router.urls
