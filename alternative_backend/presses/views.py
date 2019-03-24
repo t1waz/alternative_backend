@@ -9,3 +9,4 @@ class PressViewSet(viewsets.ModelViewSet):
     queryset = Press.objects.all()
     permission_classes = [BaseAccess]
 
+

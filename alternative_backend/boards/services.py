@@ -90,4 +90,3 @@ class BoardService:
 
     def get_board(self, barcode):
         return Board.objects.filter(barcode=barcode)[0]
-

@@ -22,3 +22,5 @@ alternative_backend/boards/migrations/
 alternative_backend/orders/migrations/
 alternative_backend/workers/migrations/
 alternative_backend/stations/migrations/
+alternative_backend/events/migrations/
+alternative_backend/presses/migrations/

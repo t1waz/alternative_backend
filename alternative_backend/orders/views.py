@@ -66,11 +66,10 @@ class SendedBoardRecordAPIView(APIView):
     def delete(self, request, format=None):
         try:
             sended_board = SendedBoard.objects.get(
-                board__barcode=request.data.get('board',0),
-                order=request.data.get('order',0))
+                board__barcode=request.data.get('board', 0),
+                order=request.data.get('order', 0))
             sended_board.delete()
             response = 'barcode removed from order'
         except:
             response = 'something wrong'
         return Response(response)
-

@@ -50,7 +50,7 @@ class NewBoardScanAPIView(APIView):
             new_board.save()
             return Response("added barcode: {}".format(new_board.data['barcode']))
         else:
-            return Response("barcode meta data not valid",status=400)
+            return Response("barcode meta data not valid", status=400)
 
 
 class BoardSecondCategoryAPIView(APIView):
@@ -72,6 +72,7 @@ class BoardSecondCategoryAPIView(APIView):
             return Response("added {}".format(request.data['barcode']))
         else:
             return Response("INCORRECT DATA", status=400)
+
 
 class ProductionAPIView(APIView):
     permission_classes = (BaseAccess,)
