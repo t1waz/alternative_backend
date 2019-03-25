@@ -6,7 +6,7 @@ from boards.models import BoardModel
 class PressSerializer(serializers.ModelSerializer):
     class Meta:
         model = Press
-        fields = ('id', 'name', 'mold')
+        fields = ('id', 'name', 'mold', 'press_time')
 
     mold = serializers.SlugRelatedField(many=False,
                                         queryset=BoardModel.objects.all(),
