@@ -4,6 +4,7 @@ from model_utils import FieldTracker
 
 class Press(models.Model):
     name = models.CharField(max_length=200)
+    press_time = models.IntegerField(default=7200)
     mold = models.ForeignKey('boards.boardmodel',
                              on_delete=models.CASCADE,
                              related_name='actual_mold')
