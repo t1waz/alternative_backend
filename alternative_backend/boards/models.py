@@ -35,6 +35,7 @@ class Board(models.Model):
     company = models.ForeignKey('BoardCompany',
                                 on_delete=models.CASCADE)
     second_category = models.BooleanField(default=False)
+    press_time = models.IntegerField(default=0)
 
     def __str__(self):
         return "{}".format(self.barcode)

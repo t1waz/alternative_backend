@@ -28,8 +28,9 @@ class BoardModelSerializer(serializers.ModelSerializer):
 class BoardSerializer(serializers.ModelSerializer):
     class Meta:
         model = Board
-        fields = ('barcode', 'model', 'company')
+        fields = ('barcode', 'model', 'company', 'press_time')
         write_only_fields = ('model', 'company')
+        read_only_fields = ('press_time',)
 
     def is_valid(self, raise_exception=False):
         try:
