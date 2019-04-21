@@ -2,7 +2,6 @@ from rest_framework.views import APIView
 from common.auth import BaseAccess
 from rest_framework.response import Response
 from .services import BoardService
-from .models import Board
 from .serializers import (
     BoardSerializer,
     BoardScanSerializer,

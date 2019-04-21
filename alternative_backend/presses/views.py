@@ -8,5 +8,3 @@ class PressViewSet(viewsets.ModelViewSet):
     serializer_class = PressSerializer
     queryset = Press.objects.all()
     permission_classes = [BaseAccess]
-
-
