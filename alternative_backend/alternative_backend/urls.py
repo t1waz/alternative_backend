@@ -16,7 +16,8 @@ from boards.views import (
     ProductionDetailAPIView,
     StockAPIView,
     StockDetailAPIView,
-    BoardSecondCategoryAPIView
+    BoardSecondCategoryAPIView,
+    BoardCompanyViewSet
 )
 from orders.views import (
     OrderViewSet,
@@ -30,6 +31,7 @@ router.register(r'workers', WorkerViewSet, basename='workers')
 router.register(r'orders', OrderViewSet, basename='orders')
 router.register(r'stations', StationViewSet, basename='stations')
 router.register(r'presses', PressViewSet, basename='presses')
+router.register(r'companies', BoardCompanyViewSet, basename='companies')
 
 
 urlpatterns = [

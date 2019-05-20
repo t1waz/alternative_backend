@@ -2,12 +2,20 @@ from rest_framework.views import APIView
 from common.auth import BaseAccess
 from rest_framework.response import Response
 from .services import BoardService
+from .models import BoardCompany
+from rest_framework import viewsets
 from .serializers import (
     BoardSerializer,
     BoardScanSerializer,
+    BoardCompanySerializer,
     BoardPresentationSerializer,
     BoardSecondCategorySerializer,
 )
+
+class BoardCompanyViewSet(viewsets.ModelViewSet):
+    serializer_class = BoardCompanySerializer
+    queryset = BoardCompany.objects.all()
+    permission_classes = [BaseAccess]
 
 
 class BoardScanAPIView(APIView):
