@@ -38,7 +38,8 @@ class BoardService:
         scans = BoardScan.objects.filter(barcode__company=company).select_related(
             'barcode', 'station').order_by('station_id')
         boards_count = {board.name: 0 for board in BoardModel.objects.filter(company=company_code)}
-        production = {station: boards_count for station in stations}
+        production = {station: boards_count for station in stations[:-1]}
+
         for i, station in enumerate(stations[:-1]):
             production[stations[i + 1]] = \
                 Counter([s.barcode.model.name for s in scans if s.station.name == station]) - \
