@@ -37,13 +37,17 @@ class BoardService:
         stations = [station.name for station in Station.objects.all()]
         scans = BoardScan.objects.filter(barcode__company=company).select_related(
             'barcode', 'station').order_by('station_id')
-        boards_count = {board.name: 0 for board in BoardModel.objects.filter(company=company_code)}
-        production = {station: boards_count for station in stations[1:]}
-
+        boards_model = [board.name for board in BoardModel.objects.filter(
+                        company__code=company_code)]
+        production = {}
         for i, station in enumerate(stations[:-1]):
             production[stations[i + 1]] = \
                 Counter([s.barcode.model.name for s in scans if s.station.name == station]) - \
                 Counter([s.barcode.model.name for s in scans if s.station.name == stations[i + 1]])
+            # adding zero values to nice data presentation. ELO
+            for model in boards_model:
+                if model not in production[stations[i + 1]].keys():
+                    production[stations[i + 1]][model] = 0                                          
 
         return production
 
