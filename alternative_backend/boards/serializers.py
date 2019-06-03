@@ -22,7 +22,7 @@ class BoardCompanySerializer(serializers.ModelSerializer):
 class BoardModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = BoardModel
-        fields = ('id', 'description', 'year', 'company')
+        fields = ('id', 'description', 'year', 'company', 'name')
 
 
 class BoardSerializer(serializers.ModelSerializer):
