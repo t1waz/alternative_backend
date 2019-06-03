@@ -18,13 +18,14 @@ from boards.views import (
     StockDetailAPIView,
     BoardSecondCategoryAPIView,
     BoardCompanyViewSet,
-    BoardModelViewSet
+    BoardModelViewSet,
 )
 from orders.views import (
     OrderViewSet,
     CompanyOrderInfoAPIView,
     CompanyOrderInfoDetailAPIView,
-    SendedBoardRecordAPIView
+    SendedBoardRecordAPIView,
+    ClientViewSet,
 )
 
 router = DefaultRouter()
@@ -34,6 +35,7 @@ router.register(r'stations', StationViewSet, basename='stations')
 router.register(r'presses', PressViewSet, basename='presses')
 router.register(r'companies', BoardCompanyViewSet, basename='companies')
 router.register(r'board_models', BoardModelViewSet, basename='boardmodels')
+router.register(r'clients', ClientViewSet, basename='clients')
 
 
 urlpatterns = [
