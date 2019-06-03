@@ -1,12 +1,17 @@
 from rest_framework import viewsets
-from .models import Order, SendedBoard
 from common.auth import BaseAccess
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .services import OrderService
+from .models import (
+    Order, 
+    SendedBoard,
+    Client
+)
 from .serializers import (
     OrderSerializer,
-    SendedBoardSerializer
+    SendedBoardSerializer,
+    ClientSerializer,
 )
 
 
@@ -17,6 +22,12 @@ class OrderViewSet(viewsets.ModelViewSet):
 
     def get_serializer_context(self):
         return {"boards": self.request.data.get('boards', [])}
+
+
+class ClientViewSet(viewsets.ModelViewSet):
+    serializer_class = ClientSerializer
+    queryset = Client.objects.all()
+    permission_classes = [BaseAccess]
 
 
 class CompanyOrderInfoAPIView(APIView):
