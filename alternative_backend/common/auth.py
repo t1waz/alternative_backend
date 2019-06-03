@@ -1,7 +1,7 @@
 from rest_framework import permissions
 
 
-ACCESS_KEY = "123dupachujpietaszekalternativelongboardspiotrekkurwa"
+ACCESS_KEY = "SECRET_KEY"
 
 
 class BaseAccess(permissions.BasePermission):
