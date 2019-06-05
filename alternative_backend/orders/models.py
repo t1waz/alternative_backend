@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Client(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     country = models.CharField(max_length=50)
     city = models.CharField(max_length=50)
     post_code = models.CharField(max_length=20)
