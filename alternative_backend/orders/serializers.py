@@ -89,3 +89,9 @@ class OrderSerializer(serializers.ModelSerializer):
                                                 order_records=self.context['boards'])
 
         return super().update(instance, validated_data)
+
+    def validate_boards_len(self, boards):
+        if len(boards) == 0:
+            raise AppException("no boards in order")
+
+        return boards
