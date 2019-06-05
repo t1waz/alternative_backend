@@ -67,6 +67,8 @@ class OrderSerializer(serializers.ModelSerializer):
         if len(self.context['boards']) == 0:
             raise AppException('no boards in order')
 
+        return data
+
     def order_boards(self, obj):
         ordered_boards = {}
         orders = OrderRecord.objects.filter(order=obj.id)
