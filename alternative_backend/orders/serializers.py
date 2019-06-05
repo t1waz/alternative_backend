@@ -63,6 +63,12 @@ class OrderSerializer(serializers.ModelSerializer):
     sended = serializers.SerializerMethodField('sended_boards')
     boards = serializers.SerializerMethodField('order_boards')
 
+    def validate(self, data):
+        if len(self.context['boards']) == 0:
+            raise AppException('no boards in order')
+
+        return data
+
     def order_boards(self, obj):
         ordered_boards = {}
         orders = OrderRecord.objects.filter(order=obj.id)
@@ -89,9 +95,3 @@ class OrderSerializer(serializers.ModelSerializer):
                                                 order_records=self.context['boards'])
 
         return super().update(instance, validated_data)
-
-    def validate_boards_len(self, boards):
-        if len(boards) == 0:
-            raise AppException("no boards in order")
-
-        return boards
