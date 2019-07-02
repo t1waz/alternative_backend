@@ -1,6 +1,9 @@
 # directory for project venv
 .venv
 
+# no coverage
+.coverage
+
 # develop database
 db.sqlite3
 

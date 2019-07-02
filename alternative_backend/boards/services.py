@@ -70,4 +70,7 @@ class BoardService:
         return {c.name: self.get_stock_for(c.code) for c in BoardCompany.objects.all()}
 
     def get_board(self, barcode):
-        return Board.objects.filter(barcode=barcode)[0]
+        try:
+            return Board.objects.filter(barcode=barcode)[0]
+        except IndexError:
+            return None

@@ -16,6 +16,7 @@ from .serializers import (
     BoardModelSerializer,
 )
 
+
 class BoardCompanyViewSet(viewsets.ModelViewSet):
     serializer_class = BoardCompanySerializer
     queryset = BoardCompany.objects.all()
@@ -51,7 +52,7 @@ class BoardScanAPIView(APIView):
             return Response("DUPLICATED/INCORRECT", status=400)
 
 
-class NewBoardScanAPIView(APIView):
+class NewBoardBarcodeAPIView(APIView):
     """
     request data structure: 
                             {
@@ -83,6 +84,8 @@ class BoardSecondCategoryAPIView(APIView):
 
     def post(self, request, format=None):
         board = BoardService().get_board(request.data['barcode'])
+        if not board:
+            return Response("INCORRECT DATA", status=400)
         new_second_board = BoardSecondCategorySerializer(board, data=request.data, )
         if new_second_board.is_valid():
             new_second_board.save()

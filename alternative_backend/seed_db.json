@@ -58,7 +58,7 @@
 				"model": 3,
 				"company":2,
 				"second_category": false }
-}, 
+},
 {	"model": "boards.board", 
 	"pk": 2, 
 	"fields": {	"barcode": 183002000002,

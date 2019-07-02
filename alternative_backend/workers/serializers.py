@@ -10,7 +10,7 @@ from .models import (
 class WorkerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Worker
-        fields = ('name', 'surname', 'username', 'barcode')
+        fields = ('id', 'name', 'surname', 'username', 'barcode')
         validators = [UniqueTogetherValidator(queryset=Worker.objects.all(),
                                               fields=('username', 'barcode'))]
 
@@ -18,7 +18,7 @@ class WorkerSerializer(serializers.ModelSerializer):
 class WorkerScanSerializer(serializers.ModelSerializer):
     class Meta:
         model = WorkerScan
-        fields = ('worker_barcode', 'week', 'day_name', 'year', 'month', 'seconds', 'started')
+        fields = ('id', 'worker_barcode', 'week', 'day_name', 'year', 'month', 'seconds', 'started')
 
     worker_barcode = serializers.SlugRelatedField(many=False,
                                                   queryset=Worker.objects.all(),
