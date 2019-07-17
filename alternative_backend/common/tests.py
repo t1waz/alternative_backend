@@ -3,7 +3,6 @@ from django.test import TestCase
 from unittest.mock import MagicMock
 from django.core import serializers
 from .auth import BaseAccess, ACCESS_KEY
-from .auth import ACCESS_KEY
 from rest_framework.test import APIRequestFactory
 
 
@@ -78,22 +77,21 @@ class ViewSetBaseTests:
         request = self.api.patch_request(self.endpoint, self.update_data)
         response = self.view(request, pk=1)
         updated_key = [key for key in self.update_data.keys()][0]
-        print(response.status_code)
         assert response.data[updated_key] == self.update_data[updated_key]
 
 
 class AuthTestTestCases(TestCase):
-	def setUp(self):
-		self.permission = BaseAccess()
+    def setUp(self):
+        self.permission = BaseAccess()
 
-	def test_base_access_with_valid_token(self):
-		request = MagicMock()
-		request.META = {"HTTP_ACCESS_TOKEN": ACCESS_KEY}
+    def test_base_access_with_valid_token(self):
+        request = MagicMock()
+        request.META = {"HTTP_ACCESS_TOKEN": ACCESS_KEY}
 
-		assert self.permission.has_permission(request, view=MagicMock())
+        assert self.permission.has_permission(request, view=MagicMock())
 
-	def test_base_access_with_not_valid_token(self):
-		request = MagicMock()
-		request.META = {"HTTP_ACCESS_TOKEN": "NOT LEGIT ACCESS TOKEN"}
+    def test_base_access_with_not_valid_token(self):
+        request = MagicMock()
+        request.META = {"HTTP_ACCESS_TOKEN": "NOT LEGIT ACCESS TOKEN"}
 
-		assert not self.permission.has_permission(request, view=MagicMock())
+        assert not self.permission.has_permission(request, view=MagicMock())

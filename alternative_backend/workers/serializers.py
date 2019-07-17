@@ -18,7 +18,8 @@ class WorkerSerializer(serializers.ModelSerializer):
 class WorkerScanSerializer(serializers.ModelSerializer):
     class Meta:
         model = WorkerScan
-        fields = ('id', 'worker_barcode', 'week', 'day_name', 'year', 'month', 'seconds', 'started')
+        fields = ('id', 'worker_barcode', 'week', 
+                  'day_name', 'year', 'month', 'seconds', 'started')
 
     worker_barcode = serializers.SlugRelatedField(many=False,
                                                   queryset=Worker.objects.all(),

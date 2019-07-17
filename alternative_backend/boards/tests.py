@@ -40,8 +40,8 @@ class BoardCompanyViewTests(ViewSetBaseTests, TestCase):
         self.serializer = BoardCompanySerializer
         self.model = BoardCompany
         self.new_data = {'name': 'Loaded',
-                       'code': 30,
-                       'description': 'one of the most popular companies'}
+                         'code': 30,
+                         'description': 'one of the most popular companies'}
         self.update_data = {'description': 'new description'}
         self.detail_view = BoardCompanyViewSet.as_view(actions=self.view_actions)
         self.view = BoardCompanyViewSet.as_view(actions=self.detail_view_actions)

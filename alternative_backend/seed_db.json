@@ -235,4 +235,10 @@
 	"fields": {	"order": 2, 
 				"board_model": 1, 
 				"quantity": 50 }
+},
+{	"model": "presses.press", 
+	"pk": 1, 
+	"fields": {	"name": "STARA STARA", 
+				"press_time": 7200, 
+				"mold": 1}
 }]
