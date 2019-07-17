@@ -21,7 +21,9 @@ class OrderViewSet(viewsets.ModelViewSet):
     permission_classes = [BaseAccess]
 
     def get_serializer_context(self):
-        return {"boards": self.request.data.get('boards', [])}
+        extra_content = {"boards": self.request.data.get('boards', {}),
+                         "request_method": self.request.method}
+        return extra_content
 
 
 class ClientViewSet(viewsets.ModelViewSet):

@@ -64,8 +64,10 @@ class OrderSerializer(serializers.ModelSerializer):
     boards = serializers.SerializerMethodField('order_boards')
 
     def validate(self, data):
-        if len(self.context['boards']) == 0:
-            raise AppException('no boards in order')
+        boards = self.context.get('boards', None)
+        if self.context.get('request_method') == 'POST':
+            if type(boards) is not dict:
+                raise AppException('invalid boards')
 
         return data
 
@@ -79,7 +81,11 @@ class OrderSerializer(serializers.ModelSerializer):
     def sended_boards(self, obj):
         sended_boards = SendedBoard.objects.filter(order=obj.id).values_list(
             'board__barcode', flat=True)
-        return sended_boards
+
+        if sended_boards: 
+            return sended_boards 
+        else: 
+            return None
 
     def create(self, validated_data):
         order = Order.objects.create(**validated_data)

@@ -2,11 +2,13 @@ import json
 import copy
 from django.test import TestCase
 from workers.models import Worker
-from common.auth import ACCESS_KEY
-from django.core import serializers
 from stations.models import Station
-from rest_framework.test import APIRequestFactory
 from alternative_backend.settings import BARCODE_LENGHT
+from common.tests import (
+    ViewSetBaseTests,
+    init_test_db,
+    TestAPI,
+)
 from .models import (
     Board,
     BoardModel,
@@ -32,139 +34,38 @@ from .serializers import (
 )
 
 
-def init_db():
-    f = open("seed_db.json", "r")
-    for deserialized_object in serializers.deserialize("json", f):
-        deserialized_object.save()
-
-
-class TestAPI:
-    def __init__(self):
-        self.factory = APIRequestFactory()
-
-    def get_request(self, endpoint):
-        return self.factory.get('{}'.format(endpoint),
-                                HTTP_ACCESS_TOKEN=ACCESS_KEY, CONTENT_TYPE='application/json')
-
-    def post_request(self, endpoint, data):
-        return self.factory.post('{}'.format(endpoint), data,
-                                 HTTP_ACCESS_TOKEN=ACCESS_KEY, CONTENT_TYPE='application/json')
-
-    def delete_request(self, endpoint):
-        return self.factory.delete('{}'.format(endpoint),
-                                   HTTP_ACCESS_TOKEN=ACCESS_KEY, CONTENT_TYPE='application/json')
-
-    def patch_request(self, endpoint, data):
-        return self.factory.patch('{}'.format(endpoint), data,
-                                  HTTP_ACCESS_TOKEN=ACCESS_KEY, CONTENT_TYPE='application/json')
-
-
-class BoardCompanyViewTests(TestCase):
+class BoardCompanyViewTests(ViewSetBaseTests, TestCase):
     def setUp(self):
         self.endpoint = 'companies/'
-        init_db()
-        self.api = TestAPI()
-        self.detail_view = BoardCompanyViewSet.as_view(actions={'get': 'retrieve'})
-        self.view = BoardCompanyViewSet.as_view(actions={'get': 'list',
-                                                         'post': 'create',
-                                                         'delete': 'destroy',
-                                                         'patch': 'partial_update'})
-
-    def test_get_list(self):
-        db_data = BoardCompanySerializer(BoardCompany.objects.all(), many=True)
-        request = self.api.get_request(self.endpoint)
-        response = self.view(request)
-        request_data = json.loads(json.dumps(response.data))
-
-        assert request_data == db_data.data
-
-    def test_get_detail(self):
-        db_company = BoardCompanySerializer(BoardCompany.objects.get(id=1))
-        request = self.api.get_request(self.endpoint)
-        response = self.detail_view(request, pk=1)
-        request_data = json.loads(json.dumps(response.data))
-
-        assert request_data == db_company.data
-
-    def test_post(self):
-        new_company = {'name': 'Loaded',
+        self.serializer = BoardCompanySerializer
+        self.model = BoardCompany
+        self.new_data = {'name': 'Loaded',
                        'code': 30,
                        'description': 'one of the most popular companies'}
-        request = self.api.post_request(self.endpoint, new_company)
-        response = self.view(request)
-
-        assert response.status_code == 201
-
-    def test_delete(self):
-        request = self.api.delete_request(self.endpoint)
-        response = self.view(request, pk=1)
-
-        assert response.status_code == 204
-
-    def test_update(self):
-        new_data = {'description': 'new description'}
-        request = self.api.patch_request(self.endpoint, new_data)
-        response = self.view(request, pk=1)
-
-        assert response.data['description'] == new_data['description']
+        self.update_data = {'description': 'new description'}
+        self.detail_view = BoardCompanyViewSet.as_view(actions=self.view_actions)
+        self.view = BoardCompanyViewSet.as_view(actions=self.detail_view_actions)
 
 
-class BoardModelViewTests(TestCase):
+class BoardModelViewTests(ViewSetBaseTests, TestCase):
     def setUp(self):
         self.endpoint = 'board_models/'
-        init_db()
-        self.api = TestAPI()
-        self.detail_view = BoardModelViewSet.as_view(actions={'get': 'retrieve'})
-        self.view = BoardModelViewSet.as_view(actions={'get': 'list',
-                                                       'post': 'create',
-                                                       'delete': 'destroy',
-                                                       'patch': 'partial_update'})
-
-    def test_get_list(self):
-        db_data = BoardModelSerializer(BoardModel.objects.all(), many=True)
-        request = self.api.get_request(self.endpoint)
-        response = self.view(request)
-        request_data = json.loads(json.dumps(response.data))
-
-        assert request_data == db_data.data
-
-    def test_get_detail(self):
-        db_company = BoardModelSerializer(BoardModel.objects.get(id=1))
-        request = self.api.get_request(self.endpoint)
-        response = self.detail_view(request, pk=1)
-        request_data = json.loads(json.dumps(response.data))
-
-        assert request_data == db_company.data
-
-    def test_post(self):
-        new_board_model = {'name': 'Erget',
-                           'description': 'one of the most popular boards',
-                           'year': 2018,
-                           'code': 30,
-                           'company': BoardCompany.objects.get(id=1).id}
-        request = self.api.post_request(self.endpoint, new_board_model)
-        response = self.view(request)
-
-        assert response.status_code == 201
-
-    def test_delete(self):
-        request = self.api.delete_request(self.endpoint)
-        response = self.view(request, pk=1)
-
-        assert response.status_code == 204
-
-    def test_update(self):
-        new_data = {'description': 'new description'}
-        request = self.api.patch_request(self.endpoint, new_data)
-        response = self.view(request, pk=1)
-
-        assert response.data['description'] == new_data['description']
+        self.serializer = BoardModelSerializer
+        self.model = BoardModel
+        self.new_data = {'name': 'Erget',
+                         'description': 'one of the most popular boards',
+                         'year': 2018,
+                         'code': 30,
+                         'company': self.model.objects.get(id=1).id}
+        self.update_data = {'description': 'new description'}
+        self.detail_view = BoardModelViewSet.as_view(actions=self.view_actions)
+        self.view = BoardModelViewSet.as_view(actions=self.detail_view_actions)
 
 
 class BoardScanAPIViewTests(TestCase):
     def setUp(self):
         self.endpoint = 'add_scan/'
-        init_db()
+        init_test_db()
         self.api = TestAPI()
         self.view = BoardScanAPIView.as_view()
         self.valid_message = {"barcode": Board.objects.get(id=3).barcode,
@@ -220,7 +121,7 @@ class BoardScanAPIViewTests(TestCase):
 class NewBoardBarcodeAPIViewTests(TestCase):
     def setUp(self):
         self.endpoint = 'add_barcode'
-        init_db()
+        init_test_db()
         self.api = TestAPI()
         self.view = NewBoardBarcodeAPIView.as_view()
         self.valid_message = {'barcode': 181002123456}
@@ -263,7 +164,7 @@ class NewBoardBarcodeAPIViewTests(TestCase):
 class BoardSecondCategoryAPIViewTests(TestCase):
     def setUp(self):
         self.endpoint = 'add_second_category/'
-        init_db()
+        init_test_db()
         self.api = TestAPI()
         self.view = BoardSecondCategoryAPIView.as_view()
         self.valid_message = {'barcode': 181002000001,
@@ -295,7 +196,7 @@ class BoardSecondCategoryAPIViewTests(TestCase):
 class ProductionAPIViewTests(TestCase):
     def setUp(self):
         self.endpoint = 'production/'
-        init_db()
+        init_test_db()
         self.api = TestAPI()
         self.view = ProductionAPIView.as_view()
 
@@ -327,7 +228,7 @@ class ProductionAPIViewTests(TestCase):
 class ProductionDetailAPIViewTests(TestCase):
     def setUp(self):
         self.endpoint = 'production'
-        init_db()
+        init_test_db()
         self.api = TestAPI()
         self.view = ProductionDetailAPIView.as_view()
 
@@ -350,7 +251,7 @@ class ProductionDetailAPIViewTests(TestCase):
 class StockAPIViewTests(TestCase):
     def setUp(self):
         self.endpoint = 'stock/'
-        init_db()
+        init_test_db()
         self.api = TestAPI()
         self.view = StockAPIView.as_view()
 
@@ -373,7 +274,7 @@ class StockAPIViewTests(TestCase):
 class StockDetailAPIViewTests(TestCase):
     def setUp(self):
         self.endpoint = 'stock/'
-        init_db()
+        init_test_db()
         self.api = TestAPI()
         self.view = StockDetailAPIView.as_view()
 
@@ -392,7 +293,7 @@ class StockDetailAPIViewTests(TestCase):
 class BarcodeInfoAPIViewTests(TestCase):
     def setUp(self):
         self.endpoint = 'boards/'
-        init_db()
+        init_test_db()
         self.api = TestAPI()
         self.view = BarcodeInfoAPIView.as_view()
 
@@ -409,7 +310,7 @@ class BarcodeInfoAPIViewTests(TestCase):
 class BarcodeInfoDetailAPIViewTests(TestCase):
     def setUp(self):
         self.endpoint = 'boards/'
-        init_db()
+        init_test_db()
         self.api = TestAPI()
         self.view = BarcodeInfoDetailAPIView.as_view()
 
