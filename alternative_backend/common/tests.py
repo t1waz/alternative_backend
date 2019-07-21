@@ -39,6 +39,7 @@ class ViewSetBaseTests:
         super(ViewSetBaseTests, self).__init__(*args, **kwargs)
         init_test_db()
         self.api = TestAPI()
+        self.pk_key = 1
         self.view_actions = {'get': 'retrieve'}
         self.detail_view_actions = {'get': 'list',
                                     'post': 'create',
@@ -54,9 +55,9 @@ class ViewSetBaseTests:
         assert request_data == db_data.data
 
     def test_get_detail(self):
-        db_company = self.serializer(self.model.objects.get(id=1))
+        db_company = self.serializer(self.model.objects.get(pk=self.pk_key))
         request = self.api.get_request(self.endpoint)
-        response = self.detail_view(request, pk=1)
+        response = self.detail_view(request, pk=self.pk_key)
         request_data = json.loads(json.dumps(response.data))
 
         assert request_data == db_company.data
@@ -69,13 +70,13 @@ class ViewSetBaseTests:
 
     def test_delete(self):
         request = self.api.delete_request(self.endpoint)
-        response = self.view(request, pk=1)
+        response = self.view(request, pk=self.pk_key)
 
         assert response.status_code == 204
 
     def test_update(self):
         request = self.api.patch_request(self.endpoint, self.update_data)
-        response = self.view(request, pk=1)
+        response = self.view(request, pk=self.pk_key)
         updated_key = [key for key in self.update_data.keys()][0]
         assert response.data[updated_key] == self.update_data[updated_key]
 

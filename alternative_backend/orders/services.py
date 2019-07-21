@@ -35,7 +35,9 @@ class OrderService:
         companies_list = list()
         for company in BoardCompany.objects.all():
             orders = self.return_order_info(company_code=company.code)
-            if not orders[list(orders.keys())[0]] == {}:
-                companies_list.append({company.name: orders})
+            companies_list.append({company.name: orders})
 
         return companies_list
+
+    def can_be_added_to_order(self, barcode):
+        pass

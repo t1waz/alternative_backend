@@ -1,12 +1,12 @@
-from django.test import TestCase
 from .models import Press
+from .views import PressViewSet
+from django.test import TestCase
+from .serializers import PressSerializer
 from common.tests import (
     ViewSetBaseTests,
     TestAPI,
     init_test_db,
 )
-from .serializers import PressSerializer
-from .views import PressViewSet
 
 
 class PressViewSetTests(ViewSetBaseTests, TestCase):

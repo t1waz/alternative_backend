@@ -217,7 +217,13 @@
 	"fields": {	"client": 2, 
 				"timestamp": "2019-01-05T23:00:23.029Z", 
 				"completed": false }
-}, 
+},
+{	"model": "orders.order", 
+	"pk": 3, 
+	"fields": {	"client": 2, 
+				"timestamp": "2019-01-05T23:00:23.029Z", 
+				"completed": false }
+},
 {	"model": "orders.orderrecord", 
 	"pk": 1, 
 	"fields": {	"order": 1, 
@@ -235,6 +241,24 @@
 	"fields": {	"order": 2, 
 				"board_model": 1, 
 				"quantity": 50 }
+},
+{	"model": "orders.orderrecord", 
+	"pk": 4, 
+	"fields": {	"order": 3, 
+				"board_model": 3, 
+				"quantity": 28 }
+},
+{	"model": "orders.orderrecord", 
+	"pk": 5, 
+	"fields": {	"order": 3, 
+				"board_model": 3, 
+				"quantity": 12 }
+},
+{	"model": "orders.orderrecord", 
+	"pk": 6, 
+	"fields": {	"order": 3, 
+				"board_model": 4, 
+				"quantity": 5 }
 },
 {	"model": "presses.press", 
 	"pk": 1, 

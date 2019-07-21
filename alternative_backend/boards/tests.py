@@ -1,4 +1,3 @@
-import json
 import copy
 from django.test import TestCase
 from workers.models import Worker
@@ -227,7 +226,7 @@ class ProductionAPIViewTests(TestCase):
 
 class ProductionDetailAPIViewTests(TestCase):
     def setUp(self):
-        self.endpoint = 'production'
+        self.endpoint = 'production/'
         init_test_db()
         self.api = TestAPI()
         self.view = ProductionDetailAPIView.as_view()
@@ -244,7 +243,7 @@ class ProductionDetailAPIViewTests(TestCase):
         request = self.api.get_request(self.endpoint)
         response = self.view(request, 1)
 
-        assert response.status_code == 200 
+        assert response.status_code == 200
         assert response.data == valid_response
 
 
