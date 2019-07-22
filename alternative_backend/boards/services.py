@@ -34,7 +34,7 @@ class BoardService:
 
     def get_production_for(self, company_code):
         company = BoardCompany.objects.get(code=company_code)
-        stations = [station['name'] for station in Station.objects.all().values('name')]
+        stations = list(Station.objects.all().values_list('name', flat=True))
         scans = BoardScan.objects.filter(barcode__company=company).select_related(
             'barcode', 'station').order_by('station_id')
         boards_model = [board['name'] for board in BoardModel.objects.filter(

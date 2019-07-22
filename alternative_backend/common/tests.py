@@ -1,4 +1,5 @@
 import json
+from django.http import JsonResponse
 from django.test import TestCase
 from unittest.mock import MagicMock
 from django.core import serializers
@@ -27,8 +28,11 @@ class TestAPI:
     def post_request(self, endpoint, data):
         return self.factory.post('{}'.format(endpoint), data, **self.headers)
 
-    def delete_request(self, endpoint):
-        return self.factory.delete('{}'.format(endpoint), **self.headers)
+    def delete_request(self, endpoint, data=None):
+        if not data:
+            return self.factory.delete('{}'.format(endpoint), **self.headers)
+        else:
+            return self.factory.delete('{}'.format(endpoint), data, **self.headers)
 
     def patch_request(self, endpoint, data):
         return self.factory.patch('{}'.format(endpoint), data, **self.headers)
@@ -50,7 +54,8 @@ class ViewSetBaseTests:
         db_data = self.serializer(self.model.objects.all(), many=True)
         request = self.api.get_request(self.endpoint)
         response = self.view(request)
-        request_data = json.loads(json.dumps(response.data))
+        request_raw_data = JsonResponse(response.data, safe=False)
+        request_data = json.loads(request_raw_data.content)
 
         assert request_data == db_data.data
 
@@ -58,7 +63,8 @@ class ViewSetBaseTests:
         db_company = self.serializer(self.model.objects.get(pk=self.pk_key))
         request = self.api.get_request(self.endpoint)
         response = self.detail_view(request, pk=self.pk_key)
-        request_data = json.loads(json.dumps(response.data))
+        request_raw_data = JsonResponse(response.data, safe=False)
+        request_data = json.loads(request_raw_data.content)
 
         assert request_data == db_company.data
 

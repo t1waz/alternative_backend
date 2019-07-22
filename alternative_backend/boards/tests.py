@@ -257,7 +257,7 @@ class StockAPIViewTests(TestCase):
     def test_get_data(self):
         valid_response = {
             'Alternative Longboards': {
-                'Fantail': 0, 
+                'Fantail': 1,
                 'Erget': 0}, 
             'Bastl Boards': {
                 'Discofox': 1, 

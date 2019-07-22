@@ -60,7 +60,7 @@ class CompanyOrderInfoAPIViewTests(TestCase):
         valid_response = [
             {
                 'Alternative Longboards': {
-                    'Fantail': 62, 
+                    'Fantail': 61, 
                     'Erget': 14
                 }
             },
@@ -87,7 +87,7 @@ class CompanyOrderInfoDetailAPIViewTests(TestCase):
 
     def test_get_data(self):
         valid_response = {
-            "Fantail": 62,
+            "Fantail": 61,
             "Erget": 14
         }
 
@@ -106,25 +106,82 @@ class SendedBoardRecordAPIViewTests(TestCase):
         self.view = SendedBoardRecordAPIView.as_view()
 
     def test_post_valid_board_to_valid_order(self):
-        pass
+        valid_message = { 
+            "board": 188001000007,
+            "order": 1
+        }
+        request = self.api.post_request(self.endpoint, valid_message)
+        response = self.view(request)
+
+        assert response.status_code == 200
 
     def test_post_invalid_board_to_valid_order(self):
-        pass
+        message = { 
+            "board": 188001000008,
+            "order": 1
+        }
+        request = self.api.post_request(self.endpoint, message)
+        response = self.view(request)
+
+        assert response.status_code == 400
 
     def test_post_invalid_board_to_invalid_order(self):
-        pass
+        message = { 
+            "board": 111,
+            "order": 66
+        }
+        request = self.api.post_request(self.endpoint, message)
+        response = self.view(request)
+
+        assert response.status_code == 400
 
     def test_post_sended_board_to_valid_order(self):
-        pass
+        message = {
+            "board": 188001000010,
+            "order": 1
+        }
+        request = self.api.post_request(self.endpoint, message)
+        response = self.view(request)
+
+        assert response.status_code == 400
+
 
     def test_post_sended_board_to_invalid_order(self):
-        pass
+        message = {
+            "board": 188001000020,
+            "order": 3
+        }
+        request = self.api.post_request(self.endpoint, message)
+        response = self.view(request)
+
+        assert response.status_code == 400
 
     def test_delete_valid_board_from_valid_order(self):
-        pass
+        message = {
+            "board": 188001000010,
+            "order": 1
+        }
+        request = self.api.delete_request(self.endpoint, message)
+        response = self.view(request)
+        print(response.data)
+        assert response.status_code == 200
 
     def test_delete_invalid_board_from_valid_order(self):
-        pass
+        message = {
+            "board": 1111,
+            "order": 1
+        }
+        request = self.api.delete_request(self.endpoint, message)
+        response = self.view(request)
+
+        assert response.status_code == 400
 
     def test_delete_invalid_board_from_invalid_order(self):
-        pass
+        message = {
+            "board": 1111,
+            "order": 66
+        }
+        request = self.api.delete_request(self.endpoint, message)
+        response = self.view(request)
+
+        assert response.status_code == 400
