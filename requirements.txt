@@ -1,7 +1,10 @@
-djangorestframework==3.9.0
+djangorestframework>=3.9.0
 django>=2.1.4
 flake8==3.6.0
 pyflakes==2.0.0
 setuptools==39.0.1
 django-model-utils==3.1.2
 flake8-per-file-ignores==0.8.1
+django-nose==1.4.6
+coverage==4.5.3
+django-cors-headers==3.0.2

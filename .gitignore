@@ -1,6 +1,9 @@
 # directory for project venv
 .venv
 
+# no coverage
+.coverage
+
 # develop database
 db.sqlite3
 
@@ -16,11 +19,3 @@ __pycache__/
 # Django stuff:
 *.log
 local_settings.py
-
-# no migrations:
-alternative_backend/boards/migrations/
-alternative_backend/orders/migrations/
-alternative_backend/workers/migrations/
-alternative_backend/stations/migrations/
-alternative_backend/events/migrations/
-alternative_backend/presses/migrations/

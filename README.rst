@@ -20,7 +20,7 @@ Deploy project:
     python manage.py migrate
 
 Load fixtures:
-	python manage.py loaddata utils/dump.json
+	python manage.py loaddata seed_db.json
 
 Run project:
 	python manage.py runserver

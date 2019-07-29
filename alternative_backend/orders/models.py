@@ -22,9 +22,9 @@ class ActiveOrderManager(models.Manager):
 
 
 class Order(models.Model):
+    timestamp = models.DateTimeField(auto_now_add=True)
     client = models.ForeignKey('Client',
                                on_delete=models.CASCADE)
-    timestamp = models.DateTimeField(auto_now_add=True)
     completed = models.BooleanField(default=False,
                                     blank=True)
 

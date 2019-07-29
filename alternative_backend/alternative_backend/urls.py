@@ -11,7 +11,7 @@ from boards.views import (
     BoardScanAPIView,
     ProductionAPIView,
     BarcodeInfoDetailAPIView,
-    NewBoardScanAPIView,
+    NewBoardBarcodeAPIView,
     BarcodeInfoAPIView,
     ProductionDetailAPIView,
     StockAPIView,
@@ -40,7 +40,7 @@ router.register(r'clients', ClientViewSet, basename='clients')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path(r'add_barcode/', NewBoardScanAPIView.as_view()),
+    path(r'add_barcode/', NewBoardBarcodeAPIView.as_view()),
     path(r'add_scan/', BoardScanAPIView.as_view()),
     path(r'add_worker_scan/', NewWorkerScanAPIView.as_view()),
     path(r'add_sended_board/', SendedBoardRecordAPIView.as_view()),

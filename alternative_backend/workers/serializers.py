@@ -18,11 +18,8 @@ class WorkerSerializer(serializers.ModelSerializer):
 class WorkerScanSerializer(serializers.ModelSerializer):
     class Meta:
         model = WorkerScan
-        fields = ('worker_barcode', 'week', 'day_name', 'year', 'month', 'seconds', 'started')
-
-    worker_barcode = serializers.SlugRelatedField(many=False,
-                                                  queryset=Worker.objects.all(),
-                                                  slug_field='username')
+        fields = ('id', 'worker_barcode', 'week', 
+                  'day_name', 'year', 'month', 'seconds', 'started')
 
     def is_valid(self, raise_exception=False):
         now = datetime.datetime.now()

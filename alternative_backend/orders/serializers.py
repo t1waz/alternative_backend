@@ -3,7 +3,6 @@ from .services import OrderService
 from alternative_backend.exceptions import AppException
 from boards.models import (
     Board,
-    BoardModel
 )
 from .models import (
     Client,
@@ -35,19 +34,42 @@ class SendedBoardSerializer(serializers.ModelSerializer):
                                          slug_field='barcode')
 
     def is_valid(self, raise_exception=False):
-        try:
-            board_model = BoardModel.objects.get(code=int(str(self.initial_data['board'])[2:4]))
-            order_qty = OrderRecord.objects.get(order=self.initial_data['order'],
-                                                board_model=board_model).quantity
-        except:
-            raise AppException("CANNOT ADD")
-        sended_qty = SendedBoard.objects.filter(order=self.initial_data['order'],
-                                                board__model=board_model).count()
-        ifsend = SendedBoard.objects.filter(board__barcode=self.initial_data['board']).exists()
-        if sended_qty >= order_qty:
-            raise AppException("FULL")
-        if ifsend:
+        barcode = int(self.initial_data['board'])
+        order_id = int(self.initial_data['order'])
+
+        if not OrderService().board_exist(barcode=barcode):
+            raise AppException("WRONG BARCODE")
+        if OrderService().already_sended(barcode=barcode):
             raise AppException("ALREADY SENDED")
+        if not OrderService().valid_order(barcode=barcode,
+                                          order_id=order_id):
+            raise AppException("WRONG ORDER")
+        if not OrderService().valid_order_quantity(barcode=barcode,
+                                                   order_id=order_id):
+            raise AppException("ORDER FULL")
+
+        return super().is_valid(raise_exception=False)
+
+
+class DeleteSendedSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SendedBoard
+        fields = ('id', 'board', 'order')
+
+    board = serializers.SlugRelatedField(many=False,
+                                     queryset=Board.objects.all(),
+                                     slug_field='barcode')
+
+    def is_valid(self, raise_exception=False):
+        barcode = int(self.initial_data['board'])
+        order_id = int(self.initial_data['order'])
+
+        if not OrderService().already_sended(barcode=barcode):
+            raise AppException("WRONG BARCODE")
+
+        if not OrderService().valid_order(barcode=barcode,
+                                          order_id=order_id):
+            raise AppException("WRONG ORDER")
 
         return super().is_valid(raise_exception=False)
 
@@ -64,8 +86,10 @@ class OrderSerializer(serializers.ModelSerializer):
     boards = serializers.SerializerMethodField('order_boards')
 
     def validate(self, data):
-        if len(self.context['boards']) == 0:
-            raise AppException('no boards in order')
+        boards = self.context.get('boards', None)
+        if self.context.get('request_method') == 'POST':
+            if type(boards) is not dict:
+                raise AppException('invalid boards')
 
         return data
 
@@ -77,9 +101,13 @@ class OrderSerializer(serializers.ModelSerializer):
         return ordered_boards
 
     def sended_boards(self, obj):
-        sended_boards = SendedBoard.objects.filter(order=obj.id).values_list(
-            'board__barcode', flat=True)
-        return sended_boards
+        sended_boards = list(SendedBoard.objects.filter(order=obj.id).values_list(
+            'board__barcode', flat=True))
+
+        if sended_boards: 
+            return sended_boards 
+        else: 
+            return None
 
     def create(self, validated_data):
         order = Order.objects.create(**validated_data)

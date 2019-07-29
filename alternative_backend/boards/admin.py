@@ -6,6 +6,7 @@ from .models import (
     BoardScan
 )
 
+
 admin.site.register(BoardCompany)
 admin.site.register(BoardModel)
 admin.site.register(Board)

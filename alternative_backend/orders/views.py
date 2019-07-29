@@ -2,16 +2,17 @@ from rest_framework import viewsets
 from common.auth import BaseAccess
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from alternative_backend.exceptions import AppException
 from .services import OrderService
 from .models import (
     Order, 
-    SendedBoard,
     Client
 )
 from .serializers import (
     OrderSerializer,
     SendedBoardSerializer,
     ClientSerializer,
+    DeleteSendedSerializer,
 )
 
 
@@ -21,7 +22,9 @@ class OrderViewSet(viewsets.ModelViewSet):
     permission_classes = [BaseAccess]
 
     def get_serializer_context(self):
-        return {"boards": self.request.data.get('boards', [])}
+        extra_content = {"boards": self.request.data.get('boards', {}),
+                         "request_method": self.request.method}
+        return extra_content
 
 
 class ClientViewSet(viewsets.ModelViewSet):
@@ -61,11 +64,7 @@ class SendedBoardRecordAPIView(APIView):
         new_send_board = SendedBoardSerializer(data=request.data)
         if new_send_board.is_valid():
             new_send_board.save()
-            response = "added sendedboard"
-        else:
-            response = "scan data not valid"
-
-        return Response(response)
+            return Response('added sendedboard')
     """
     request data structure: 
                             {
@@ -75,12 +74,12 @@ class SendedBoardRecordAPIView(APIView):
     comment key is not required
     """
     def delete(self, request, format=None):
-        try:
-            sended_board = SendedBoard.objects.get(
-                board__barcode=request.data.get('board', 0),
-                order=request.data.get('order', 0))
-            sended_board.delete()
-            response = 'barcode removed from order'
-        except:
-            response = 'something wrong'
-        return Response(response)
+        sended_board = DeleteSendedSerializer(data=request.data)
+        if sended_board.is_valid():
+            barcode = sended_board.validated_data['board'].barcode
+            order_id = sended_board.validated_data['order'].id
+            if OrderService().remove_order_record(barcode=barcode,
+                                                  order_id=order_id):
+                return Response('barcode removed from order')
+            else:
+                return AppException('INTERNAL ERROR')

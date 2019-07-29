@@ -22,13 +22,13 @@ class BoardCompanySerializer(serializers.ModelSerializer):
 class BoardModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = BoardModel
-        fields = ('id', 'description', 'year', 'company', 'name')
+        fields = ('id', 'description', 'year', 'company', 'name', 'code')
 
 
 class BoardSerializer(serializers.ModelSerializer):
     class Meta:
         model = Board
-        fields = ('barcode', 'model', 'company', 'press_time')
+        fields = ('id', 'barcode', 'model', 'company', 'press_time')
         write_only_fields = ('model', 'company')
         read_only_fields = ('press_time',)
 
@@ -42,8 +42,13 @@ class BoardSerializer(serializers.ModelSerializer):
             company_id = BoardCompany.objects.get(code=company_code).id
         except:
             return False
-        self.initial_data.update({'model': model_id})
-        self.initial_data.update({'company': company_id})
+        new_initial_data = self.initial_data.copy()                     # TODO check if is legit
+        new_initial_data.update({'model': model_id})
+        new_initial_data.update({'company': company_id})
+        self.initial_data = new_initial_data
+
+        # self.initial_data.update({'model': model_id})                 # OLD ONE
+        # self.initial_data.update({'company': company_id})
 
         return super().is_valid(raise_exception=True)
 

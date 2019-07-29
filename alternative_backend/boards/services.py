@@ -34,11 +34,11 @@ class BoardService:
 
     def get_production_for(self, company_code):
         company = BoardCompany.objects.get(code=company_code)
-        stations = [station.name for station in Station.objects.all()]
+        stations = list(Station.objects.all().values_list('name', flat=True))
         scans = BoardScan.objects.filter(barcode__company=company).select_related(
             'barcode', 'station').order_by('station_id')
-        boards_model = [board.name for board in BoardModel.objects.filter(
-                        company__code=company_code)]
+        boards_model = [board['name'] for board in BoardModel.objects.filter(
+                        company__code=company_code).values('name')]
         production = {}
         for i, station in enumerate(stations[:-1]):
             production[stations[i + 1]] = \
@@ -56,7 +56,8 @@ class BoardService:
 
     def get_stock_for(self, company_code):
         stock_dict = dict()
-        for model in [m.name for m in BoardModel.objects.filter(company=company_code)]:
+        models = BoardModel.objects.filter(company=company_code).values('name')
+        for model in [m['name'] for m in models]:
             finisied = BoardScan.objects.filter(station=Station.objects.latest('id').id,
                                                 barcode__company__code=company_code,
                                                 barcode__model__name=model).count() or 0
@@ -70,4 +71,7 @@ class BoardService:
         return {c.name: self.get_stock_for(c.code) for c in BoardCompany.objects.all()}
 
     def get_board(self, barcode):
-        return Board.objects.filter(barcode=barcode)[0]
+        try:
+            return Board.objects.filter(barcode=barcode)[0]
+        except IndexError:
+            return None
