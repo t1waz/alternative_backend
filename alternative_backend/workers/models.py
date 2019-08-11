@@ -4,8 +4,8 @@ from django.db import models
 class Worker(models.Model):
     username = models.CharField(max_length=30,
                                 unique=True)
-    barcode = models.IntegerField(primary_key=True,
-                                  unique=True)
+    barcode = models.BigIntegerField(primary_key=True,
+                                     unique=True)
 
     @property
     def name(self):
