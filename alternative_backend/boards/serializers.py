@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 from alternative_backend.exceptions import AppException
-from alternative_backend.settings import BARCODE_LENGHT
+from django.conf import settings
 from workers.models import Worker
 from stations.models import Station
 from orders.models import SendedBoard
@@ -53,7 +53,7 @@ class BoardSerializer(serializers.ModelSerializer):
         return super().is_valid(raise_exception=True)
 
     def validate_barcode(self, barcode):
-        if not len(str(barcode)) == BARCODE_LENGHT:
+        if not len(str(barcode)) == settings.BARCODE_LENGHT:
             raise AppException("barcode number not valid")
         board_code = int(str(barcode)[2:4])
         company_code = int(str(barcode)[4:6])

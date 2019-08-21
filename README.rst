@@ -6,76 +6,41 @@ App purpose's to serve backend service for Alternative Longboards company.
 How to setup
 ------------
 
-Install project venv:
-	python3.6 -m venv .venv
+Run commands from docker-compose.yml dir:
+	$ chmod +x scripts/build.sh
 
-Activate venv env:	
-	source .venv/bin/activate
+	$ chmod +x scripts/load_fixtures.sh
 
-Install packages:
-    pip install -r requirements.txt
+	$ chmod +x scripts/makemigrations.sh
 
-Deploy project:
-    python manage.py makemigrations
-    python manage.py migrate
+	$ chmod +x scripts/runserver.sh
 
-Load fixtures:
-	python manage.py loaddata seed_db.json
+	$ chmod +x scripts/stopserver.sh
 
-Run project:
-	python manage.py runserver
+	$ chmod +x scripts/tests.sh
 
+Setup project:
+	$ .scripts/makemigrations.sh
 
-DEPLOY
-------
+	$ .scripts/load_fixtures.sh
 
-Create service
-	$ sudo nano /etc/systemd/system/<app_name>.service
+Usage
+-----
 
-	[Unit]
+Build dockers (use in pip packages changes, or deploy itself):
+	$ ./scripts/build.sh
 
-	Description=gunicorn daemon for <app_name>
-	After=network.target
-	
-	[Service]
+Load fixtures from alternative_backend/seed_db.json:
+	$ ./scripts/load_fixtures.sh
 
-	WorkingDirectory=<path_to_app_manage.py>
-	ExecStart=<path_to_app_venv>/bin/gunicorn --workers 3 --bind unix:/tmp/<app_name>.sock <path_to_folder_with_app_wsgi>.wsgi:application
+Easy make migrations:
+	$ ./scripts/makemigrations.sh
 
-	[Install]
+Run containers and project in develop stage:
+	$ ./scripts/runserver.sh
 
-	WantedBy=multi-user.target
+Stop containers and project in develop stage:
+	$ ./scripts/stopserver.sh
 
-Run service
-	sudo systemctl start <app_name>
-	sudo systemctl daemon-reload
-	sudo systemctl status <app_name>
-	sudo systemctl enable <app_name>
-	sudo systemctl status <app_name>
-
-Create nginx config
-	$ nano /etc/nginx/sites-available/<app_name>
-
-	server {
-	    listen <port>;
-	    server_name 0.0.0.0;
-	
-	    location = /favicon.ico { access_log off; log_not_found off; }
-
-	    location /static/ {
-	            root <app_static_folder_best_to_store_in_tmp>;
-	    }
-
-	    location / {
-	            proxy_set_header Host $http_host;
-	            proxy_set_header X-Real-IP $remote_addr;
-	            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-	            proxy_set_header X-Forwarded-Proto $scheme;
-	            include proxy_params;
-            proxy_pass http://unix:/tmp/<app_name>.sock;
-	    }
-	}
-
-	$ sudo ln -s /etc/nginx/sites-available/<app_name>  /etc/nginx/sites-enabled/
-	$ sudo nginx -t
-	$ sudo service nginx restart
+Run tests:
+	$ ./scripts/tests.sh

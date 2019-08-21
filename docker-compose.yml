@@ -1,0 +1,37 @@
+  version: '3'  
+
+  volumes:
+    db_data:
+    static:
+
+  services:
+    web:
+      build:
+        context: .
+        dockerfile: compose/backend/Dockerfile
+      environment:
+        STATIC_DIR: /
+      command: bash /manage/run.sh
+      volumes:
+        - ./alternative_backend:/app
+        - static:/static
+      depends_on:
+        - db
+    db:
+      image: postgres:latest
+      volumes:
+        - db_data:/var/lib/postgres/data/
+      environment:
+        POSTGRES_PASSWORD: not_very_secret_password
+    nginx:
+      build: 
+        context: .
+        dockerfile: compose/nginx/Dockerfile
+      volumes:
+        - static:/var/local/alternative_backend/static
+      ports:
+        -   80:80
+      depends_on:
+        - web
+
+

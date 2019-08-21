@@ -4,13 +4,12 @@ from django.test import TestCase
 from unittest.mock import MagicMock
 from django.core import serializers
 from .auth import BaseAccess, ACCESS_KEY
+from django.core.management import call_command
 from rest_framework.test import APIRequestFactory
 
 
 def init_test_db():
-    f = open("seed_db.json", "r")
-    for deserialized_object in serializers.deserialize("json", f):
-        deserialized_object.save()
+    call_command('loaddata', 'seed_db.json', verbosity=0)
 
 
 class TestAPI:

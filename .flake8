@@ -1,7 +1,7 @@
 [flake8]
 # W191 - I want my project to look nice in my personal visual taste
-ignore = W191, E722, W291
-max-line-length = 99
+ignore = W191, E722, W291, E126, E128
+max-line-length = 105
 per-file-ignores = 
     workers/migrations/*: E501
     presses/migrations/*: E501

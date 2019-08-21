@@ -145,7 +145,6 @@ class SendedBoardRecordAPIViewTests(TestCase):
 
         assert response.status_code == 400
 
-
     def test_post_sended_board_to_invalid_order(self):
         message = {
             "board": 188001000020,

@@ -2,7 +2,7 @@ import copy
 from django.test import TestCase
 from workers.models import Worker
 from stations.models import Station
-from alternative_backend.settings import BARCODE_LENGHT
+from django.conf import settings
 from common.tests import (
     ViewSetBaseTests,
     init_test_db,
@@ -146,12 +146,12 @@ class NewBoardBarcodeAPIViewTests(TestCase):
         assert response.status_code == 400
 
     def test_wrong_barcode_lenght(self):
-        wrong_barcodes = [int(''.join(['1' for _ in range(BARCODE_LENGHT + 1)])),
-                          int(''.join(['1' for _ in range(BARCODE_LENGHT - 1)])),
-                          int(str(191010) + ''.join(['1' for _ in range(BARCODE_LENGHT - 5)])),
-                          int(str(191010) + ''.join(['1' for _ in range(BARCODE_LENGHT - 7)])),
-                          int(str(199910) + ''.join(['1' for _ in range(BARCODE_LENGHT - 5)])),
-                          int(str(191099) + ''.join(['1' for _ in range(BARCODE_LENGHT - 7)]))]
+        wrong_barcodes = [int(''.join(['1' for _ in range(settings.BARCODE_LENGHT + 1)])),
+                          int(''.join(['1' for _ in range(settings.BARCODE_LENGHT - 1)])),
+                          int(str(191010) + ''.join(['1' for _ in range(settings.BARCODE_LENGHT - 5)])),
+                          int(str(191010) + ''.join(['1' for _ in range(settings.BARCODE_LENGHT - 7)])),
+                          int(str(199910) + ''.join(['1' for _ in range(settings.BARCODE_LENGHT - 5)])),
+                          int(str(191099) + ''.join(['1' for _ in range(settings.BARCODE_LENGHT - 7)]))]
         for wrong_barcode in wrong_barcodes:
             wrong_message = {'barcode': wrong_barcode}
             request = self.api.post_request(self.endpoint, wrong_message)
