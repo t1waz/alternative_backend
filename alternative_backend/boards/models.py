@@ -1,10 +1,15 @@
 from django.db import models
+from .validators import (
+    validate_code,
+    validate_year,
+)
 
 
 class BoardCompany(models.Model):
     description = models.CharField(max_length=500)
     name = models.CharField(max_length=200)
-    code = models.IntegerField(unique=True)
+    code = models.IntegerField(unique=True,
+                               validators=[validate_code])
 
     def __str__(self):
         return "{} {}".format(self.id, self.name)
@@ -16,8 +21,8 @@ class BoardCompany(models.Model):
 class BoardModel(models.Model):
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=500)
-    year = models.IntegerField()
-    code = models.IntegerField()
+    year = models.IntegerField(validators=[validate_year])
+    code = models.IntegerField(validators=[validate_code])
     company = models.ForeignKey('BoardCompany',
                                 on_delete=models.CASCADE)
 

@@ -35,7 +35,6 @@ CORS_ALLOW_HEADERS = list(default_headers) + [
 ]
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',

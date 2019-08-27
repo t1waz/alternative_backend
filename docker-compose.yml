@@ -1,28 +1,39 @@
   version: '3'  
 
   volumes:
-    db_data:
-    static:
+    db_data: {}
+    static: {}
 
   services:
-    web:
+
+    django-service: &django
       build:
         context: .
         dockerfile: compose/backend/Dockerfile
-      environment:
-        STATIC_DIR: /
-      command: bash /manage/run.sh
+      env_file:
+        - .envs/django.env
+        -   .envs/postgres.env
+      command: bash /manage/build.sh
       volumes:
         - ./alternative_backend:/app
         - static:/static
       depends_on:
         - db
+
+    django-app:
+      <<: *django
+      command: bash /manage/dev_run.sh
+      depends_on:
+        - db
+        - django-service
+
     db:
       image: postgres:latest
       volumes:
-        - db_data:/var/lib/postgres/data/
-      environment:
-        POSTGRES_PASSWORD: not_very_secret_password
+        - db_data:/var/lib/postgresql/data
+      env_file:
+        - .envs/postgres.env
+
     nginx:
       build: 
         context: .
@@ -30,8 +41,8 @@
       volumes:
         - static:/var/local/alternative_backend/static
       ports:
-        -   80:80
+        - 80:80
       depends_on:
-        - web
+        - django-app
 
 
