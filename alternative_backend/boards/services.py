@@ -29,23 +29,23 @@ class BoardService:
     def get_all_barcodes(self):
         return Board.objects.all()
 
-    def get_barcode(self, barcode):
+    def get_board(self, barcode):
         try:
             return Board.objects.get(barcode=barcode)
-        except Board.DoesNotExists:
+        except Board.DoesNotExist:
             return None
 
-    def get_company_from_barcode(self, barcode):
-        model = None
+    def get_company(self, barcode):
         try:
             return BoardCompany.objects.get(code=str(barcode)[4:6])
-        except BoardCompany.DoesNotExists:
+        except BoardCompany.DoesNotExist:
             return None
 
-    def get_model_from_barcode(self, barcode):
+    def get_model(self, barcode):
         try:
-            return BoardModel.objects.get(code=str(barcode)[2:4])
-        except BoardModel.DoesNotExists:
+            return BoardModel.objects.get(code=str(barcode)[2:4],
+                                          company__code=str(barcode)[4:6])
+        except BoardModel.DoesNotExist:
             return None
 
     def get_production_for(self, company_code):
@@ -85,9 +85,3 @@ class BoardService:
 
     def get_stock(self):
         return {c.name: self.get_stock_for(c.code) for c in BoardCompany.objects.all()}
-
-    def get_board(self, barcode):
-        try:
-            return Board.objects.filter(barcode=barcode)[0]
-        except IndexError:
-            return None

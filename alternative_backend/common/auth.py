@@ -1,7 +1,5 @@
+from django.conf import settings
 from rest_framework import permissions
-
-
-ACCESS_KEY = "SECRET_KEY"
 
 
 class BaseAccess(permissions.BasePermission):
@@ -10,4 +8,4 @@ class BaseAccess(permissions.BasePermission):
     """
     def has_permission(self, request, view):
         request_token = request.META.get('HTTP_ACCESS_TOKEN', None)
-        return request_token == ACCESS_KEY
+        return request_token == settings.ACCESS_KEY

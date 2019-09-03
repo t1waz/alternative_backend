@@ -12,7 +12,7 @@
         dockerfile: compose/backend/Dockerfile
       env_file:
         - .envs/django.env
-        -   .envs/postgres.env
+        - .envs/postgres.env
       command: bash /manage/build.sh
       volumes:
         - ./alternative_backend:/app

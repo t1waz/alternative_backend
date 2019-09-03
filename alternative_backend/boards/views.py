@@ -135,6 +135,6 @@ class BarcodeInfoDetailAPIView(APIView):
     permission_classes = (BaseAccess,)
 
     def get(self, request, barcode, format=None):
-        board = BoardService().get_barcode(barcode)
+        board = BoardService().get_board(barcode)
         response = BoardPresentationSerializer(board).data
         return Response(response)

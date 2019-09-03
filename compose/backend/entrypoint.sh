@@ -29,5 +29,3 @@ done
 >&2 echo 'PostgreSQL is available'
 
 exec "$@"
-
-

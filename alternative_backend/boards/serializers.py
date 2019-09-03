@@ -1,74 +1,74 @@
-from rest_framework import serializers
-from rest_framework.validators import UniqueTogetherValidator
-from alternative_backend.exceptions import AppException
 from django.conf import settings
 from workers.models import Worker
+from .services import BoardService
 from stations.models import Station
 from orders.models import SendedBoard
+from rest_framework import serializers
+from rest_framework.validators import UniqueTogetherValidator
+from .validators import (
+    validate_code,
+    validate_year,
+    validate_barcode,
+)
 from .models import (
     BoardCompany,
     BoardModel,
     Board,
-    BoardScan
+    BoardScan,
 )
 
 
 class BoardCompanySerializer(serializers.ModelSerializer):
+    def valid(self, data):
+        validate_code(self.initial_data.get('code'))
+
+        return data
+
     class Meta:
         model = BoardCompany
         fields = ('id', 'description', 'name', 'code')
 
 
 class BoardModelSerializer(serializers.ModelSerializer):
+    def valid(self, data):
+        validate_code(data.get('code'))
+        validate_year(data.get('year'))
+
+        return data
+
     class Meta:
         model = BoardModel
         fields = ('id', 'description', 'year', 'company', 'name', 'code')
 
 
 class BoardSerializer(serializers.ModelSerializer):
+    def update_initial_data(self):
+        # TODO make more clear
+        barcode = self.initial_data.get('barcode')
+        model = BoardService().get_model(barcode=barcode)
+        company = BoardService().get_company(barcode=barcode)
+        if model and company:
+            data = {
+                'model': model.id,
+                'company': company.id
+            }
+
+        self.initial_data.update(data)
+
+    def is_valid(self, raise_exception=False):
+        validate_barcode(barcode=str(self.initial_data.get('barcode')))
+        self.update_initial_data()
+
+        return super().is_valid(raise_exception=True)
+
     class Meta:
         model = Board
         fields = ('id', 'barcode', 'model', 'company', 'press_time')
         write_only_fields = ('model', 'company')
         read_only_fields = ('press_time',)
 
-    def is_valid(self, raise_exception=False):
-        try:
-            model_code = int(str(self.initial_data['barcode'])[2:4])
-            company_code = int(str(self.initial_data['barcode'])[4:6])
-
-            model_id = BoardModel.objects.get(code=model_code,
-                                              company__code=company_code).id
-            company_id = BoardCompany.objects.get(code=company_code).id
-        except:
-            return False
-        new_initial_data = self.initial_data.copy()                     # TODO check if is legit
-        new_initial_data.update({'model': model_id})
-        new_initial_data.update({'company': company_id})
-        self.initial_data = new_initial_data
-
-        # self.initial_data.update({'model': model_id})                 # OLD ONE
-        # self.initial_data.update({'company': company_id})
-
-        return super().is_valid(raise_exception=True)
-
-    def validate_barcode(self, barcode):
-        if not len(str(barcode)) == settings.BARCODE_LENGHT:
-            raise AppException("barcode number not valid")
-        board_code = int(str(barcode)[2:4])
-        company_code = int(str(barcode)[4:6])
-        if not BoardModel.objects.filter(code=board_code,
-                                         company__code=company_code).exists():
-            raise AppException("barcode model or company not valid")
-
-        return barcode
-
 
 class BoardPresentationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Board
-        fields = ('company', 'model', 'year', 'barcode', 'customer', 'production_history')
-
     model = serializers.SlugRelatedField(many=False,
                                          queryset=BoardModel.objects.all(),
                                          slug_field='name')
@@ -94,6 +94,10 @@ class BoardPresentationSerializer(serializers.ModelSerializer):
     def get_year(self, obj):
         return obj.model.year
 
+    class Meta:
+        model = Board
+        fields = ('company', 'model', 'year', 'barcode', 'customer', 'production_history')
+
 
 class BoardSecondCategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -102,12 +106,6 @@ class BoardSecondCategorySerializer(serializers.ModelSerializer):
 
 
 class BoardScanSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = BoardScan
-        fields = ('worker', 'station', 'barcode', 'timestamp', 'comment')
-        validators = [UniqueTogetherValidator(queryset=BoardScan.objects.all(),
-                                              fields=('barcode', 'station'))]
-
     barcode = serializers.SlugRelatedField(many=False,
                                            queryset=Board.objects.all(),
                                            slug_field='barcode')
@@ -119,3 +117,9 @@ class BoardScanSerializer(serializers.ModelSerializer):
                                            slug_field='name')
     timestamp = serializers.DateTimeField(required=False)
     comment = serializers.CharField(required=False)
+
+    class Meta:
+        model = BoardScan
+        fields = ('worker', 'station', 'barcode', 'timestamp', 'comment')
+        validators = [UniqueTogetherValidator(queryset=BoardScan.objects.all(),
+                                              fields=('barcode', 'station'))]

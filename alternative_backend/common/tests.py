@@ -3,7 +3,8 @@ from django.http import JsonResponse
 from django.test import TestCase
 from unittest.mock import MagicMock
 from django.core import serializers
-from .auth import BaseAccess, ACCESS_KEY
+from django.conf import settings
+from .auth import BaseAccess
 from django.core.management import call_command
 from rest_framework.test import APIRequestFactory
 
@@ -16,7 +17,7 @@ class TestAPI:
     def __init__(self):
         self.factory = APIRequestFactory()
         self.headers = {
-            'HTTP_ACCESS_TOKEN': ACCESS_KEY,
+            'HTTP_ACCESS_TOKEN': settings.ACCESS_KEY,
             'CONTENT_TYPE': 'application/json',
             'format': 'json'
         }
@@ -83,6 +84,7 @@ class ViewSetBaseTests:
         request = self.api.patch_request(self.endpoint, self.update_data)
         response = self.view(request, pk=self.pk_key)
         updated_key = [key for key in self.update_data.keys()][0]
+        print(response.data)
         assert response.data[updated_key] == self.update_data[updated_key]
 
 
@@ -92,7 +94,7 @@ class AuthTestTestCases(TestCase):
 
     def test_base_access_with_valid_token(self):
         request = MagicMock()
-        request.META = {"HTTP_ACCESS_TOKEN": ACCESS_KEY}
+        request.META = {"HTTP_ACCESS_TOKEN": settings.ACCESS_KEY}
 
         assert self.permission.has_permission(request, view=MagicMock())
 
