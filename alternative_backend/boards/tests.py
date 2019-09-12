@@ -41,7 +41,7 @@ class BoardCompanyViewTests(ViewSetBaseTests, TestCase):
         self.new_data = {'name': 'Loaded',
                          'code': 30,
                          'description': 'one of the most popular companies'}
-        self.update_data = {'description': 'new description'}
+        self.update_datas = [{'description': 'new description'}]
         self.detail_view = BoardCompanyViewSet.as_view(actions=self.view_actions)
         self.view = BoardCompanyViewSet.as_view(actions=self.detail_view_actions)
 
@@ -56,7 +56,7 @@ class BoardModelViewTests(ViewSetBaseTests, TestCase):
                          'year': 2018,
                          'code': 30,
                          'company': self.model.objects.get(id=1).id}
-        self.update_data = {'description': 'new description'}
+        self.update_datas = [{'description': 'new description'}]
         self.detail_view = BoardModelViewSet.as_view(actions=self.view_actions)
         self.view = BoardModelViewSet.as_view(actions=self.detail_view_actions)
 

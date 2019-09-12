@@ -30,12 +30,18 @@ class BoardService:
         return Board.objects.all()
 
     def get_board(self, barcode):
+        if not barcode:
+            return None
+
         try:
             return Board.objects.get(barcode=barcode)
         except Board.DoesNotExist:
             return None
 
     def get_company(self, barcode):
+        if not barcode:
+            return None
+
         try:
             return BoardCompany.objects.get(code=str(barcode)[4:6])
         except BoardCompany.DoesNotExist:

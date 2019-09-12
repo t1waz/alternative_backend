@@ -20,7 +20,7 @@ class WorkerViewSetTests(ViewSetBaseTests, TestCase):
         self.pk_key = 111111111111
         self.new_data = {'username': 'Justa', 
                          'barcode': 111111112222}
-        self.update_data = {'username': 'Justa two'}
+        self.update_datas = [{'username': 'Justa two'}]
         self.detail_view = WorkerViewSet.as_view(actions=self.view_actions)
         self.view = WorkerViewSet.as_view(actions=self.detail_view_actions)
 

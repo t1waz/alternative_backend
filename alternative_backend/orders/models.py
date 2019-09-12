@@ -1,4 +1,5 @@
 from django.db import models
+from .managers import ActiveOrderManager
 
 
 class Client(models.Model):
@@ -14,11 +15,6 @@ class Client(models.Model):
 
     class Meta:
         db_table = 'client'
-
-
-class ActiveOrderManager(models.Manager):
-    def get_queryset(self):
-        return super().get_queryset().filter(completed=False)
 
 
 class Order(models.Model):

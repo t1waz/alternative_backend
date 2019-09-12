@@ -99,6 +99,7 @@ class ProductionAPIView(APIView):
 
     def get(self, request, format=None):
         response = BoardService().get_production()
+
         return Response(response)
 
 
@@ -107,18 +108,21 @@ class ProductionDetailAPIView(APIView):
 
     def get(self, request, company, format=None):
         response = BoardService().get_production_for(company_code=company)
+
         return Response(response)
 
 
 class StockAPIView(APIView):
     def get(self, request, format=None):
         response = BoardService().get_stock()
+
         return Response(response)
 
 
 class StockDetailAPIView(APIView):
     def get(self, request, code, format=None):
         response = BoardService().get_stock_for(company_code=code)
+
         return Response(response)
 
 
@@ -128,6 +132,7 @@ class BarcodeInfoAPIView(APIView):
     def get(self, request, format=None):
         boards = BoardService().get_all_barcodes()
         response = BoardPresentationSerializer(boards, many=True).data
+
         return Response(response)
 
 
@@ -137,4 +142,5 @@ class BarcodeInfoDetailAPIView(APIView):
     def get(self, request, barcode, format=None):
         board = BoardService().get_board(barcode)
         response = BoardPresentationSerializer(board).data
+
         return Response(response)

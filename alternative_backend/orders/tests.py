@@ -28,7 +28,7 @@ class OrderViewSetTests(ViewSetBaseTests, TestCase):
         self.model = Order
         self.new_data = {'client': 'Lukasz Tomkiel',
                          'boards': {'Fantail': 2}}
-        self.update_data = {'client': 'Heiko'}
+        self.update_datas = [{'client': 'Heiko'}, {'boards': {'Fantail': 3}}]
         self.detail_view = OrderViewSet.as_view(actions=self.view_actions)
         self.view = OrderViewSet.as_view(actions=self.detail_view_actions)
 
@@ -44,7 +44,7 @@ class ClientViewSetTests(ViewSetBaseTests, TestCase):
                          'post_code': '12-345',
                          'adress': 'Piotra 1/4',
                          'is_company': 'false'}
-        self.update_data = {'name': 'Heiko Niemiec'}
+        self.update_datas = [{'name': 'Heiko Niemiec'}]
         self.detail_view = ClientViewSet.as_view(actions=self.view_actions)
         self.view = ClientViewSet.as_view(actions=self.detail_view_actions)
 
@@ -182,5 +182,5 @@ class SendedBoardRecordAPIViewTests(TestCase):
         }
         request = self.api.delete_request(self.endpoint, message)
         response = self.view(request)
-
+        print(response)
         assert response.status_code == 400

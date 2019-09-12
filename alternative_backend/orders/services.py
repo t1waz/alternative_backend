@@ -1,5 +1,7 @@
 from django.db.models import Sum
+from django.db import transaction
 from stations.models import Station
+from common.exceptions import ServiceException
 from boards.models import (
     BoardModel,
     BoardCompany,
@@ -14,11 +16,15 @@ from .models import (
 
 
 class OrderService:
+
     def update_order_records(self, order_id, order_records):
-        for board in order_records.keys():
-            OrderRecord.objects.create(order=Order.objects.get(id=order_id),
-                                       board_model=BoardModel.objects.filter(name=board)[0],
-                                       quantity=order_records[board])
+        with transaction.atomic():
+            order = Order.objects.get(id=order_id)
+            OrderRecord.objects.filter(order=order).delete()
+            for board, quantity in order_records.items():
+                OrderRecord.objects.create(order=order,
+                                           board_model=BoardModel.objects.get(name=board),
+                                           quantity=quantity)
 
     def return_order_info(self, company_code):
         order_dict = dict()
@@ -51,32 +57,37 @@ class OrderService:
     def board_exist(self, barcode):
         return Board.objects.filter(barcode=barcode).exists()
 
-    def already_sended(self, barcode):
-        return SendedBoard.objects.filter(board__barcode=barcode).exists()
+    def is_board_already_sended(self, board):
+        try:
+            return SendedBoard.objects.filter(board=board).exists()
+        except: # TODO
+            raise ServiceException('incorrect data')
 
-    def valid_order(self, barcode, order_id):
-        board_model = Board.objects.values_list('model', flat=True).get(barcode=barcode)
+    def get_order_quantity(self, board, order_id):
+        try:
+            order_qty = sum(OrderRecord.objects.filter(order=order_id,
+                                                       board_model=board.model).values_list(
+                                                       'quantity', flat=True))
+
+            return order_qty
+        except: # TODO
+            raise ServiceException('incorrect data')
+      
+
+    def valid_order_quantity(self, board, order_id):
         order_qty = sum(OrderRecord.objects.filter(order=order_id,
-                                                   board_model=board_model).values_list(
-                                                   'quantity', flat=True))
-
-        return order_qty      
-
-    def valid_order_quantity(self, barcode, order_id):
-        board_model = Board.objects.values_list('model', flat=True).get(barcode=barcode)
-        order_qty = sum(OrderRecord.objects.filter(order=order_id,
-                                                   board_model=board_model).values_list(
+                                                   board_model=board.model).values_list(
                                                    'quantity', flat=True))
         sended_qty = SendedBoard.objects.filter(order=order_id,
-                                                board__model=board_model).count()
+                                                board__model=board.model).count()
 
         return sended_qty <= order_qty and order_qty
 
-    def remove_order_record(self, barcode, order_id):
-        try:
-            SendedBoard.objects.get(board__barcode=barcode,
-                                    order=order_id)
-            return True
-        except:
-            # handle this exception
-            return False
+    def get_order_records(self, order_id):
+        return {order.board_model.name: order.quantity for order in 
+                OrderRecord.objects.filter(order=order_id)}
+
+
+    def get_sended_boards(self, order_id):
+        return SendedBoard.objects.filter(order=order_id).select_related('board')
+

@@ -62,9 +62,10 @@ class SendedBoardRecordAPIView(APIView):
 
     def post(self, request, format=None):
         new_send_board = SendedBoardSerializer(data=request.data)
-        if new_send_board.is_valid():
+        if new_send_board.is_valid(raise_exception=True):
             new_send_board.save()
             return Response('added sendedboard')
+        
     """
     request data structure: 
                             {
@@ -75,11 +76,5 @@ class SendedBoardRecordAPIView(APIView):
     """
     def delete(self, request, format=None):
         sended_board = DeleteSendedSerializer(data=request.data)
-        if sended_board.is_valid():
-            barcode = sended_board.validated_data['board'].barcode
-            order_id = sended_board.validated_data['order'].id
-            if OrderService().remove_order_record(barcode=barcode,
-                                                  order_id=order_id):
-                return Response('barcode removed from order')
-            else:
-                return AppException('INTERNAL ERROR')
+        if sended_board.is_valid(raise_exception=True):
+            return Response('barcode removed from order')

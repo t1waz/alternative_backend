@@ -17,6 +17,6 @@ class PressViewSetTests(ViewSetBaseTests, TestCase):
         self.new_data = {'name': 'CZARNA STARA', 
                          'press_time': 7200,
                          'mold': 'Fantail'}
-        self.update_data = {'mold': 'Erget'}
+        self.update_datas = [{'mold': 'Erget'}]
         self.detail_view = PressViewSet.as_view(actions=self.view_actions)
         self.view = PressViewSet.as_view(actions=self.detail_view_actions)

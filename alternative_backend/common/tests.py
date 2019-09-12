@@ -71,6 +71,7 @@ class ViewSetBaseTests:
     def test_post(self):
         request = self.api.post_request(self.endpoint, self.new_data)
         response = self.view(request)
+        print(response.data)
 
         assert response.status_code == 201
 
@@ -81,11 +82,12 @@ class ViewSetBaseTests:
         assert response.status_code == 204
 
     def test_update(self):
-        request = self.api.patch_request(self.endpoint, self.update_data)
-        response = self.view(request, pk=self.pk_key)
-        updated_key = [key for key in self.update_data.keys()][0]
-        print(response.data)
-        assert response.data[updated_key] == self.update_data[updated_key]
+        for update_data in self.update_datas:
+            request = self.api.patch_request(self.endpoint, update_data)
+            response = self.view(request, pk=self.pk_key)
+            updated_key = [key for key in update_data.keys()][0]
+            print(response.data)
+            assert response.data[updated_key] == update_data[updated_key]
 
 
 class AuthTestTestCases(TestCase):
