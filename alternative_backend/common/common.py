@@ -15,8 +15,8 @@ class SimpleValidator:
         for validator in validators:
             try:
                 validator(**value)
-            except: # TODO
-                raise ValidationError('incorrect data for {}'.format(validator))
+            except:  # TODO
+                raise ValidationError('incorrect data for {}'.format(validator))  # TODO
 
     def __call__(self, value):
         common_fields = set(self.fields).intersection(set(self.updated_fields))

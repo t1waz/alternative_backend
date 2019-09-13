@@ -1,9 +1,8 @@
 from rest_framework import viewsets
 from common.auth import BaseAccess
+from .services import OrderService
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from alternative_backend.exceptions import AppException
-from .services import OrderService
 from .models import (
     Order, 
     Client
@@ -65,7 +64,7 @@ class SendedBoardRecordAPIView(APIView):
         if new_send_board.is_valid(raise_exception=True):
             new_send_board.save()
             return Response('added sendedboard')
-        
+
     """
     request data structure: 
                             {

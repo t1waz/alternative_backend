@@ -1,4 +1,3 @@
-from django.conf import settings
 from workers.models import Worker
 from .services import BoardService
 from stations.models import Station
@@ -113,4 +112,3 @@ class BoardScanSerializer(serializers.ModelSerializer):
                                            slug_field='name')
     timestamp = serializers.DateTimeField(required=False)
     comment = serializers.CharField(required=False)
-

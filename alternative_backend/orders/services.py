@@ -60,7 +60,7 @@ class OrderService:
     def is_board_already_sended(self, board):
         try:
             return SendedBoard.objects.filter(board=board).exists()
-        except: # TODO
+        except:  # TODO
             raise ServiceException('incorrect data')
 
     def get_order_quantity(self, board, order_id):
@@ -70,9 +70,8 @@ class OrderService:
                                                        'quantity', flat=True))
 
             return order_qty
-        except: # TODO
+        except:  # TODO
             raise ServiceException('incorrect data')
-      
 
     def valid_order_quantity(self, board, order_id):
         order_qty = sum(OrderRecord.objects.filter(order=order_id,
@@ -87,7 +86,5 @@ class OrderService:
         return {order.board_model.name: order.quantity for order in 
                 OrderRecord.objects.filter(order=order_id)}
 
-
     def get_sended_boards(self, order_id):
         return SendedBoard.objects.filter(order=order_id).select_related('board')
-

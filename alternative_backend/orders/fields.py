@@ -12,7 +12,6 @@ class BoardsField(serializers.Field):
         return ''
 
 
-
 class SendedField(serializers.Field):
     def to_representation(self, value):
         return [sended.board.barcode for sended in 

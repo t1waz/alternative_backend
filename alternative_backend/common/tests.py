@@ -2,7 +2,6 @@ import json
 from django.http import JsonResponse
 from django.test import TestCase
 from unittest.mock import MagicMock
-from django.core import serializers
 from django.conf import settings
 from .auth import BaseAccess
 from django.core.management import call_command

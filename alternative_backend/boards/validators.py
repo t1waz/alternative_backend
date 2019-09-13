@@ -43,9 +43,3 @@ class BoardModelValidation(SimpleValidator):
 
 class BoardValidation(SimpleValidator):
     validators = (validate_barcode,)
-
-
-
-
-
-    
