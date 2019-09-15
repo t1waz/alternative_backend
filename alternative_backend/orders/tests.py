@@ -162,7 +162,7 @@ class SendedBoardRecordAPIViewTests(TestCase):
         }
         request = self.api.delete_request(self.endpoint, message)
         response = self.view(request)
-        print(response.data)
+
         assert response.status_code == 200
 
     def test_delete_invalid_board_from_valid_order(self):
@@ -182,5 +182,5 @@ class SendedBoardRecordAPIViewTests(TestCase):
         }
         request = self.api.delete_request(self.endpoint, message)
         response = self.view(request)
-        print(response)
+
         assert response.status_code == 400

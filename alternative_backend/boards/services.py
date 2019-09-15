@@ -2,6 +2,7 @@ from collections import Counter
 from stations.models import Station
 from orders.models import SendedBoard
 from workers.models import Worker
+from common.exceptions import ServiceException
 from .models import (
     Board,
     BoardScan,
@@ -11,37 +12,37 @@ from .models import (
 
 
 class BoardService:
-    def add_missing_scan(self, _request_data):
-        station = Station.objects.get(name=_request_data['station'])
-        board = Board.objects.get(barcode=_request_data['barcode'])
-        worker = Worker.objects.get(username=_request_data['worker'])
+    def add_missing_scan(self, last_scan): # TODO 
+        station = last_scan.get('station')
+        board = last_scan.get('barcode')
+        worker = last_scan.get('worker')
 
         prev_stations = Station.objects.filter(id__in=range(station.id - 1, 0, -1))
-
+        missing_board_scans = []
         for station in prev_stations:
             if not BoardScan.objects.filter(barcode=board,
                                             station=station).exists():
-                BoardScan.objects.create(barcode=board,
-                                         worker=worker,
-                                         station=station,
-                                         comment="added automatic")
+                missing_board_scan = BoardScan(barcode=board,
+                                                     worker=worker,
+                                                     station=station,
+                                                     comment="added automatic")
+                missing_board_scans.append(missing_board_scan)
+
+        try:   
+            BoardScan.objects.bulk_create(missing_board_scans)
+        except: # TODO
+            raise ServiceException('cannot create missing scan')
 
     def get_all_barcodes(self):
         return Board.objects.all()
 
-    def get_board(self, barcode):
-        if not barcode:
-            return None
-
+    def get_board(self, barcode): # TODO - if barcode is None
         try:
             return Board.objects.get(barcode=barcode)
         except Board.DoesNotExist:
             return None
 
-    def get_company(self, barcode):
-        if not barcode:
-            return None
-
+    def get_company(self, barcode): # TODO - if barcode is None
         try:
             return BoardCompany.objects.get(code=str(barcode)[4:6])
         except BoardCompany.DoesNotExist:
@@ -53,6 +54,18 @@ class BoardService:
                                           company__code=str(barcode)[4:6])
         except BoardModel.DoesNotExist:
             return None
+
+    def create_new_board_from_barcode(self, barcode):
+        try:
+            new_board = Board.objects.create(barcode=barcode,
+                                             model = self.get_model(barcode=barcode),
+                                             company = self.get_company(barcode=barcode),
+                                             second_category=False)
+        except: # TODO
+            raise ServiceException('cannot create new board')
+
+        return new_board
+
 
     def get_production_for(self, company_code):
         company = BoardCompany.objects.get(code=company_code)

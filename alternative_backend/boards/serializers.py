@@ -21,50 +21,40 @@ class BoardCompanySerializer(serializers.ModelSerializer):
     class Meta:
         model = BoardCompany
         fields = ('id', 'description', 'name', 'code')
-        validators = (BoardCompanyValidation(fields), )
+        validators = [BoardCompanyValidation(fields)]
 
 
 class BoardModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = BoardModel
         fields = ('id', 'description', 'year', 'company', 'name', 'code')
-        validators = (BoardModelValidation(fields),)
+        validators = [BoardModelValidation(fields)]
 
 
-class BoardSerializer(serializers.ModelSerializer):
+class BoardUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Board
-        fields = ('id', 'barcode', 'model', 'company', 'press_time')
-        write_only_fields = ('model', 'company')
-        read_only_fields = ('press_time',)
-        validators = (BoardValidation(fields),)
-
-    def update_initial_data(self):
-        # TODO make more clear
-        barcode = self.initial_data.get('barcode')
-
-        model = BoardService().get_model(barcode=barcode)
-        company = BoardService().get_company(barcode=barcode)
-        if model and company:
-            self.initial_data.update({
-                'model': model.id,
-                'company': company.id
-            })
-
-    def is_valid(self, raise_exception=False):
-        self.update_initial_data()
-
-        return super().is_valid(raise_exception=False)
+        fields = ('second_category', )
 
 
-class BoardPresentationSerializer(serializers.ModelSerializer):
+class BoardListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Board
-        fields = ('company', 'model', 'year', 'barcode', 'customer', 'production_history')
+        fields = ('barcode', 'model', 'company')
 
     model = serializers.SlugRelatedField(many=False,
                                          queryset=BoardModel.objects.all(),
                                          slug_field='name')
+    company = serializers.SlugRelatedField(many=False,
+                                           queryset=BoardCompany.objects.all(),
+                                           slug_field='name')
+
+
+class BoardDetailViewSerializer(BoardListSerializer):
+    class Meta:
+        model = Board
+        fields = ('barcode', 'model', 'company', 'second_category',
+                  'year', 'customer', 'production_history')
 
     customer = serializers.SerializerMethodField()
     production_history = serializers.SerializerMethodField()
@@ -88,16 +78,23 @@ class BoardPresentationSerializer(serializers.ModelSerializer):
         return obj.model.year
 
 
-class BoardSecondCategorySerializer(serializers.ModelSerializer):
+class BoardCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Board
-        fields = ('barcode', 'second_category')
+        fields = ('barcode',)
+        validators = [BoardValidation(fields)]
+
+    def create(self, validated_data):
+        barcode = validated_data['barcode']
+        new_board = BoardService().create_new_board_from_barcode(barcode=barcode)
+
+        return new_board
 
 
 class BoardScanSerializer(serializers.ModelSerializer):
     class Meta:
         model = BoardScan
-        fields = ('worker', 'station', 'barcode', 'timestamp', 'comment')
+        fields = ('worker', 'station', 'barcode', 'comment')
         validators = [UniqueTogetherValidator(queryset=BoardScan.objects.all(),
                                               fields=('barcode', 'station'))]
 
@@ -110,5 +107,8 @@ class BoardScanSerializer(serializers.ModelSerializer):
     station = serializers.SlugRelatedField(many=False,
                                            queryset=Station.objects.all(),
                                            slug_field='name')
-    timestamp = serializers.DateTimeField(required=False)
-    comment = serializers.CharField(required=False)
+
+    def create(self, validated_data):
+        BoardService().add_missing_scan(last_scan=validated_data)
+
+        return super().create(validated_data)

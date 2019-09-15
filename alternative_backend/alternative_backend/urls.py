@@ -10,15 +10,12 @@ from workers.views import (
 from boards.views import (
     BoardScanAPIView,
     ProductionAPIView,
-    BarcodeInfoDetailAPIView,
-    NewBoardBarcodeAPIView,
-    BarcodeInfoAPIView,
     ProductionDetailAPIView,
     StockAPIView,
     StockDetailAPIView,
-    BoardSecondCategoryAPIView,
     BoardCompanyViewSet,
     BoardModelViewSet,
+    BoardViewSet,
 )
 from orders.views import (
     OrderViewSet,
@@ -36,21 +33,18 @@ router.register(r'presses', PressViewSet, basename='presses')
 router.register(r'companies', BoardCompanyViewSet, basename='companies')
 router.register(r'board_models', BoardModelViewSet, basename='boardmodels')
 router.register(r'clients', ClientViewSet, basename='clients')
+router.register(r'boards', BoardViewSet, basename='boards')
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path(r'add_barcode/', NewBoardBarcodeAPIView.as_view()),
     path(r'add_scan/', BoardScanAPIView.as_view()),
     path(r'add_worker_scan/', NewWorkerScanAPIView.as_view()),
     path(r'add_sended_board/', SendedBoardRecordAPIView.as_view()),
-    path(r'add_second_category/', BoardSecondCategoryAPIView.as_view()),
     path(r'production/', ProductionAPIView.as_view()),
     path(r'production/<int:company>', ProductionDetailAPIView.as_view()),
     path(r'stock/', StockAPIView.as_view()),
     path(r'stock/<int:code>', StockDetailAPIView.as_view()),
     path(r'order_info/', CompanyOrderInfoAPIView.as_view()),
     path(r'order_info/<int:code>/', CompanyOrderInfoDetailAPIView.as_view()),
-    path(r'boards/', BarcodeInfoAPIView.as_view()),
-    path(r'boards/<int:barcode>/', BarcodeInfoDetailAPIView.as_view()),
 ] + router.urls

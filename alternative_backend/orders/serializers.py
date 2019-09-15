@@ -36,7 +36,7 @@ class SendedBoardSerializer(serializers.ModelSerializer):
     class Meta:
         model = SendedBoard
         fields = ('id', 'board', 'order')
-        validators = (SendedBoardValidation(fields), )
+        validators = [SendedBoardValidation(fields)]
 
     board = serializers.SlugRelatedField(many=False,
                                          queryset=Board.objects.all(),
@@ -47,14 +47,14 @@ class DeleteSendedSerializer(SendedBoardSerializer):
     class Meta:
         model = SendedBoard
         fields = ('id', 'board', 'order')
-        validators = (DeleteSendedValidation(fields), )
+        validators = [DeleteSendedValidation(fields)]
 
 
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = ('id', 'client', 'timestamp', 'completed', 'boards', 'sended')
-        validators = (OrderValidation(fields), )
+        validators = [OrderValidation(fields)]
 
     sended = serializers.SerializerMethodField('sended_boards')
     boards = BoardsField(source='*')
