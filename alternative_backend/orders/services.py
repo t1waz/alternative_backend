@@ -17,20 +17,26 @@ from .models import (
 
 class OrderService:
 
+    @transaction.atomic
     def update_order_records(self, order_id, order_records):
-        with transaction.atomic():
-            order = Order.objects.get(id=order_id)
-            OrderRecord.objects.filter(order=order).delete()
-            for board, quantity in order_records.items():
-                OrderRecord.objects.create(order=order,
-                                           board_model=BoardModel.objects.get(name=board),
-                                           quantity=quantity)
+        order = Order.objects.get(id=order_id)
+        OrderRecord.objects.filter(order=order).delete()
+        order_records = []
+        for board, quantity in order_records.items():
+            order_record = OrderRecord(order=order,
+                                       board_model=BoardModel.objects.get(name=board),
+                                       quantity=quantity)
+            order_records.append(order_record)
+
+        try:
+            OrderRecord.objects.bulk_create(order_record)
+        except:  #  TODO
+            raise ServiceException('cannot update')
 
     def return_order_info(self, company_code):
         order_dict = dict()
         for model in [model.name for model in 
                       BoardModel.objects.filter(company__code=company_code)]:
-
             order = OrderRecord.objects.filter(board_model__name=model,
                                                board_model__company__code=company_code).aggregate(
                                                Sum('quantity'))['quantity__sum'] or 0
@@ -55,7 +61,10 @@ class OrderService:
                                         station__id=last_station_id).exists()
 
     def board_exist(self, barcode):
-        return Board.objects.filter(barcode=barcode).exists()
+        try:
+            return Board.objects.filter(barcode=barcode).exists()
+        except:  #  TODO
+            raise ServiceException('cannot check')
 
     def is_board_already_sended(self, board):
         try:

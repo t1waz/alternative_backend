@@ -1,4 +1,5 @@
 from collections import Counter
+from django.db import transaction
 from stations.models import Station
 from orders.models import SendedBoard
 from workers.models import Worker
@@ -12,20 +13,20 @@ from .models import (
 
 
 class BoardService:
-    def add_missing_scan(self, last_scan): # TODO 
+    @transaction.atomic
+    def add_missing_scans(self, last_scan):
         station = last_scan.get('station')
         board = last_scan.get('barcode')
         worker = last_scan.get('worker')
-
         prev_stations = Station.objects.filter(id__in=range(station.id - 1, 0, -1))
         missing_board_scans = []
         for station in prev_stations:
             if not BoardScan.objects.filter(barcode=board,
                                             station=station).exists():
                 missing_board_scan = BoardScan(barcode=board,
-                                                     worker=worker,
-                                                     station=station,
-                                                     comment="added automatic")
+                                               worker=worker,
+                                               station=station,
+                                               comment="added automatic")
                 missing_board_scans.append(missing_board_scan)
 
         try:   
@@ -33,20 +34,25 @@ class BoardService:
         except: # TODO
             raise ServiceException('cannot create missing scan')
 
+
     def get_all_barcodes(self):
         return Board.objects.all()
 
-    def get_board(self, barcode): # TODO - if barcode is None
+    def get_board(self, barcode): 
         try:
             return Board.objects.get(barcode=barcode)
         except Board.DoesNotExist:
             return None
+        except:
+            raise ServiceException('incorrect input data')
 
     def get_company(self, barcode): # TODO - if barcode is None
         try:
             return BoardCompany.objects.get(code=str(barcode)[4:6])
         except BoardCompany.DoesNotExist:
             return None
+        except Exception:
+            raise ServiceException('incorrect input data')
 
     def get_model(self, barcode):
         try:
@@ -54,6 +60,8 @@ class BoardService:
                                           company__code=str(barcode)[4:6])
         except BoardModel.DoesNotExist:
             return None
+        except:
+            raise ServiceException('incorrect input data')
 
     def create_new_board_from_barcode(self, barcode):
         try:
@@ -79,7 +87,7 @@ class BoardService:
             production[stations[i + 1]] = \
                 Counter([s.barcode.model.name for s in scans if s.station.name == station]) - \
                 Counter([s.barcode.model.name for s in scans if s.station.name == stations[i + 1]])
-            # adding zero values to nice data presentation. ELO
+            # Adding zero values to nice data presentation.
             for model in boards_model:
                 if model not in production[stations[i + 1]].keys():
                     production[stations[i + 1]][model] = 0                                          

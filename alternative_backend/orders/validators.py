@@ -32,11 +32,11 @@ def validate_delete_order_quantity(**kwargs):
 
 
 def validate_board_models(**kwargs):
-    pass
+    pass #  TODO
 
 
 def validate_board_models_quantity(**kwargs):
-    pass
+    pass #  TODO
 
 
 class SendedBoardValidation(SimpleValidator):

@@ -1,11 +1,13 @@
-from rest_framework import viewsets
 from common.auth import BaseAccess
 from .services import OrderService
+from rest_framework import viewsets
+from rest_framework.mixins import (CreateModelMixin, DestroyModelMixin)
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import (
     Order, 
-    Client
+    Client,
+    SendedBoard, 
 )
 from .serializers import (
     OrderSerializer,
@@ -46,6 +48,18 @@ class CompanyOrderInfoDetailAPIView(APIView):
     def get(self, request, code, format=None):
         response = OrderService().return_order_info(company_code=code)
         return Response(response)
+
+
+# class SendedBoardRecordAPIView(CreateModelMixin, DestroyModelMixin):
+#     permission_classes = (BaseAccess, )
+#     queryset = SendedBoard.objects.all()
+
+#     def get_serializer(self, data):
+#         if self.action == 'create':
+#             return SendedBoardSerializer
+#         elif self.action == 'destroy':
+#             return DeleteSendedSerializer
+
 
 
 class SendedBoardRecordAPIView(APIView):

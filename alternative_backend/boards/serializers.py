@@ -109,6 +109,6 @@ class BoardScanSerializer(serializers.ModelSerializer):
                                            slug_field='name')
 
     def create(self, validated_data):
-        BoardService().add_missing_scan(last_scan=validated_data)
+        BoardService().add_missing_scans(last_scan=validated_data)
 
         return super().create(validated_data)
