@@ -19,18 +19,17 @@ class OrderService:
 
     @transaction.atomic
     def update_order_records(self, order_id, order_records):
-        print('aaa', order_records, dir(order_records))
         order = Order.objects.get(id=order_id)
         OrderRecord.objects.filter(order=order).delete()
-        order_records = []
+        records = []
         for board, quantity in order_records.items():
-            order_record = OrderRecord(order=order,
-                                       board_model=BoardModel.objects.get(name=board),
-                                       quantity=quantity)
-            order_records.append(order_record)
+            record = OrderRecord(order=order,
+                                 board_model=BoardModel.objects.get(name=board),
+                                 quantity=quantity)
+            records.append(record)
 
         try:
-            OrderRecord.objects.bulk_create(order_records)
+            OrderRecord.objects.bulk_create(records)
         except:  #  TODO
             raise ServiceException('cannot update')
 

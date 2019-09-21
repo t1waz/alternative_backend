@@ -52,44 +52,15 @@ class CompanyOrderInfoDetailAPIView(APIView):
 
 
 class SendedBoardRecordAPIView(mixins.CreateModelMixin,
-                               mixins.DestroyModelMixin,
                                generics.GenericAPIView):
     permission_classes = (BaseAccess, )
     queryset = SendedBoard.objects.all()
+    serializer_class = SendedBoardSerializer
 
-    def get_serializer(self, data):
-        if self.action == 'create':
-            return SendedBoardSerializer
-        elif self.action == 'destroy':
-            return DeleteSendedSerializer
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
 
-
-# class SendedBoardRecordAPIView(APIView):
-#     """
-#     request data structure: 
-#                             {
-#                                 "board": barcode:int,
-#                                 "order": order pk: int
-#                             } 
-#     comment key is not required
-#     """
-#     permission_classes = [BaseAccess]
-
-#     def post(self, request, format=None):
-#         new_send_board = SendedBoardSerializer(data=request.data)
-#         if new_send_board.is_valid(raise_exception=True):
-#             new_send_board.save()
-#             return Response('added sendedboard')
-
-#     """
-#     request data structure: 
-#                             {
-#                                 "board": barcode:int,
-#                                 "order": order pk:int,
-#                             } 
-#     comment key is not required
-#     """
-#     def delete(self, request, format=None):
-#         sended_board = DeleteSendedSerializer(data=request.data)
-#         if sended_board.is_valid(raise_exception=True):
-#             return Response('barcode removed from order')
+    def delete(self, request, *args, **kwargs):
+        sended_board = DeleteSendedSerializer(data=request.data)
+        if sended_board.is_valid(raise_exception=True):
+            return Response('barcode removed from order')
