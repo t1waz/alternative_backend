@@ -1,9 +1,10 @@
 from common.auth import BaseAccess
 from .services import OrderService
 from rest_framework import viewsets
-from rest_framework.mixins import (CreateModelMixin, DestroyModelMixin)
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework import generics
+from rest_framework import mixins 
 from .models import (
     Order, 
     Client,
@@ -50,44 +51,45 @@ class CompanyOrderInfoDetailAPIView(APIView):
         return Response(response)
 
 
-# class SendedBoardRecordAPIView(CreateModelMixin, DestroyModelMixin):
-#     permission_classes = (BaseAccess, )
-#     queryset = SendedBoard.objects.all()
+class SendedBoardRecordAPIView(mixins.CreateModelMixin,
+                               mixins.DestroyModelMixin,
+                               generics.GenericAPIView):
+    permission_classes = (BaseAccess, )
+    queryset = SendedBoard.objects.all()
 
-#     def get_serializer(self, data):
-#         if self.action == 'create':
-#             return SendedBoardSerializer
-#         elif self.action == 'destroy':
-#             return DeleteSendedSerializer
+    def get_serializer(self, data):
+        if self.action == 'create':
+            return SendedBoardSerializer
+        elif self.action == 'destroy':
+            return DeleteSendedSerializer
 
 
+# class SendedBoardRecordAPIView(APIView):
+#     """
+#     request data structure: 
+#                             {
+#                                 "board": barcode:int,
+#                                 "order": order pk: int
+#                             } 
+#     comment key is not required
+#     """
+#     permission_classes = [BaseAccess]
 
-class SendedBoardRecordAPIView(APIView):
-    """
-    request data structure: 
-                            {
-                                "board": barcode:int,
-                                "order": order pk: int
-                            } 
-    comment key is not required
-    """
-    permission_classes = [BaseAccess]
+#     def post(self, request, format=None):
+#         new_send_board = SendedBoardSerializer(data=request.data)
+#         if new_send_board.is_valid(raise_exception=True):
+#             new_send_board.save()
+#             return Response('added sendedboard')
 
-    def post(self, request, format=None):
-        new_send_board = SendedBoardSerializer(data=request.data)
-        if new_send_board.is_valid(raise_exception=True):
-            new_send_board.save()
-            return Response('added sendedboard')
-
-    """
-    request data structure: 
-                            {
-                                "board": barcode:int,
-                                "order": order pk:int,
-                            } 
-    comment key is not required
-    """
-    def delete(self, request, format=None):
-        sended_board = DeleteSendedSerializer(data=request.data)
-        if sended_board.is_valid(raise_exception=True):
-            return Response('barcode removed from order')
+#     """
+#     request data structure: 
+#                             {
+#                                 "board": barcode:int,
+#                                 "order": order pk:int,
+#                             } 
+#     comment key is not required
+#     """
+#     def delete(self, request, format=None):
+#         sended_board = DeleteSendedSerializer(data=request.data)
+#         if sended_board.is_valid(raise_exception=True):
+#             return Response('barcode removed from order')

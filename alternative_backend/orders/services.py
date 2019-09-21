@@ -19,6 +19,7 @@ class OrderService:
 
     @transaction.atomic
     def update_order_records(self, order_id, order_records):
+        print('aaa', order_records, dir(order_records))
         order = Order.objects.get(id=order_id)
         OrderRecord.objects.filter(order=order).delete()
         order_records = []
@@ -29,7 +30,7 @@ class OrderService:
             order_records.append(order_record)
 
         try:
-            OrderRecord.objects.bulk_create(order_record)
+            OrderRecord.objects.bulk_create(order_records)
         except:  #  TODO
             raise ServiceException('cannot update')
 

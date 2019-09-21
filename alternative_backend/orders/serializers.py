@@ -72,6 +72,7 @@ class OrderSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         boards_to_update = self.context.get('boards')
+
         if boards_to_update:
             OrderService().update_order_records(order_id=instance.pk,
                                                 order_records=boards_to_update)
