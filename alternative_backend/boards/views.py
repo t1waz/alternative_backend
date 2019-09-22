@@ -16,8 +16,6 @@ from .serializers import (
     BoardModelSerializer,
     BoardListSerializer,
     BoardDetailViewSerializer,
-    BoardListSerializer,
-    BoardDetailViewSerializer,
     BoardCreateSerializer,
     BoardUpdateSerializer,
 )

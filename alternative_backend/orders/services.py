@@ -30,7 +30,7 @@ class OrderService:
 
         try:
             OrderRecord.objects.bulk_create(records)
-        except:  #  TODO
+        except:    # TODO
             raise ServiceException('cannot update')
 
     def return_order_info(self, company_code):
@@ -63,7 +63,7 @@ class OrderService:
     def board_exist(self, barcode):
         try:
             return Board.objects.filter(barcode=barcode).exists()
-        except:  #  TODO
+        except:    # TODO
             raise ServiceException('cannot check')
 
     def is_board_already_sended(self, board):

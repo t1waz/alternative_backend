@@ -4,8 +4,6 @@ from django.test import TestCase
 from .serializers import PressSerializer
 from common.tests import (
     ViewSetBaseTests,
-    TestAPI,
-    init_test_db,
 )
 
 

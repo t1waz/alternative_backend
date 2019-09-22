@@ -6,6 +6,12 @@ from presses.urls import urlpatterns as presses_urlpatterns
 from stations.urls import urlpatterns as stations_urlpatterns
 from workers.urls import urlpatterns as workers_urlpatterns
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-] + boards_urlpatterns + orders_urlpatterns + presses_urlpatterns + stations_urlpatterns + 
+] 
++ boards_urlpatterns
++ orders_urlpatterns
++ presses_urlpatterns
++ stations_urlpatterns 
++ workers_urlpatterns

@@ -4,8 +4,6 @@ from .views import StationViewSet
 from .serializers import StationSerializer
 from common.tests import (
     ViewSetBaseTests,
-    TestAPI,
-    init_test_db,
 )
 
 

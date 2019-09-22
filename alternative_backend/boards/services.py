@@ -2,7 +2,6 @@ from collections import Counter
 from django.db import transaction
 from stations.models import Station
 from orders.models import SendedBoard
-from workers.models import Worker
 from common.exceptions import ServiceException
 from .models import (
     Board,
@@ -31,9 +30,8 @@ class BoardService:
 
         try:   
             BoardScan.objects.bulk_create(missing_board_scans)
-        except: # TODO
+        except:    # TODO
             raise ServiceException('cannot create missing scan')
-
 
     def get_all_barcodes(self):
         return Board.objects.all()
@@ -46,7 +44,7 @@ class BoardService:
         except:
             raise ServiceException('incorrect input data')
 
-    def get_company(self, barcode): # TODO - if barcode is None
+    def get_company(self, barcode):    # TODO - if barcode is None
         try:
             return BoardCompany.objects.get(code=str(barcode)[4:6])
         except BoardCompany.DoesNotExist:
@@ -66,14 +64,13 @@ class BoardService:
     def create_new_board_from_barcode(self, barcode):
         try:
             new_board = Board.objects.create(barcode=barcode,
-                                             model = self.get_model(barcode=barcode),
-                                             company = self.get_company(barcode=barcode),
+                                             model=self.get_model(barcode=barcode),
+                                             company=self.get_company(barcode=barcode),
                                              second_category=False)
-        except: # TODO
+        except:    # TODO
             raise ServiceException('cannot create new board')
 
         return new_board
-
 
     def get_production_for(self, company_code):
         company = BoardCompany.objects.get(code=company_code)

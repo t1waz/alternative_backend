@@ -31,8 +31,6 @@ from .serializers import (
     BoardCompanySerializer,
     BoardListSerializer,
     BoardDetailViewSerializer,
-    BoardCreateSerializer,
-    
 )
 
 
@@ -187,7 +185,6 @@ class BoardScanAPIViewTests(TestCase):
 
         assert is_missing_scan is True    
 
-
     def test_wrong_barcode(self):
         wrong_barcodes = [111, 'aaa', '', 1.0]
         for wrong_barcode in wrong_barcodes:
@@ -323,4 +320,3 @@ class StockDetailAPIViewTests(TestCase):
 
         assert response.status_code == 200
         assert response.data == valid_response
-

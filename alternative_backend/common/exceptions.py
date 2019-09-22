@@ -2,7 +2,7 @@ from rest_framework.exceptions import APIException
 
 
 class ServiceException(Exception):
-	pass
+    pass
 
 
 class CustomException(APIException):
