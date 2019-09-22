@@ -6,6 +6,8 @@ App purpose's to serve backend service for Alternative Longboards company.
 How to setup
 ------------
 
+Fill .envs with data.
+
 Run command from docker-compose.yml dir:
 	$ chmod +x scripts/setup_project.sh
 
