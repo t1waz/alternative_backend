@@ -6,23 +6,11 @@ App purpose's to serve backend service for Alternative Longboards company.
 How to setup
 ------------
 
-Run commands from docker-compose.yml dir:
-	$ chmod +x scripts/build.sh
-
-	$ chmod +x scripts/load_fixtures.sh
-
-	$ chmod +x scripts/makemigrations.sh
-
-	$ chmod +x scripts/runserver.sh
-
-	$ chmod +x scripts/stopserver.sh
-
-	$ chmod +x scripts/tests.sh
+Run command from docker-compose.yml dir:
+	$ chmod +x scripts/setup_project.sh
 
 Setup project:
-	$ .scripts/makemigrations.sh
-
-	$ .scripts/load_fixtures.sh
+	$ .scripts/setup_project.sh
 
 Usage
 -----
@@ -37,10 +25,18 @@ Easy make migrations:
 	$ ./scripts/makemigrations.sh
 
 Run containers and project in develop stage:
-	$ ./scripts/runserver.sh
+	$ ./scripts/start_dev.sh
 
-Stop containers and project in develop stage:
-	$ ./scripts/stopserver.sh
+Run containers and project in production stage:
+	$ ./scripts/start_prod.sh
+
+Stop containers and project:
+	$ ./scripts/stop.sh
 
 Run tests:
 	$ ./scripts/tests.sh
+
+Check style with flake8:
+	$ ./scripts/check_style.sh
+
+Enjoy !

@@ -1,12 +1,15 @@
 FROM python:3
 
-WORKDIR /app
+WORKDIR /manage
 
-RUN mkdir /manage
+RUN mkdir /app
 
 RUN mkdir /entrypoint
 
 COPY ./requirements.txt /app
+
+COPY ./compose/backend/run.sh /manage
+RUN chmod +x /manage/run.sh
 
 COPY ./compose/backend/dev_run.sh /manage
 RUN chmod +x /manage/dev_run.sh
@@ -23,6 +26,6 @@ RUN chmod +x /entrypoint/entrypoint.sh
 COPY ./compose/backend/app_uwsgi.ini /manage
 
 RUN pip install --upgrade pip \
-	&& pip install -r requirements.txt
+	&& pip install -r /app/requirements.txt
 
 ENTRYPOINT ["/entrypoint/entrypoint.sh"]
