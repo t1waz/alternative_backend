@@ -1,8 +1,8 @@
 FROM python:3
 
-WORKDIR /manage
+WORKDIR /app
 
-RUN mkdir /app
+RUN mkdir /manage
 
 RUN mkdir /entrypoint
 

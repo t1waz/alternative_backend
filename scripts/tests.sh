@@ -1,3 +1,3 @@
 #bin/bash
 
-sudo docker-compose run django-app python /app/manage.py test
+sudo docker-compose run django-app python manage.py test

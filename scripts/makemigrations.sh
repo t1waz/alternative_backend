@@ -1,3 +1,3 @@
 #bin/bash
 
-sudo docker-compose run django-app python /app/manage.py makemigrations
+sudo docker-compose run django-app python manage.py makemigrations
