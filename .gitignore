@@ -7,8 +7,6 @@
 # develop database
 db.sqlite3
 
-# no envs
-.envs/
 
 # cache
 __pycache__/
