@@ -7,12 +7,12 @@ from stations.urls import urlpatterns as stations_urlpatterns
 from workers.urls import urlpatterns as workers_urlpatterns
 
 
-routers_urlpatterns = boards_urlpatterns + \
-                      orders_urlpatterns + \
-                      presses_urlpatterns + \
-                      stations_urlpatterns + \
-                      workers_urlpatterns
+app_urlpatterns = boards_urlpatterns + \
+                  orders_urlpatterns + \
+                  presses_urlpatterns + \
+                  stations_urlpatterns + \
+                  workers_urlpatterns
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-] + routers_urlpatterns
+] + app_urlpatterns

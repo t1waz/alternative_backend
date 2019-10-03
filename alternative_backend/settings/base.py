@@ -138,6 +138,6 @@ STATIC_URL = '/static/'
 
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 
-STATIC_ROOT = os.path.join(os.environ.get('STATIC_DIR', PROJECT_DIR), 'static')
+STATIC_ROOT = os.path.join('/', 'static')
 
 BARCODE_LENGHT = 12

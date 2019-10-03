@@ -1,4 +1,4 @@
 
 #bin/bash
 
-sudo docker-compose down
+docker-compose down
