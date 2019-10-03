@@ -2,10 +2,8 @@ from django.core.exceptions import ValidationError
 
 
 class SimpleValidator:
-    def __init__(self, *args):
-        self.fields = args
-
     def set_context(self, serializer):
+        self.fields = serializer.Meta.fields
         self.instance = getattr(serializer, 'instance', None)
         self.updated_fields = [field for field in dir(self) if field in self.fields]
 

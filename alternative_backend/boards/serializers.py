@@ -21,14 +21,14 @@ class BoardCompanySerializer(serializers.ModelSerializer):
     class Meta:
         model = BoardCompany
         fields = ('id', 'description', 'name', 'code')
-        validators = [BoardCompanyValidation(fields)]
+        validators = [BoardCompanyValidation()]
 
 
 class BoardModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = BoardModel
         fields = ('id', 'description', 'year', 'company', 'name', 'code')
-        validators = [BoardModelValidation(fields)]
+        validators = [BoardModelValidation()]
 
 
 class BoardUpdateSerializer(serializers.ModelSerializer):
@@ -82,7 +82,7 @@ class BoardCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Board
         fields = ('barcode',)
-        validators = [BoardValidation(fields)]
+        validators = [BoardValidation()]
 
     def create(self, validated_data):
         barcode = validated_data['barcode']
