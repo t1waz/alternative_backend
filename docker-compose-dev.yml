@@ -1,0 +1,39 @@
+  version: '3'
+
+  volumes:
+    db_data_development: {}
+    static_development: {}
+
+  services:
+
+    django-service: &django
+      build:
+        context: .
+        dockerfile: compose/development/backend/Dockerfile
+      env_file:
+        - .envs/development/django.env
+        - .envs/development/postgres.env
+      command: bash /manage/build.sh
+      volumes:
+        - ./alternative_backend:/app
+        - static_development:/static
+      depends_on:
+        - db
+
+    django-app:
+      <<: *django
+      command: bash /manage/run.sh
+      ports:
+      - "80:80"
+      depends_on:
+        - db
+        - django-service
+
+    db:
+      image: postgres:latest
+      volumes:
+        - db_data_development:/var/lib/postgresql/data
+      env_file:
+        - .envs/development/postgres.env
+
+

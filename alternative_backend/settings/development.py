@@ -6,8 +6,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-ACCESS_KEY = os.environ['DEVELOPMENT_ACCESS_TOKEN']
-
 # Use nose to run all tests
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 

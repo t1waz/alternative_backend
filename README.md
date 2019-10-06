@@ -3,24 +3,31 @@ ALTERNATIVE BACKEND
 
 App purpose's to serve backend service for Alternative Longboards company.
 
+
 How to setup
 ------------
 
-Create .envs dir:
-	$ mkdir .envs
+Create .envs resources:
 
-	$ touch django.env
+	$ mkdir .envs/development
 
-	$ touch postgres.env
+	$ mkdir .envs/production
+
+	$ touch .envs/development/django.env
+
+	$ touch .envs/development/postgres.env
+
+	$ touch .envs/production/django.env
+
+	$ touch .envs/production/postgres.env
 
 
 Fill .envs with data:
 
 	django.envs:
 
-		DEVELOPMENT_ACCESS_TOKEN=<YOUR_KEY>
-
-		PRODUCTION_ACCESS_TOKEN=<YOUR_KEY>
+		ACCESS_TOKEN=<YOUR_KEY>
+		SETTINGS_PATH=settings.development or settings.production
 
 	postgres.envs:
 
@@ -48,29 +55,33 @@ Setup project:
 Usage
 -----
 
-Build dockers (use in pip packages changes, or deploy itself):
+Development build:
 
-	$ ./scripts/build.sh
+	$ ./scripts/dev_build.sh
 
 Load fixtures from alternative_backend/seed_db.json:
 
-	$ ./scripts/load_fixtures.sh
+	$ ./scripts/dev_load_fixtures.sh
 
-Easy make migrations:
+Make migrations:
 
-	$ ./scripts/makemigrations.sh
+	$ ./scripts/dev_makemigrations.sh
 
-Run containers and project in develop stage:
+Run development enviroment:
 
-	$ ./scripts/start_dev.sh
+	$ ./scripts/dev_start.sh
 
-Run containers and project in production stage:
+Run production enviroment:
 
-	$ ./scripts/start_prod.sh
+	$ ./scripts/prod_start.sh
 
-Stop containers and project:
+Stop development enviorment:
 
-	$ ./scripts/stop.sh
+	$ ./scripts/dev_stop.sh
+
+Stop production enviorment:
+
+	$ ./scripts/prod_stop.sh
 
 Run tests:
 

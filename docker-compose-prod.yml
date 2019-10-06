@@ -1,0 +1,47 @@
+  version: '3'
+
+  volumes:
+    db_data_production: {}
+    static_production: {}
+
+  services:
+
+    django-service: &django
+      build:
+        context: .
+        dockerfile: compose/production/backend/Dockerfile
+      env_file:
+        - .envs/production/django.env
+        - .envs/production/postgres.env
+      command: bash /manage/build.sh
+      volumes:
+        - static_production:/static
+      depends_on:
+        - db
+
+    django-app:
+      <<: *django
+      command: bash /manage/run.sh
+      depends_on:
+        - db
+        - django-service
+
+    db:
+      image: postgres:latest
+      volumes:
+        - db_data_production:/var/lib/postgresql/data
+      env_file:
+        - .envs/production/postgres.env
+
+    nginx:
+      build:
+        context: .
+        dockerfile: compose/production/nginx/Dockerfile
+      volumes:
+        - static_production:/var/local/alternative_backend/static
+      ports:
+        - 80:80
+      depends_on:
+        - django-app
+
+

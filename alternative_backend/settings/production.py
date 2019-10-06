@@ -6,5 +6,3 @@ from .base import *
 DEBUG = False
 
 ALLOWED_HOSTS = ['*']
-
-ACCESS_KEY = os.environ['PRODUCTION_ACCESS_TOKEN']
