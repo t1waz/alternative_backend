@@ -9,4 +9,5 @@ per-file-ignores =
     orders/migrations/*: E501
     stations/migrations/*: E501
     boards/migrations/*: E501
-    settings/*: F405, F403, F401
+    settings/*: F403, F401
+    materials/migrations/*: E501

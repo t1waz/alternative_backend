@@ -6,7 +6,9 @@ from .views import (
 
 app_router = DefaultRouter()
 
-app_router.register(r'stations', StationViewSet, basename='stations')
+app_router.register(r'stations', 
+					StationViewSet, 
+					basename='stations')
 
 urlpatterns = [
 

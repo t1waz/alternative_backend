@@ -1,19 +1,19 @@
 from workers.models import Worker
-from .services import BoardService
 from stations.models import Station
 from orders.models import SendedBoard
 from rest_framework import serializers
+from boards.services import BoardService
 from rest_framework.validators import UniqueTogetherValidator
-from .validators import (
-    BoardCompanyValidation,
-    BoardModelValidation,
-    BoardValidation,
-)
-from .models import (
+from boards.models import (
     BoardCompany,
     BoardModel,
     Board,
     BoardScan,
+)
+from boards.validators import (
+    BoardCompanyValidation,
+    BoardModelValidation,
+    BoardValidation,
 )
 
 

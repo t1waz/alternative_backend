@@ -6,7 +6,9 @@ from .views import (
 
 app_router = DefaultRouter()
 
-app_router.register(r'presses', PressViewSet, basename='presses')
+app_router.register(r'presses',
+					PressViewSet, 
+					basename='presses')
 
 urlpatterns = [
 

@@ -11,8 +11,12 @@ from .views import (
 
 app_router = DefaultRouter()
 
-app_router.register(r'clients', ClientViewSet, basename='clients')
-app_router.register(r'orders', OrderViewSet, basename='orders')
+app_router.register(r'clients', 
+                    ClientViewSet, 
+                    basename='clients')
+app_router.register(r'orders', 
+                    OrderViewSet, 
+                    basename='orders')
 
 
 urlpatterns = [
