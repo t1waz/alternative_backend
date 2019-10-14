@@ -43,6 +43,24 @@ class BoardCompanyViewTests(ViewSetBaseTests, TestCase):
                          'code': 30,
                          'description': 'one of the most popular companies'}
         self.update_datas = [{'description': 'new description'}]
+        self.post_invalid_datas = [
+            {
+                'name': 'Loaded',
+                'code': 100,
+                'description': 'one of the most popular companies'
+            },
+            {
+                'name': 'Loadedsdfsdfsdfsfdsdfasddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddasasdddddddddddddddddddddddddddddddddddddddddddd',
+                'code': 1,
+                'description': 'one of the most popular companies'
+            },
+            {
+                'name': 'Loaded',
+                'code': 1,
+                'description': 'one of sdffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffdsfthe mo'
+            },
+            
+        ]
         self.detail_view = BoardCompanyViewSet.as_view(actions=self.view_actions)
         self.view = BoardCompanyViewSet.as_view(actions=self.detail_view_actions)
 
@@ -57,6 +75,50 @@ class BoardModelViewTests(ViewSetBaseTests, TestCase):
                          'year': 2018,
                          'code': 35,
                          'company': 1}
+        self.post_invalid_datas = [
+            {
+                'name': 'Erget',
+                'description': 'one of the most popular boards',
+                'year': 2018,
+                'code': 35,
+                'company': 1
+            },
+            {
+                'name': 'Erget_3',
+                'description': 'one of the most popular boards',
+                'year': 20181,
+                'code': 35,
+                'company': 1
+            },
+            {
+                'name': 'Erget_4',
+                'description': 'one of the most popular boards',
+                'year': 2018,
+                'code': 351,
+                'company': 1
+            },
+            {
+                'name': 'Erget_5',
+                'description': 'one of the most popular boards',
+                'year': 2018,
+                'code': 35,
+                'company': 12
+            },
+           {
+                'name': 'Erget_6',
+                'description': 'one of thasdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddasdasdasdasdasda',
+                'year': 2018,
+                'code': 35,
+                'company': 12
+            },
+           {
+                'name': 'Erget',
+                'description': 'one of thasdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddasdasdasdasdasda',
+                'year': 2018123,
+                'code': 351,
+                'company': 124
+            },
+        ]
         self.update_datas = [{'description': 'new description'}]
         self.detail_view = BoardModelViewSet.as_view(actions=self.view_actions)
         self.view = BoardModelViewSet.as_view(actions=self.detail_view_actions)
@@ -125,7 +187,7 @@ class BoardViewSetTests(ViewSetBaseTests, TestCase):
             assert response.status_code == 400
 
     def test_delete(self):
-        pass
+        pass  # TODO
 
     def test_update(self):
         valid_message = {'barcode': 181002000001,

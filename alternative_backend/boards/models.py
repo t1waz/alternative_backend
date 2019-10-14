@@ -2,7 +2,7 @@ from django.db import models
 
 
 class BoardCompany(models.Model):
-    description = models.CharField(max_length=500)
+    description = models.CharField(max_length=200)
     code = models.IntegerField(unique=True)
     name = models.CharField(max_length=200,
                             unique=True)
@@ -17,7 +17,7 @@ class BoardCompany(models.Model):
 class BoardModel(models.Model):
     name = models.CharField(max_length=50,
                             unique=True)
-    description = models.CharField(max_length=500)
+    description = models.CharField(max_length=200)
     year = models.IntegerField()
     code = models.IntegerField(unique=True)
     company = models.ForeignKey('BoardCompany',

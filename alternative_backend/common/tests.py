@@ -43,6 +43,8 @@ class ViewSetBaseTests:
         init_test_db()
         self.api = TestAPI()
         self.pk_key = 1
+        self.post_invalid_datas = []
+        self.update_invalid_datas = []
         self.view_actions = {'get': 'retrieve'}
         self.detail_view_actions = {'get': 'list',
                                     'post': 'create',
@@ -86,6 +88,21 @@ class ViewSetBaseTests:
             updated_key = [key for key in update_data.keys()][0]
 
             assert response.data[updated_key] == update_data[updated_key]
+
+    def test_post_invalid(self):
+        for invalid_data in self.post_invalid_datas:
+            request = self.api.post_request(self.endpoint, invalid_data)
+            response = self.view(request)
+
+            assert response.status_code != 201
+
+    def test_update_invalid(self):
+        for invalid_data in self.update_invalid_datas:
+            pk = invalid_data['pk']
+            request = self.api.patch_request(self.endpoint, update_data)
+            response = self.view(request, pk=pk)
+
+            assert response.status_code == 201
 
 
 class AuthTestTestCases(TestCase):

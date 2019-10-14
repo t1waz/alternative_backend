@@ -38,7 +38,8 @@ class BoardCompanyValidation(SimpleValidator):
 
 
 class BoardModelValidation(SimpleValidator):
-    validators = (validate_year,)
+    validators = (validate_year,
+                  validate_code,)
 
 
 class BoardValidation(SimpleValidator):
