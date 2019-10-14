@@ -9,4 +9,3 @@ from materials.models import (
 admin.site.register(MaterialCategory)
 admin.site.register(Material)
 admin.site.register(BoardModelComponent)
-

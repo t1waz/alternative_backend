@@ -398,6 +398,5 @@
 {	"model": "presses.press", 
 	"pk": 1, 
 	"fields": {	"name": "STARA STARA", 
-				"press_time": 7200, 
-				"mold": 1}
+				"press_time": 7200}
 }]

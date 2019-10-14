@@ -4,18 +4,20 @@ from materials.constants import UNITS
 
 
 class MaterialCategory(models.Model):
-    name = models.CharField(max_length=500)
     description = models.CharField(max_length=500)
+    name = models.CharField(max_length=500,
+                            unique=True)
 
     def __str__(self):
         return "{} {}".format(self.id, self.name)
 
 
 class Material(models.Model):
-    name = models.CharField(max_length=500)
     description = models.CharField(max_length=500)
     price = models.FloatField()
     tracker = FieldTracker(fields=['price'])
+    name = models.CharField(max_length=500,
+                            unique=True)
     unit = models.CharField(max_length=500,
                             choices=UNITS)
     category = models.ForeignKey('MaterialCategory',

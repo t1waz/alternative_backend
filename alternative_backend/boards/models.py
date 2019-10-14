@@ -14,7 +14,8 @@ class BoardCompany(models.Model):
 
 
 class BoardModel(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50,
+                            unique=True)
     description = models.CharField(max_length=500)
     year = models.IntegerField()
     code = models.IntegerField()

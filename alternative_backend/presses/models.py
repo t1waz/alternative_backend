@@ -1,14 +1,16 @@
 from django.db import models
-from model_utils import FieldTracker
 
 
 class Press(models.Model):
-    name = models.CharField(max_length=200)
     press_time = models.IntegerField()
-    mold = models.ForeignKey('boards.boardmodel',
-                             on_delete=models.CASCADE,
-                             related_name='actual_mold')
-    tracker = FieldTracker(fields=['mold'])
+    name = models.CharField(max_length=200,
+                            unique=True)
+
+    def __str__(self):
+        return "{} {}".format(self.name, self.press_time)
+
+    class Meta:
+        db_table = "press"
 
 
 class MoldHistory(models.Model):
@@ -23,4 +25,12 @@ class MoldHistory(models.Model):
                                 related_name='history_started')
     finished = models.ForeignKey('events.event',
                                  on_delete=models.CASCADE,
-                                 related_name='history_finished')
+                                 related_name='history_finished',
+                                 null=True,
+                                 blank=True)
+
+    def __str__(self):
+        return "{} {}".format(self.press, self.mold)
+
+    class Meta:
+        db_table = "mold_history"

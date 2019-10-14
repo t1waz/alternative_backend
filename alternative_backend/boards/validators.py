@@ -29,7 +29,7 @@ def validate_barcode(**kwargs):
 
     if not BoardService().get_company(barcode=barcode):
         raise ValidationError('not valid company in barcode'.format(barcode))
-    if not BoardService().get_model(barcode=barcode):
+    if not BoardService().get_model_from_barcode(barcode=barcode):
         raise ValidationError('not valid board model in barcode'.format(barcode))
 
 

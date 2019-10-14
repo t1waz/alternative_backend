@@ -22,7 +22,7 @@ class MaterialSerializer(serializers.ModelSerializer):
                                             slug_field='name')
 
 
-class BoardModelComponentSerializers(serializers.ModelSerializer):
+class BoardModelComponentSerializer(serializers.ModelSerializer):
     class Meta:
         model = BoardModelComponent
         fields = ('id', 'material', 'quantity')

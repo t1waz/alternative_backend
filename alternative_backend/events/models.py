@@ -11,3 +11,9 @@ class Event(models.Model):
                                on_delete=models.CASCADE)
     operation = models.ForeignKey('Operation',
                                   on_delete=models.CASCADE)
+
+    def __str__(self):
+        return "{} {}".format(self.person, self.operation.name)
+
+    class Meta:
+        db_table = "event"

@@ -52,10 +52,26 @@ class BoardService:
         except Exception:
             raise ServiceException('incorrect input data')
 
-    def get_model(self, barcode):
+    def get_model_from_barcode(self, barcode):
         try:
             return BoardModel.objects.get(code=str(barcode)[2:4],
                                           company__code=str(barcode)[4:6])
+        except BoardModel.DoesNotExist:
+            return None
+        except:
+            raise ServiceException('incorrect input data')
+
+    def get_model_from_id(self, id):
+        try:
+            return BoardModel.objects.get(id=id)
+        except BoardModel.DoesNotExist:
+            return None
+        except:
+            raise ServiceException('incorrect input data')
+
+    def get_model_from_name(self, name):
+        try:
+            return BoardModel.objects.get(name=name)
         except BoardModel.DoesNotExist:
             return None
         except:

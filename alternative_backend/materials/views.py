@@ -8,7 +8,7 @@ from materials.models import (
 from materials.serializers import (
     MaterialCategorySerializer,
     MaterialSerializer,
-    BoardModelComponent,
+    BoardModelComponentSerializer,
 )
 
 
