@@ -395,8 +395,30 @@
 				"order": 4, 
 				"timestamp": "2019-01-22T07:35:15.481Z"}
 },
+{
+	"model": "events.operation",
+	"pk": 1,
+	"fields": {	"name": "changing mold"}
+
+},
+{
+	"model": "events.event",
+	"pk": 1,
+	"fields": {	"timestamp": "2018-12-16T23:16:11.133Z",
+				"person": 111111111111,
+				"operation": 1
+	}
+},
 {	"model": "presses.press", 
 	"pk": 1, 
 	"fields": {	"name": "STARA STARA", 
 				"press_time": 7200}
+},
+{
+	"model": "presses.moldhistory",
+	"pk": 1,
+	"fields": { "press": 1,
+				"mold": 2,
+				"started": 1,
+				"finished": null}
 }]

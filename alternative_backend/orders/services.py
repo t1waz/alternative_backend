@@ -8,7 +8,7 @@ from boards.models import (
     BoardScan,
     Board,
 )
-from .models import (
+from orders.models import (
     OrderRecord, 
     Order, 
     SendedBoard,

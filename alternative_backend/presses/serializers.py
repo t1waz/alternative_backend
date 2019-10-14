@@ -13,13 +13,6 @@ class PressSerializer(serializers.ModelSerializer):
         model = Press
         fields = ('id', 'name', 'mold', 'press_time')
 
-    mold = serializers.SerializerMethodField()
-
-    def get_mold(self, obj):
-        open_record = PressService().get_open_mold_history_records(press=obj)
-
-        return open_record.mold.name
-
 
 class MoldHistorySerializer(serializers.ModelSerializer):
     class Meta:

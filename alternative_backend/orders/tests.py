@@ -1,5 +1,5 @@
 from django.test import TestCase
-from .models import (
+from orders.models import (
     Order,
     Client
 )
@@ -8,11 +8,11 @@ from common.tests import (
     TestAPI,
     init_test_db,
 )
-from .serializers import (
+from orders.serializers import (
     OrderSerializer,
     ClientSerializer
 )
-from .views import (
+from orders.views import (
     OrderViewSet,
     ClientViewSet,
     CompanyOrderInfoAPIView,

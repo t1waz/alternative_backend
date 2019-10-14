@@ -1,6 +1,6 @@
-from rest_framework.routers import DefaultRouter
 from django.urls import path
-from .views import (
+from rest_framework.routers import DefaultRouter
+from presses.views import (
     PressViewSet,
     MoldChangeApiView
 )

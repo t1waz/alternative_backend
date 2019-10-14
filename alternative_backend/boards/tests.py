@@ -10,13 +10,13 @@ from common.tests import (
     init_test_db,
     TestAPI,
 )
-from .models import (
+from boards.models import (
     Board,
     BoardModel,
     BoardCompany,
     BoardScan,
 )
-from .views import (
+from boards.views import (
     StockAPIView,
     BoardScanAPIView,
     BoardModelViewSet,
@@ -26,7 +26,7 @@ from .views import (
     ProductionDetailAPIView,
     BoardViewSet,
 )
-from .serializers import (
+from boards.serializers import (
     BoardModelSerializer,
     BoardCompanySerializer,
     BoardListSerializer,
@@ -52,11 +52,11 @@ class BoardModelViewTests(ViewSetBaseTests, TestCase):
         self.endpoint = 'board_models/'
         self.serializer = BoardModelSerializer
         self.model = BoardModel
-        self.new_data = {'name': 'Erget',
+        self.new_data = {'name': 'Erget_2',
                          'description': 'one of the most popular boards',
                          'year': 2018,
-                         'code': 30,
-                         'company': self.model.objects.get(id=1).id}
+                         'code': 35,
+                         'company': 1}
         self.update_datas = [{'description': 'new description'}]
         self.detail_view = BoardModelViewSet.as_view(actions=self.view_actions)
         self.view = BoardModelViewSet.as_view(actions=self.detail_view_actions)

@@ -3,7 +3,7 @@ from django.db import transaction
 from stations.models import Station
 from orders.models import SendedBoard
 from common.exceptions import ServiceException
-from .models import (
+from boards.models import (
     Board,
     BoardScan,
     BoardCompany,
@@ -53,7 +53,7 @@ class BoardService:
     def create_new_board_from_barcode(self, barcode):
         try:
             new_board = Board.objects.create(barcode=barcode,
-                                             model=self.get_model(barcode=barcode),
+                                             model=self.get_model_from_barcode(barcode=barcode),
                                              company=self.get_barcode_company(barcode=barcode),
                                              second_category=False)
         except:    # TODO

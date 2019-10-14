@@ -1,16 +1,16 @@
 from rest_framework import mixins
 from common.auth import BaseAccess
-from .services import OrderService
 from rest_framework import generics
 from rest_framework import viewsets
+from orders.services import OrderService
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import (
+from orders.models import (
     Order, 
     Client,
     SendedBoard, 
 )
-from .serializers import (
+from orders.serializers import (
     OrderSerializer,
     SendedBoardSerializer,
     ClientSerializer,

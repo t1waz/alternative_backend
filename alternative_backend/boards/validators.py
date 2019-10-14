@@ -1,5 +1,5 @@
 from django.conf import settings
-from .services import BoardService
+from boards.services import BoardService
 from common.common import SimpleValidator
 from django.core.exceptions import ValidationError
 

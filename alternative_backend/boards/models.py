@@ -3,8 +3,9 @@ from django.db import models
 
 class BoardCompany(models.Model):
     description = models.CharField(max_length=500)
-    name = models.CharField(max_length=200)
     code = models.IntegerField(unique=True)
+    name = models.CharField(max_length=200,
+                            unique=True)
 
     def __str__(self):
         return "{} {}".format(self.id, self.name)
@@ -18,7 +19,7 @@ class BoardModel(models.Model):
                             unique=True)
     description = models.CharField(max_length=500)
     year = models.IntegerField()
-    code = models.IntegerField()
+    code = models.IntegerField(unique=True)
     company = models.ForeignKey('BoardCompany',
                                 on_delete=models.CASCADE)
 

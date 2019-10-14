@@ -1,10 +1,10 @@
-from .services import OrderService
 from rest_framework import serializers
-from .fields import (
+from orders.services import OrderService
+from orders.fields import (
     BoardsField,
     SendedField,
 )
-from .validators import (
+from orders.validators import (
     SendedBoardValidation,
     DeleteSendedValidation,
     OrderValidation,
@@ -12,7 +12,7 @@ from .validators import (
 from boards.models import (
     Board,
 )
-from .models import (
+from orders.models import (
     Client,
     Order,
     OrderRecord,

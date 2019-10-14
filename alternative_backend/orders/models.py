@@ -1,5 +1,5 @@
 from django.db import models
-from .managers import ActiveOrderManager
+from orders.managers import ActiveOrderManager
 
 
 class Client(models.Model):
