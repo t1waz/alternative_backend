@@ -1,6 +1,6 @@
+from django.db import transaction
 from events.services import EventService
 from common.exceptions import ServiceException
-from django.db import transaction
 from presses.models import (
     Press,
     MoldHistory,

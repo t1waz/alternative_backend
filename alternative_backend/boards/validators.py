@@ -27,7 +27,7 @@ def validate_barcode(**kwargs):
     if len(str(barcode)) > settings.BARCODE_LENGHT:
         raise ValidationError('barcode: {} is too long'.format(barcode))
 
-    if not BoardService().get_company(barcode=barcode):
+    if not BoardService().get_barcode_company(barcode=barcode):
         raise ValidationError('not valid company in barcode'.format(barcode))
     if not BoardService().get_model_from_barcode(barcode=barcode):
         raise ValidationError('not valid board model in barcode'.format(barcode))

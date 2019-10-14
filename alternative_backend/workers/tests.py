@@ -1,14 +1,14 @@
-from .models import Worker
 from django.test import TestCase
-from .views import (
-    WorkerViewSet,
-    NewWorkerScanAPIView,
-)
-from .serializers import WorkerSerializer
+from workers.models import Worker
+from workers.serializers import WorkerSerializer
 from common.tests import (
     ViewSetBaseTests,
     TestAPI,
     init_test_db,
+)
+from workers.views import (
+    WorkerViewSet,
+    NewWorkerScanAPIView,
 )
 
 

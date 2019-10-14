@@ -1,7 +1,7 @@
-from rest_framework import viewsets
-from .serializers import StationSerializer
-from .models import Station
 from common.auth import BaseAccess
+from rest_framework import viewsets
+from stations.models import Station
+from stations.serializers import StationSerializer
 
 
 class StationViewSet(viewsets.ModelViewSet):

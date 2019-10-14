@@ -1,9 +1,9 @@
-from rest_framework import viewsets
+from workers.models import Worker
 from common.auth import BaseAccess
+from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import Worker
-from .serializers import (
+from workers.serializers import (
     WorkerSerializer,
     WorkerScanSerializer
 )

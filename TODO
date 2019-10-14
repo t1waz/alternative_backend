@@ -5,3 +5,4 @@ command to start new app:
 
 - test for press history
 - better tests
+- removes properties from models

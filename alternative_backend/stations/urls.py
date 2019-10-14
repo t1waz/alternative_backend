@@ -1,5 +1,5 @@
 from rest_framework.routers import DefaultRouter
-from .views import (
+from stations.views import (
 	StationViewSet,
 )
 

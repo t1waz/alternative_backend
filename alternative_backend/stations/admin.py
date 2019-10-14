@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Station
+from stations.models import Station
 
 
 admin.site.register(Station)

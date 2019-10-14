@@ -1,9 +1,9 @@
 import json
-from django.http import JsonResponse
-from django.test import TestCase
-from unittest.mock import MagicMock
-from django.conf import settings
 from .auth import BaseAccess
+from django.test import TestCase
+from django.conf import settings
+from unittest.mock import MagicMock
+from django.http import JsonResponse
 from django.core.management import call_command
 from rest_framework.test import APIRequestFactory
 

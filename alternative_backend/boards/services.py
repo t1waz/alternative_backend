@@ -33,18 +33,7 @@ class BoardService:
         except:    # TODO
             raise ServiceException('cannot create missing scan')
 
-    def get_all_barcodes(self):
-        return Board.objects.all()
-
-    def get_board(self, barcode): 
-        try:
-            return Board.objects.get(barcode=barcode)
-        except Board.DoesNotExist:
-            return None
-        except:
-            raise ServiceException('incorrect input data')
-
-    def get_company(self, barcode):    # TODO - if barcode is None
+    def get_barcode_company(self, barcode):    # TODO - if barcode is None
         try:
             return BoardCompany.objects.get(code=str(barcode)[4:6])
         except BoardCompany.DoesNotExist:
@@ -61,27 +50,11 @@ class BoardService:
         except:
             raise ServiceException('incorrect input data')
 
-    def get_model_from_id(self, id):
-        try:
-            return BoardModel.objects.get(id=id)
-        except BoardModel.DoesNotExist:
-            return None
-        except:
-            raise ServiceException('incorrect input data')
-
-    def get_model_from_name(self, name):
-        try:
-            return BoardModel.objects.get(name=name)
-        except BoardModel.DoesNotExist:
-            return None
-        except:
-            raise ServiceException('incorrect input data')
-
     def create_new_board_from_barcode(self, barcode):
         try:
             new_board = Board.objects.create(barcode=barcode,
                                              model=self.get_model(barcode=barcode),
-                                             company=self.get_company(barcode=barcode),
+                                             company=self.get_barcode_company(barcode=barcode),
                                              second_category=False)
         except:    # TODO
             raise ServiceException('cannot create new board')

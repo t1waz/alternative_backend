@@ -1,7 +1,7 @@
-from .models import Station
 from django.test import TestCase
-from .views import StationViewSet
-from .serializers import StationSerializer
+from stations.models import Station
+from stations.views import StationViewSet
+from stations.serializers import StationSerializer
 from common.tests import (
     ViewSetBaseTests,
 )

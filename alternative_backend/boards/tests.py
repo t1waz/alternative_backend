@@ -1,10 +1,10 @@
 import copy
 import json
-from django.http import JsonResponse
 from django.test import TestCase
+from django.conf import settings
 from workers.models import Worker
 from stations.models import Station
-from django.conf import settings
+from django.http import JsonResponse
 from common.tests import (
     ViewSetBaseTests,
     init_test_db,

@@ -1,11 +1,11 @@
-from rest_framework import viewsets
+from presses.models import Press
 from common.auth import BaseAccess
-from .models import Press
-from rest_framework.response import Response
-from common.exceptions import ServiceException
+from rest_framework import viewsets
 from rest_framework.views import APIView
 from presses.services import PressService
-from .serializers import (
+from rest_framework.response import Response
+from common.exceptions import ServiceException
+from presses.serializers import (
     PressSerializer,
     MoldHistorySerializer,
 )

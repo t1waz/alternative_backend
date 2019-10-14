@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .services import OrderService
+from orders.services import OrderService
 
 
 class BoardsField(serializers.Field):
