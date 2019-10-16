@@ -2,7 +2,6 @@ from rest_framework import serializers
 from materials.models import (
     MaterialCategory,
     Material,
-    BoardModelComponent,
 )
 
 
@@ -15,14 +14,8 @@ class MaterialCategorySerializer(serializers.ModelSerializer):
 class MaterialSerializer(serializers.ModelSerializer):
     class Meta:
         model = Material
-        fields = ('id', 'name', 'description', 'unit', 'category')
+        fields = ('id', 'name', 'description', 'unit', 'category', 'price')
 
     category = serializers.SlugRelatedField(many=False,
                                             queryset=MaterialCategory.objects.all(),
                                             slug_field='name')
-
-
-class BoardModelComponentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = BoardModelComponent
-        fields = ('id', 'material', 'quantity')

@@ -4,11 +4,13 @@ from orders.models import SendedBoard
 from rest_framework import serializers
 from boards.services import BoardService
 from rest_framework.validators import UniqueTogetherValidator
+from materials.models import Material
 from boards.models import (
     BoardCompany,
     BoardModel,
     Board,
     BoardScan,
+    BoardModelComponent,
 )
 from boards.validators import (
     BoardCompanyValidation,
@@ -24,11 +26,47 @@ class BoardCompanySerializer(serializers.ModelSerializer):
         validators = [BoardCompanyValidation()]
 
 
+class BoardModelComponentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BoardModelComponent
+        fields = ('material', 'quantity')
+
+    material = serializers.SlugRelatedField(many=False,
+                                            queryset=Material.objects.all(),
+                                            slug_field='name')
+
+
+class BoardModelComponentsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BoardModel
+        fields = ('components',)
+
+    components = BoardModelComponentSerializer(source='component',
+                                               many=True)
+
+    def create(self, validated_data):
+        components = validated_data.pop('component')
+        new_model = BoardService().create_board_model(validated_data=validated_data)
+        BoardService().create_components(model=new_model,
+                                         components=components)
+
+        return new_model
+
+    def update(self, instance, validated_data):
+        if 'components' in validated_data.keys():
+            components = validated_data.pop('components')
+            BoardService().update_components(model=instance,
+                                             components=components)
+
+        return instance
+
+
 class BoardModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = BoardModel
-        fields = ('id', 'description', 'year', 'company', 'name', 'code')
         validators = [BoardModelValidation()]
+        fields = ('id', 'description', 'year', 'company', 
+                  'name', 'code',)
 
 
 class BoardUpdateSerializer(serializers.ModelSerializer):

@@ -7,7 +7,8 @@ from boards.models import (
     Board,
     BoardScan,
     BoardCompany,
-    BoardModel
+    BoardModel,
+    BoardModelComponent,
 )
 
 
@@ -45,6 +46,14 @@ class BoardService:
         try:
             return BoardModel.objects.get(code=str(barcode)[2:4],
                                           company__code=str(barcode)[4:6])
+        except BoardModel.DoesNotExist:
+            return None
+        except:
+            raise ServiceException('incorrect input data')
+
+    def get_model_from_name(self, model_name):
+        try:
+            return BoardModel.objects.get(name=model_name)
         except BoardModel.DoesNotExist:
             return None
         except:
@@ -98,3 +107,38 @@ class BoardService:
 
     def get_stock(self):
         return {c.name: self.get_stock_for(c.code) for c in BoardCompany.objects.all()}
+
+    def get_model_construction(self, model_name):
+        return {material: quantity for (material, quantity) in
+                BoardModelComponent.objects.filter(model__name=model_name).values_list(
+                    'material__name', 'quantity')}
+
+    def get_model_production_price(self, model_name):
+        return sum(qty * material_price for (qty, material_price) in 
+                BoardModelComponent.objects.filter(model__name=model_name).values_list(
+                        'quantity', 'material__price'))
+
+    def create_board_model(self, validated_data):
+        return BoardModel.objects.create(**validated_data)
+
+    def create_components(self, model, components):
+        new_components = []
+
+        for component in components:
+            new_component = BoardModelComponent(quantity=component['quantity'],
+                                                model=model,
+                                                material=component['material'])
+
+            new_components.append(new_component)
+
+        try:
+            BoardModelComponent.objects.bulk_create(new_components)
+        except:  # TODO
+            raise ServiceException('internal error - cannot create')
+
+    @transaction.atomic
+    def update_components(self, model, components):
+        BoardModelComponent.objects.filter(model=model).delete()
+
+        self.create_components(model=model,
+                               components=components)

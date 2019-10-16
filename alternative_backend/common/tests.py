@@ -99,7 +99,7 @@ class ViewSetBaseTests:
     def test_update_invalid(self):
         for invalid_data in self.update_invalid_datas:
             pk = invalid_data['pk']
-            request = self.api.patch_request(self.endpoint, update_data)
+            request = self.api.patch_request(self.endpoint, invalid_data)
             response = self.view(request, pk=pk)
 
             assert response.status_code == 201

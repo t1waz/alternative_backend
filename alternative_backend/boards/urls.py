@@ -9,6 +9,7 @@ from boards.views import (
     ProductionDetailAPIView,
     StockAPIView,
     StockDetailAPIView,
+    BoardModelCompositionAPIView,
 )
 
 
@@ -30,5 +31,5 @@ urlpatterns = [
     path(r'production/<int:company>', ProductionDetailAPIView.as_view()),
     path(r'stock/', StockAPIView.as_view()),
     path(r'stock/<int:code>', StockDetailAPIView.as_view()),
-
+    path(r'board_models/<int:pk>/components/', BoardModelCompositionAPIView.as_view()),
 ] + app_router.urls

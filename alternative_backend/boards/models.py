@@ -62,3 +62,15 @@ class BoardScan(models.Model):
 
     class Meta:
         db_table = "board_scan"
+
+
+class BoardModelComponent(models.Model):
+    quantity = models.FloatField()
+    model = models.ForeignKey('BoardModel',
+                              on_delete=models.CASCADE,
+                              related_name='component')
+    material = models.ForeignKey('materials.material',
+                                 on_delete=models.CASCADE)
+
+    def __str__(self):
+        return "{} {}".format(self.material.name, self.model.name)

@@ -50,16 +50,19 @@ class BoardCompanyViewTests(ViewSetBaseTests, TestCase):
                 'description': 'one of the most popular companies'
             },
             {
-                'name': 'Loadedsdfsdfsdfsfdsdfasddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddasasdddddddddddddddddddddddddddddddddddddddddddd',
+                'name': 'Loadedsdfsdfsdfsfdsdfasdddddddddddddddddddddddddddddddddddddddd\
+                ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddasasdddd\
+                dddddddddddddddddddddddddddddddddddddddd',
                 'code': 1,
                 'description': 'one of the most popular companies'
             },
             {
                 'name': 'Loaded',
                 'code': 1,
-                'description': 'one of sdffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffdsfthe mo'
+                'description': 'one of sdfffffffffffffffffffffffffffffffffffffffffffffff\
+                ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\
+                fffffffffffffffffffffffffffffffdsfthe mo'
             },
-            
         ]
         self.detail_view = BoardCompanyViewSet.as_view(actions=self.view_actions)
         self.view = BoardCompanyViewSet.as_view(actions=self.detail_view_actions)
@@ -104,16 +107,20 @@ class BoardModelViewTests(ViewSetBaseTests, TestCase):
                 'code': 35,
                 'company': 12
             },
-           {
+            {
                 'name': 'Erget_6',
-                'description': 'one of thasdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddasdasdasdasdasda',
+                'description': 'one of thasddddddddddddddddddddddddddddddddddddddddddd\
+                dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\
+                ddddddddddddddddddddddddddddasdasdasdasdasda',
                 'year': 2018,
                 'code': 35,
                 'company': 12
             },
-           {
+            {
                 'name': 'Erget',
-                'description': 'one of thasdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddasdasdasdasdasda',
+                'description': 'one of thasdddddddddddddddddddddddddddddddddddddddddddd\
+                ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\
+                ddddddddddddddddddddddddddasdasdasdasdasda',
                 'year': 2018123,
                 'code': 351,
                 'company': 124

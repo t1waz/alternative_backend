@@ -35,7 +35,6 @@ class Press(models.Model):
                                                        finished__isnull=True)
 
         return current_mold_hisotry.mold.name
-    
 
     def __str__(self):
         return "{} {}".format(self.name, self.press_time)

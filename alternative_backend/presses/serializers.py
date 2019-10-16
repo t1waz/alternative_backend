@@ -1,7 +1,6 @@
 from workers.models import Worker
 from boards.models import BoardModel
 from rest_framework import serializers
-from presses.services import PressService
 from presses.models import (
     Press,
     MoldHistory,

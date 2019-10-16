@@ -3,12 +3,10 @@ from common.auth import BaseAccess
 from materials.models import (
     MaterialCategory,
     Material,
-    BoardModelComponent,
 )
 from materials.serializers import (
     MaterialCategorySerializer,
     MaterialSerializer,
-    BoardModelComponentSerializer,
 )
 
 

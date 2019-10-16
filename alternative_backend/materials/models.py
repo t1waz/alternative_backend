@@ -1,5 +1,4 @@
 from django.db import models
-from model_utils import FieldTracker
 from materials.constants import UNITS
 
 
@@ -15,7 +14,6 @@ class MaterialCategory(models.Model):
 class Material(models.Model):
     description = models.CharField(max_length=500)
     price = models.FloatField()
-    tracker = FieldTracker(fields=['price'])
     name = models.CharField(max_length=500,
                             unique=True)
     unit = models.CharField(max_length=500,
@@ -29,17 +27,7 @@ class Material(models.Model):
 
 class MaterialPriceHistory(models.Model):
     price = models.FloatField()
+    timestamp = models.DateTimeField(auto_now_add=True)
     material = models.ForeignKey('Material',
                                  on_delete=models.CASCADE,
                                  related_name='history_material')
-    established = models.ForeignKey('events.event',
-                                    on_delete=models.CASCADE,
-                                    related_name='history_established')
-
-
-class BoardModelComponent(models.Model):
-    quantity = models.FloatField()
-    model = models.ForeignKey('boards.boardmodel',
-                              on_delete=models.CASCADE)
-    material = models.ForeignKey('Material',
-                                 on_delete=models.CASCADE)

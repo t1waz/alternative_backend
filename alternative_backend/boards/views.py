@@ -18,6 +18,7 @@ from boards.serializers import (
     BoardDetailViewSerializer,
     BoardCreateSerializer,
     BoardUpdateSerializer,
+    BoardModelComponentsSerializer,
 )
 
 
@@ -53,6 +54,13 @@ class BoardScanAPIView(generics.CreateAPIView):
     permission_classes = (BaseAccess, )
     queryset = BoardScan.objects.all()
     serializer_class = BoardScanSerializer
+
+
+class BoardModelCompositionAPIView(generics.RetrieveAPIView):
+    permission_classes = (BaseAccess, )
+    queryset = BoardModel.objects.all()
+    serializer_class = BoardModelComponentsSerializer
+    lookup_field = 'pk'
 
 
 class ProductionAPIView(APIView):
