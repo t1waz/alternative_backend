@@ -5,4 +5,5 @@ command to start new app:
 
 - test for press history
 - better tests
-- removes properties from models
+- add detailed test for materials (invalid cases)
+- add tests for board components

@@ -421,4 +421,20 @@
 				"mold": 2,
 				"started": 1,
 				"finished": null}
+},
+{
+	"model": "materials.materialcategory",
+	"pk": 1,
+	"fields": {	"name": "WOOD",
+				"description": "wood like materials"}
+},
+{
+	"model": "materials.material",
+	"pk": 1,
+	"fields": {	"description": "material like wood",
+				"price": 4,
+				"name": "wood core",
+				"unit": "pcs",
+				"category": 1
+	}
 }]
