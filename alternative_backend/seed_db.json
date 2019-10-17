@@ -1,12 +1,14 @@
 [{	"model": "workers.worker", 
 	"pk": 111111111111,
 	"fields": {	"username": "Lukasz Tomkiel",  
-				"barcode": 111111111111 }
+				"barcode": 111111111111,
+				"password": "aaa" }
 },
 {	"model": "workers.worker", 
 	"pk": 222222222222,
 	"fields": {	"username": "Szymon Smialek",
-				"barcode": 222222222222 }
+				"barcode": 222222222222,
+				"password": "bbb" }
 },
 {	"model": "boards.boardcompany", 
 	"pk": 1,
