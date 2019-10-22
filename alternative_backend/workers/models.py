@@ -3,6 +3,7 @@ from django.db import models
 
 class Worker(models.Model):
     password = models.CharField(max_length=100)
+    is_active = models.BooleanField(default=True)
     username = models.CharField(max_length=30,
                                 unique=True)
     barcode = models.BigIntegerField(primary_key=True,

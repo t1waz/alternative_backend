@@ -20,7 +20,7 @@ class BoardModel(models.Model):
     description = models.CharField(max_length=200)
     year = models.IntegerField()
     code = models.IntegerField(unique=True)
-    company = models.ForeignKey('BoardCompany',
+    company = models.ForeignKey('boards.boardcompany',
                                 on_delete=models.CASCADE)
 
     def __str__(self):
@@ -32,9 +32,9 @@ class BoardModel(models.Model):
 
 class Board(models.Model):
     barcode = models.BigIntegerField(unique=True)
-    model = models.ForeignKey('BoardModel',
+    model = models.ForeignKey('boards.boardmodel',
                               on_delete=models.CASCADE)
-    company = models.ForeignKey('BoardCompany',
+    company = models.ForeignKey('boards.boardcompany',
                                 on_delete=models.CASCADE)
     second_category = models.BooleanField(default=False)
     press_time = models.IntegerField(default=0)
@@ -47,7 +47,7 @@ class Board(models.Model):
 
 
 class BoardScan(models.Model):
-    barcode = models.ForeignKey('Board',
+    barcode = models.ForeignKey('boards.board',
                                 on_delete=models.CASCADE)
     worker = models.ForeignKey('workers.Worker',
                                on_delete=models.CASCADE)
@@ -64,13 +64,13 @@ class BoardScan(models.Model):
         db_table = "board_scan"
 
 
-class BoardModelComponent(models.Model):
+class BoardModelMaterial(models.Model):
     quantity = models.FloatField()
-    model = models.ForeignKey('BoardModel',
+    model = models.ForeignKey('boards.boardmodel',
                               on_delete=models.CASCADE,
-                              related_name='component')
+                              related_name='components')
     material = models.ForeignKey('materials.material',
-                                 on_delete=models.CASCADE)
+                                 on_delete=models.CASCADE)    
 
     def __str__(self):
         return "{} {}".format(self.material.name, self.model.name)

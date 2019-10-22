@@ -6,6 +6,7 @@ class SimpleValidator:
         self.fields = serializer.Meta.fields
         self.instance = getattr(serializer, 'instance', None)
         self.updated_fields = [field for field in dir(self) if field in self.fields]
+        self.required_fields = getattr(serializer.Meta, 'required_fields', set())
 
     def run_validators(self, value):
         validators = getattr(self, 'validators')
@@ -18,5 +19,6 @@ class SimpleValidator:
 
     def __call__(self, value):
         common_fields = set(self.fields).intersection(set(self.updated_fields))
+        common_fields = common_fields.union(self.required_fields)
         if not self.instance or common_fields:
             self.run_validators(value)

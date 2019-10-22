@@ -7,3 +7,4 @@ command to start new app:
 - better tests
 - add detailed test for materials (invalid cases)
 - add tests for board components
+- better exception handling

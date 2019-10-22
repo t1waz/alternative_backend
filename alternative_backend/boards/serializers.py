@@ -10,7 +10,7 @@ from boards.models import (
     BoardModel,
     Board,
     BoardScan,
-    BoardModelComponent,
+    BoardModelMaterial,
 )
 from boards.validators import (
     BoardCompanyValidation,
@@ -26,9 +26,9 @@ class BoardCompanySerializer(serializers.ModelSerializer):
         validators = [BoardCompanyValidation()]
 
 
-class BoardModelComponentSerializer(serializers.ModelSerializer):
+class BoardModelMaterialSerializer(serializers.ModelSerializer):
     class Meta:
-        model = BoardModelComponent
+        model = BoardModelMaterial
         fields = ('material', 'quantity')
 
     material = serializers.SlugRelatedField(many=False,
@@ -36,13 +36,13 @@ class BoardModelComponentSerializer(serializers.ModelSerializer):
                                             slug_field='name')
 
 
-class BoardModelComponentsSerializer(serializers.ModelSerializer):
+class BoardModelMaterialsSerializer(serializers.ModelSerializer):
     class Meta:
         model = BoardModel
         fields = ('components',)
 
-    components = BoardModelComponentSerializer(source='component',
-                                               many=True)
+    components = BoardModelMaterialSerializer(source='component',
+                                              many=True)
 
     def create(self, validated_data):
         components = validated_data.pop('component')
@@ -66,7 +66,12 @@ class BoardModelSerializer(serializers.ModelSerializer):
         model = BoardModel
         validators = [BoardModelValidation()]
         fields = ('id', 'description', 'year', 'company', 
-                  'name', 'code',)
+                  'name', 'code', 'production_price_pln')
+
+    production_price_pln = serializers.SerializerMethodField()
+
+    def get_production_price_pln(self, obj):
+        return round(BoardService().get_price_for_model(model=obj), 2)
 
 
 class BoardUpdateSerializer(serializers.ModelSerializer):

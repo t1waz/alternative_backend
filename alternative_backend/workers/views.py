@@ -2,11 +2,24 @@ from workers.models import Worker
 from common.auth import BaseAccess
 from rest_framework import viewsets
 from rest_framework.views import APIView
+from workers.services import WorkerService
 from rest_framework.response import Response
 from workers.serializers import (
     WorkerSerializer,
-    WorkerScanSerializer
+    WorkerScanSerializer,
 )
+
+
+class WorkerLoginAPIView(APIView):
+    def post(self, request, format=None):
+        token = WorkerService().get_token(username=request.data.get('username'),
+                                          password=request.data.get('password'))
+
+        if not token:
+            return Response('invalid login data',
+                            status=404)
+
+        return Response({'token': token})
 
 
 class WorkerViewSet(viewsets.ModelViewSet):

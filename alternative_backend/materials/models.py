@@ -14,9 +14,11 @@ class MaterialCategory(models.Model):
 class Material(models.Model):
     description = models.CharField(max_length=500)
     price = models.FloatField()
-    name = models.CharField(max_length=500,
+    currency = models.ForeignKey('currency.currency',
+                                 on_delete=models.CASCADE)
+    name = models.CharField(max_length=50,
                             unique=True)
-    unit = models.CharField(max_length=500,
+    unit = models.CharField(max_length=50,
                             choices=UNITS)
     category = models.ForeignKey('MaterialCategory',
                                  on_delete=models.CASCADE)
@@ -27,7 +29,16 @@ class Material(models.Model):
 
 class MaterialPriceHistory(models.Model):
     price = models.FloatField()
-    timestamp = models.DateTimeField(auto_now_add=True)
+    currency = models.ForeignKey('currency.currency',
+                                 on_delete=models.CASCADE)
+    started = models.ForeignKey('events.event',
+                                on_delete=models.CASCADE,
+                                related_name='history_material_price_started')
+    finished = models.ForeignKey('events.event',
+                                 on_delete=models.CASCADE,
+                                 related_name='history_material_price_finished',
+                                 null=True,
+                                 blank=True)
     material = models.ForeignKey('Material',
                                  on_delete=models.CASCADE,
                                  related_name='history_material')

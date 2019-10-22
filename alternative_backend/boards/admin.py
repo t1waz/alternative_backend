@@ -4,7 +4,7 @@ from boards.models import (
     BoardModel,
     Board,
     BoardScan,
-    BoardModelComponent,
+    BoardModelMaterial,
 )
 
 
@@ -12,4 +12,4 @@ admin.site.register(BoardCompany)
 admin.site.register(BoardModel)
 admin.site.register(Board)
 admin.site.register(BoardScan)
-admin.site.register(BoardModelComponent)
+admin.site.register(BoardModelMaterial)

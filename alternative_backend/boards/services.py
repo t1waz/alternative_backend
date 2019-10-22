@@ -8,13 +8,13 @@ from boards.models import (
     BoardScan,
     BoardCompany,
     BoardModel,
-    BoardModelComponent,
+    BoardModelMaterial,
 )
 
 
 class BoardService:
     @transaction.atomic
-    def add_missing_scans(self, last_scan):
+    def add_missing_scans(self, last_scan: dict) -> None:
         station = last_scan.get('station')
         board = last_scan.get('barcode')
         worker = last_scan.get('worker')
@@ -34,7 +34,7 @@ class BoardService:
         except:    # TODO
             raise ServiceException('cannot create missing scan')
 
-    def get_barcode_company(self, barcode):    # TODO - if barcode is None
+    def get_barcode_company(self, barcode: int) -> BoardCompany:
         try:
             return BoardCompany.objects.get(code=str(barcode)[4:6])
         except BoardCompany.DoesNotExist:
@@ -42,7 +42,7 @@ class BoardService:
         except Exception:
             raise ServiceException('incorrect input data')
 
-    def get_model_from_barcode(self, barcode):
+    def get_model_from_barcode(self, barcode: int) -> BoardModel:
         try:
             return BoardModel.objects.get(code=str(barcode)[2:4],
                                           company__code=str(barcode)[4:6])
@@ -51,7 +51,7 @@ class BoardService:
         except:
             raise ServiceException('incorrect input data')
 
-    def get_model_from_name(self, model_name):
+    def get_model_from_name(self, model_name: str) -> BoardModel:
         try:
             return BoardModel.objects.get(name=model_name)
         except BoardModel.DoesNotExist:
@@ -59,7 +59,7 @@ class BoardService:
         except:
             raise ServiceException('incorrect input data')
 
-    def create_new_board_from_barcode(self, barcode):
+    def create_new_board_from_barcode(self, barcode: str) -> None:
         try:
             new_board = Board.objects.create(barcode=barcode,
                                              model=self.get_model_from_barcode(barcode=barcode),
@@ -70,7 +70,7 @@ class BoardService:
 
         return new_board
 
-    def get_production_for(self, company_code):
+    def get_production_for(self, company_code: str) -> dict:
         company = BoardCompany.objects.get(code=company_code)
         stations = list(Station.objects.all().values_list('name', flat=True))
         scans = BoardScan.objects.filter(barcode__company=company).select_related(
@@ -92,7 +92,7 @@ class BoardService:
     def get_production(self):
         return {c.name: self.get_production_for(c.code) for c in BoardCompany.objects.all()}
 
-    def get_stock_for(self, company_code):
+    def get_stock_for(self, company_code: str) -> dict:
         stock_dict = dict()
         models = BoardModel.objects.filter(company=company_code).values('name')
         for model in [m['name'] for m in models]:
@@ -108,37 +108,42 @@ class BoardService:
     def get_stock(self):
         return {c.name: self.get_stock_for(c.code) for c in BoardCompany.objects.all()}
 
-    def get_model_construction(self, model_name):
+    def get_model_construction(self, model_name: str) -> dict:
         return {material: quantity for (material, quantity) in
-                BoardModelComponent.objects.filter(model__name=model_name).values_list(
+                BoardModelMaterial.objects.filter(model__name=model_name).values_list(
                     'material__name', 'quantity')}
 
-    def get_model_production_price(self, model_name):
+    def get_model_production_price(self, model_name: str) -> dict:
         return sum(qty * material_price for (qty, material_price) in 
-                BoardModelComponent.objects.filter(model__name=model_name).values_list(
+                BoardModelMaterial.objects.filter(model__name=model_name).values_list(
                         'quantity', 'material__price'))
 
-    def create_board_model(self, validated_data):
+    def create_board_model(self, validated_data: dict) -> None:
         return BoardModel.objects.create(**validated_data)
 
     def create_components(self, model, components):
         new_components = []
 
         for component in components:
-            new_component = BoardModelComponent(quantity=component['quantity'],
-                                                model=model,
-                                                material=component['material'])
+            new_component = BoardModelMaterial(quantity=component['quantity'],
+                                               model=model,
+                                               material=component['material'])
 
             new_components.append(new_component)
 
         try:
-            BoardModelComponent.objects.bulk_create(new_components)
+            BoardModelMaterial.objects.bulk_create(new_components)
         except:  # TODO
             raise ServiceException('internal error - cannot create')
 
     @transaction.atomic
     def update_components(self, model, components):
-        BoardModelComponent.objects.filter(model=model).delete()
+        BoardModelMaterial.objects.filter(model=model).delete()
 
         self.create_components(model=model,
                                components=components)
+
+    def get_price_for_model(self, model):
+        return sum(quantity * price * currency for (quantity, price, currency) in
+                   model.components.all().values_list(
+                   'quantity', 'material__price', 'material__currency__price'))

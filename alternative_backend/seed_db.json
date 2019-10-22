@@ -2,13 +2,15 @@
 	"pk": 111111111111,
 	"fields": {	"username": "Lukasz Tomkiel",  
 				"barcode": 111111111111,
-				"password": "aaa" }
+				"password": "aaa",
+				"is_active": true }
 },
 {	"model": "workers.worker", 
 	"pk": 222222222222,
 	"fields": {	"username": "Szymon Smialek",
 				"barcode": 222222222222,
-				"password": "bbb" }
+				"password": "bbb",
+				"is_active": true }
 },
 {	"model": "boards.boardcompany", 
 	"pk": 1,
@@ -414,7 +416,8 @@
 {	"model": "presses.press", 
 	"pk": 1, 
 	"fields": {	"name": "STARA STARA", 
-				"press_time": 7200}
+				"press_time": 7200,
+				"mold": 2}
 },
 {
 	"model": "presses.moldhistory",
@@ -431,12 +434,160 @@
 				"description": "wood like materials"}
 },
 {
+	"model": "materials.materialcategory",
+	"pk": 2,
+	"fields": {	"name": "COMPOSITE",
+				"description": "wood like materials"}
+},
+{
+	"model": "materials.material",
+	"pk": 1,
+	"fields": {	"description": "core for Fantail dimensions 1000x300",
+				"price": 1.2,
+				"currency": 1,
+				"name": "Fantail core",
+				"unit": "pcs",
+				"category": 1}
+},
+{
+	"model": "materials.material",
+	"pk": 2,
+	"fields": {	"description": "core for Erget dimensions 1100x300",
+				"price": 2,
+				"currency": 2,
+				"name": "Erget core",
+				"unit": "pcs",
+				"category": 1}
+},
+{
+	"model": "materials.material",
+	"pk": 3,
+	"fields": {	"description": "core for Discofix dimensions 1200x300",
+				"price": 2.5,
+				"currency": 1,
+				"name": "Discofox core",
+				"unit": "pcs",
+				"category": 1}
+},
+{
+	"model": "materials.material",
+	"pk": 4,
+	"fields": {	"description": "core for Bolero dimensions 1250x300",
+				"price": 3,
+				"currency": 1,
+				"name": "Bolero core",
+				"unit": "pcs",
+				"category": 1}
+},
+{
+	"model": "materials.material",
+	"pk": 5,
+	"fields": {	"description": "biaxial glass 300 kg/m2",
+				"price": 5.7,
+				"currency": 1,
+				"name": "biaxial 300",
+				"unit": "m2",
+				"category": 2}
+},
+{
+	"model": "materials.material",
+	"pk": 6,
+	"fields": {	"description": "biaxial glass 600 kg/m2",
+				"price": 10.7,
+				"currency": 2,
+				"name": "biaxial 600",
+				"unit": "m2",
+				"category": 1}
+},
+{
+	"model": "boards.boardmodelmaterial",
+	"pk": 1,
+	"fields": {	"quantity": 1,
+				"model": 1,
+				"material": 1
+	}
+},
+{
+	"model": "boards.boardmodelmaterial",
+	"pk": 2,
+	"fields": {	"quantity": 1,
+				"model": 2,
+				"material": 2
+	}
+},
+{
+	"model": "boards.boardmodelmaterial",
+	"pk": 3,
+	"fields": {	"quantity": 1,
+				"model": 3,
+				"material": 3
+	}
+},
+{
+	"model": "boards.boardmodelmaterial",
+	"pk": 4,
+	"fields": {	"quantity": 1,
+				"model": 4,
+				"material": 4
+	}
+},
+{
+	"model": "boards.boardmodelmaterial",
+	"pk": 5,
+	"fields": {	"quantity": 0.5,
+				"model": 1,
+				"material": 5
+	}
+},
+{
+	"model": "boards.boardmodelmaterial",
+	"pk": 6,
+	"fields": {	"quantity": 0.3,
+				"model": 1,
+				"material": 6
+	}
+},
+{
+	"model": "boards.boardmodelmaterial",
+	"pk": 7,
+	"fields": {	"quantity": 1.7,
+				"model": 2,
+				"material": 5
+	}
+},
+{
+	"model": "currency.currency",
+	"pk": 1,
+	"fields": { "name": "euro",
+				"symbol": "EUR",
+				"price": 1.2
+			}
+},
+{
+	"model": "currency.currency",
+	"pk": 2,
+	"fields": {	"name": "dollar",
+				"symbol": "USD",
+				"price": 2.5
+	}
+},
+{
+	"model": "currency.currency",
+	"pk": 3,
+	"fields": {	"name": "polish zloty",
+				"symbol": "PLN",
+				"price": 1
+	}
+},
+{
 	"model": "materials.material",
 	"pk": 1,
 	"fields": {	"description": "material like wood",
 				"price": 4,
+				"currency": 1,
 				"name": "wood core",
 				"unit": "pcs",
 				"category": 1
 	}
-}]
+}
+]

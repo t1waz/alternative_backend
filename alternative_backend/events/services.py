@@ -1,4 +1,5 @@
 from common.exceptions import ServiceException
+from workers.models import Worker
 from events.models import (
     Event,
     Operation,
@@ -6,10 +7,7 @@ from events.models import (
 
 
 class EventService:
-    def create_event(self, worker, operation_name):
-        if not worker:
-            raise ServiceException("create event worker data is incorrect")
-
+    def create_event(self, worker: Worker, operation_name: str) -> Event:
         operation, created = Operation.objects.get_or_create(name=operation_name)
 
         try:
@@ -18,15 +16,13 @@ class EventService:
         except:  # TODO
             ServiceException("cannot create new event")
 
-    def create_operation(self, name):
+    def create_operation(self, name: str) -> Operation:
         try:
-            new_operation = Operation.objects.create(name=name)
+            return Operation.objects.create(name=name)
         except:  # TODO
             ServiceException("cannot create operation")
 
-        return new_operation
-
-    def get_operation(self, name):
+    def get_operation(self, name: str) -> Operation:
         try:
             return Operation.objects.get(name=name)
         except Operation.DoesNotExist:

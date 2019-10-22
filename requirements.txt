@@ -10,3 +10,8 @@ coverage==4.5.3
 django-cors-headers==3.0.2
 psycopg2-binary==2.8.3
 uWSGI==2.0.18
+cryptography==2.8
+celery==4.3.0
+redis==3.3.11
+crontab==0.22.6
+requests==2.22.0

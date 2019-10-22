@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
+from celery.schedules import crontab
 from corsheaders.defaults import default_headers
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -51,6 +52,8 @@ INSTALLED_APPS = [
     'presses',
     'events',
     'materials',
+    'common',
+    'currency',
 ]
 
 # Database
@@ -66,6 +69,19 @@ DATABASES = {
     }
 }
 
+CELERY_BROKER_URL = 'redis://redis:6379'
+CELERY_RESULT_BACKEND = 'redis://redis:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+
+CELERY_BEAT_SCHEDULE = {
+    'get_currency_prices': {
+        'task': 'currency.tasks.get_currency_prices',
+        'schedule': crontab(minute=0, hour=0)  # execute at midnight
+    }
+}
+
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -76,6 +92,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'common.middlewares.IdentyProviderMiddleware',
 ]
 
 ROOT_URLCONF = 'alternative_backend.urls'
@@ -143,5 +160,3 @@ PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_ROOT = os.path.join('/', 'static')
 
 BARCODE_LENGHT = 12
-
-ACCESS_KEY = os.environ['ACCESS_TOKEN']

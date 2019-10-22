@@ -24,3 +24,7 @@ __pycache__/
 local_settings.py
 
 alternative_backend/alternative_backend/static/
+
+alternative_backend/celerybeat.pid
+
+alternative_backend/celerybeat-schedule

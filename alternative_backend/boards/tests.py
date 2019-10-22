@@ -1,13 +1,11 @@
 import copy
-import json
 from django.test import TestCase
-from django.conf import settings
 from workers.models import Worker
 from stations.models import Station
-from django.http import JsonResponse
-from common.tests import (
-    ViewSetBaseTests,
+from common.utils import (
+    ViewSetTestsMixin,
     init_test_db,
+    get_token,
     TestAPI,
 )
 from boards.models import (
@@ -34,199 +32,180 @@ from boards.serializers import (
 )
 
 
-class BoardCompanyViewTests(ViewSetBaseTests, TestCase):
-    def setUp(self):
-        self.endpoint = 'companies/'
-        self.serializer = BoardCompanySerializer
-        self.model = BoardCompany
-        self.new_data = {'name': 'Loaded',
-                         'code': 30,
-                         'description': 'one of the most popular companies'}
-        self.update_datas = [{'description': 'new description'}]
-        self.post_invalid_datas = [
-            {
-                'name': 'Loaded',
-                'code': 100,
-                'description': 'one of the most popular companies'
-            },
-            {
-                'name': 'Loadedsdfsdfsdfsfdsdfasdddddddddddddddddddddddddddddddddddddddd\
-                ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddasasdddd\
-                dddddddddddddddddddddddddddddddddddddddd',
-                'code': 1,
-                'description': 'one of the most popular companies'
-            },
-            {
-                'name': 'Loaded',
-                'code': 1,
-                'description': 'one of sdfffffffffffffffffffffffffffffffffffffffffffffff\
-                ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\
-                fffffffffffffffffffffffffffffffdsfthe mo'
-            },
-        ]
-        self.detail_view = BoardCompanyViewSet.as_view(actions=self.view_actions)
-        self.view = BoardCompanyViewSet.as_view(actions=self.detail_view_actions)
+class BoardCompanyViewTests(ViewSetTestsMixin, TestCase):
+    model = BoardCompany
+    endpoint = 'companies/'
+    view = BoardCompanyViewSet
+    serializer = BoardCompanySerializer
+    post_datas = [
+        {
+            'name': 'Loaded',
+            'code': 30,
+            'description': 'one of the most popular companies'
+        },
+    ]
+    update_datas = [
+        {
+            'description': 'new description'
+        },
+    ]
+    post_invalid_datas = [
+        {
+            'name': 'Loaded',
+            'code': 100,
+            'description': 'one of the most popular companies'
+        },
+        {
+            'name': 'Loadedsdfsdfsdfsfdsdfasdddddddddddddddddddddddddddddddddddddddd\
+            ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddasasdddd\
+            dddddddddddddddddddddddddddddddddddddddd',
+            'code': 1,
+            'description': 'one of the most popular companies'
+        },
+        {
+            'name': 'Loaded',
+            'code': 1,
+            'description': 'one of sdfffffffffffffffffffffffffffffffffffffffffffffff\
+            ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\
+            fffffffffffffffffffffffffffffffdsfthe mo'
+        },
+    ]
+    update_invalid_datas = [
+
+    ]
 
 
-class BoardModelViewTests(ViewSetBaseTests, TestCase):
-    def setUp(self):
-        self.endpoint = 'board_models/'
-        self.serializer = BoardModelSerializer
-        self.model = BoardModel
-        self.new_data = {'name': 'Erget_2',
-                         'description': 'one of the most popular boards',
-                         'year': 2018,
-                         'code': 35,
-                         'company': 1}
-        self.post_invalid_datas = [
-            {
-                'name': 'Erget',
-                'description': 'one of the most popular boards',
-                'year': 2018,
-                'code': 35,
-                'company': 1
-            },
-            {
-                'name': 'Erget_3',
-                'description': 'one of the most popular boards',
-                'year': 20181,
-                'code': 35,
-                'company': 1
-            },
-            {
-                'name': 'Erget_4',
-                'description': 'one of the most popular boards',
-                'year': 2018,
-                'code': 351,
-                'company': 1
-            },
-            {
-                'name': 'Erget_5',
-                'description': 'one of the most popular boards',
-                'year': 2018,
-                'code': 35,
-                'company': 12
-            },
-            {
-                'name': 'Erget_6',
-                'description': 'one of thasddddddddddddddddddddddddddddddddddddddddddd\
-                dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\
-                ddddddddddddddddddddddddddddasdasdasdasdasda',
-                'year': 2018,
-                'code': 35,
-                'company': 12
-            },
-            {
-                'name': 'Erget',
-                'description': 'one of thasdddddddddddddddddddddddddddddddddddddddddddd\
-                ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\
-                ddddddddddddddddddddddddddasdasdasdasdasda',
-                'year': 2018123,
-                'code': 351,
-                'company': 124
-            },
-        ]
-        self.update_datas = [{'description': 'new description'}]
-        self.detail_view = BoardModelViewSet.as_view(actions=self.view_actions)
-        self.view = BoardModelViewSet.as_view(actions=self.detail_view_actions)
+class BoardModelViewTests(ViewSetTestsMixin, TestCase):
+    model = BoardModel
+    endpoint = 'board_models/'
+    view = BoardModelViewSet
+    serializer = BoardModelSerializer
+    post_datas = [
+        {
+            'name': 'Erget_2',
+            'description': 'one of the most popular boards',
+            'year': 2018,
+            'code': 35,
+            'company': 1
+        },
+
+    ]
+    update_datas = [
+        {
+            'description': 'new description'
+        },
+    ]
+    post_invalid_datas = [
+        {
+            'name': 'Erget',
+            'description': 'one of the most popular boards',
+            'year': 2018,
+            'code': 35,
+            'company': 1
+        },
+        {
+            'name': 'Erget_3',
+            'description': 'one of the most popular boards',
+            'year': 20181,
+            'code': 35,
+            'company': 1
+        },
+        {
+            'name': 'Erget_4',
+            'description': 'one of the most popular boards',
+            'year': 2018,
+            'code': 351,
+            'company': 1
+        },
+        {
+            'name': 'Erget_5',
+            'description': 'one of the most popular boards',
+            'year': 2018,
+            'code': 35,
+            'company': 12
+        },
+        {
+            'name': 'Erget_6',
+            'description': 'one of thasddddddddddddddddddddddddddddddddddddddddddd\
+            dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\
+            ddddddddddddddddddddddddddddasdasdasdasdasda',
+            'year': 2018,
+            'code': 35,
+            'company': 12
+        },
+        {
+            'name': 'Erget',
+            'description': 'one of thasdddddddddddddddddddddddddddddddddddddddddddd\
+            ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\
+            ddddddddddddddddddddddddddasdasdasdasdasda',
+            'year': 2018123,
+            'code': 351,
+            'company': 124
+        },
+
+    ]
+    update_invalid_datas = [
+
+    ]
 
 
-class BoardViewSetTests(ViewSetBaseTests, TestCase):
-    def setUp(self):
-        self.endpoint = 'boards'
-        self.model = Board
-        self.detail_view = BoardViewSet.as_view(actions={'get': 'retrieve',
-                                                         'patch': 'partial_update'})
-        self.view = BoardViewSet.as_view(actions={'get': 'list',
-                                                  'post': 'create'})
+class BoardViewSetTests(ViewSetTestsMixin, TestCase):
+    model = Board
+    endpoint = 'boards/'
+    view = BoardViewSet
+    serializer = BoardListSerializer
+    detail_serializer = BoardDetailViewSerializer
+    key_search = {'barcode': 181002000001}
+    post_datas = [
+        {
+            'barcode': 181002123456
+        },
+    ]
+    update_datas = [
+        {
+            'barcode': 181002000001,
+            'second_category': True
+        },
+        {
+            'barcode': 181002000001,
+            'second_category': False
+        },
+    ]
+    post_invalid_datas = [
+        {
+            'barcode': 199910654321
+        },
+        {
+            'barcode': 191099654321
+        },
+        {
+            'barcode': 1910996543211
+        },
+        {
+            'barcode': 19109965432
+        },
+        {
+            'barcode': 19221099654321
+        },
+        {
+            'barcode': 100099654321
+        },
+        {
+            'barcode': 199910654321,
+            'second_category': True
+        },
 
-    def test_get_list(self):
-        db_data = BoardListSerializer(self.model.objects.all(), many=True)
-        request = self.api.get_request(self.endpoint)
-        response = self.view(request)
-        request_raw_data = JsonResponse(response.data, safe=False)
-        request_data = json.loads(request_raw_data.content)
+    ]
+    update_invalid_datas = [
 
-        assert request_data == db_data.data
-
-    def test_get_detail(self):
-        db_company = BoardDetailViewSerializer(self.model.objects.get(barcode=181002000001))
-        request = self.api.get_request(self.endpoint)
-        response = self.detail_view(request, barcode=181002000001)
-        request_raw_data = JsonResponse(response.data, safe=False)
-        request_data = json.loads(request_raw_data.content)
-
-        assert request_data == db_company.data
-
-    def test_post(self):
-        new_data = {'barcode': 181002123456}
-        request = self.api.post_request(self.endpoint, new_data)
-        response = self.view(request)
-
-        assert response.status_code == 201
-
-    def test_wrong_model(self):
-        wrong_message = {'barcode': 199910654321}
-        request = self.api.post_request(self.endpoint, wrong_message)
-        response = self.view(request)
-
-        assert response.status_code == 400
-
-    def test_wrong_company(self):
-        wrong_message = {'barcode': 191099654321}
-        request = self.api.post_request(self.endpoint, wrong_message)
-        response = self.view(request)
-
-        assert response.status_code == 400
-
-    def test_wrong_barcode_lenght(self):
-        wrong_barcodes = [int(''.join(['1' for _ in range(settings.BARCODE_LENGHT + 1)])),
-                          int(''.join(['1' for _ in range(settings.BARCODE_LENGHT - 1)])),
-                          int(str(191010) + ''.join(['1' for _ in range(settings.BARCODE_LENGHT - 5)])),
-                          int(str(191010) + ''.join(['1' for _ in range(settings.BARCODE_LENGHT - 7)])),
-                          int(str(199910) + ''.join(['1' for _ in range(settings.BARCODE_LENGHT - 5)])),
-                          int(str(191099) + ''.join(['1' for _ in range(settings.BARCODE_LENGHT - 7)]))]
-        for wrong_barcode in wrong_barcodes:
-            wrong_message = {'barcode': wrong_barcode}
-            request = self.api.post_request(self.endpoint, wrong_message)
-            response = self.view(request)
-
-            assert response.status_code == 400
-
-    def test_delete(self):
-        pass  # TODO
-
-    def test_update(self):
-        valid_message = {'barcode': 181002000001,
-                         'second_category': True}
-        request = self.api.patch_request(self.endpoint, valid_message)
-        response = self.detail_view(request, barcode=valid_message['barcode'])
-
-        assert response.status_code == 200
-
-        valid_message_2 = copy.copy(valid_message)
-        valid_message_2['second_category'] = False
-
-        request = self.api.patch_request(self.endpoint, valid_message)
-        response = self.detail_view(request, barcode=valid_message['barcode'])
-
-        assert response.status_code == 200
-
-    def test_non_existing_barcode(self):
-        wrong_message = {'barcode': 199910654321,
-                         'second_category': True}
-
-        request = self.api.patch_request(self.endpoint, wrong_message)
-        response = self.detail_view(request, barcode=wrong_message['barcode'])
-
-        assert response.status_code == 404
+    ]
 
 
 class BoardScanAPIViewTests(TestCase):
     def setUp(self):
         self.endpoint = 'add_scan/'
         init_test_db()
-        self.api = TestAPI()
+        self.api = TestAPI(token=get_token())
         self.worker = Worker.objects.get(barcode=111111111111)
         self.barcode = Board.objects.get(id=3)
         self.view = BoardScanAPIView.as_view()
@@ -298,7 +277,7 @@ class ProductionAPIViewTests(TestCase):
     def setUp(self):
         self.endpoint = 'production/'
         init_test_db()
-        self.api = TestAPI()
+        self.api = TestAPI(token=get_token())
         self.view = ProductionAPIView.as_view()
 
     def test_get_data(self):
@@ -330,7 +309,7 @@ class ProductionDetailAPIViewTests(TestCase):
     def setUp(self):
         self.endpoint = 'production/'
         init_test_db()
-        self.api = TestAPI()
+        self.api = TestAPI(token=get_token())
         self.view = ProductionDetailAPIView.as_view()
 
     def test_get_data(self):
@@ -353,7 +332,7 @@ class StockAPIViewTests(TestCase):
     def setUp(self):
         self.endpoint = 'stock/'
         init_test_db()
-        self.api = TestAPI()
+        self.api = TestAPI(token=get_token())
         self.view = StockAPIView.as_view()
 
     def test_get_data(self):
@@ -376,7 +355,7 @@ class StockDetailAPIViewTests(TestCase):
     def setUp(self):
         self.endpoint = 'stock/'
         init_test_db()
-        self.api = TestAPI()
+        self.api = TestAPI(token=get_token())
         self.view = StockDetailAPIView.as_view()
 
     def test_get_data(self):

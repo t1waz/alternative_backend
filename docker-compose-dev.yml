@@ -29,6 +29,24 @@
         - db
         - django-service
 
+    django-celery:
+      <<: *django
+      command: celery -A alternative_backend worker -l debug
+      depends_on:
+        - db
+        - django-service
+        - redis
+        - django-app
+
+    django-celery-beat:
+      <<: *django
+      command: celery -A alternative_backend beat -l debug
+      depends_on:
+        - db
+        - django-service
+        - redis
+        - django-app
+
     db:
       image: postgres:latest
       volumes:
@@ -36,4 +54,5 @@
       env_file:
         - .envs/development/postgres.env
 
-
+    redis:
+      image: "redis:alpine"

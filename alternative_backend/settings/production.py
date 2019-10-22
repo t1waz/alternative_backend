@@ -6,3 +6,5 @@ from settings.base import *
 DEBUG = False
 
 ALLOWED_HOSTS = ['*']
+
+CRYPTO_KEY = b'sziAlG_7nlDASeKdYTGAU5jnh0xYHoI-F_OfnpX9XHo='

@@ -3,10 +3,11 @@ from orders.models import (
     Order,
     Client
 )
-from common.tests import (
-    ViewSetBaseTests,
-    TestAPI,
+from common.utils import (
+    ViewSetTestsMixin,
     init_test_db,
+    get_token,
+    TestAPI,
 )
 from orders.serializers import (
     OrderSerializer,
@@ -21,39 +22,73 @@ from orders.views import (
 )
 
 
-class OrderViewSetTests(ViewSetBaseTests, TestCase):
-    def setUp(self):
-        self.endpoint = 'orders/'
-        self.serializer = OrderSerializer
-        self.model = Order
-        self.new_data = {'client': 'Lukasz Tomkiel',
-                         'boards': {'Fantail': 2}}
-        self.update_datas = [{'client': 'Heiko'}, {'boards': {'Fantail': 3}}]
-        self.detail_view = OrderViewSet.as_view(actions=self.view_actions)
-        self.view = OrderViewSet.as_view(actions=self.detail_view_actions)
+class OrderViewSetTests(ViewSetTestsMixin, TestCase):
+    model = Order
+    endpoint = 'orders/'
+    view = OrderViewSet
+    serializer = OrderSerializer
+    post_datas = [
+        {
+            'client': 'Lukasz Tomkiel',
+            'boards': 
+                {
+                    'Fantail': 2
+                }
+        },
+    ]
+    update_datas = [
+        {
+            'client': 'Heiko'
+        }, 
+        {
+            'boards': 
+                {
+                    'Fantail': 3
+                }
+        },
+    ]
+    post_invalid_datas = [
+
+    ]
+    update_invalid_datas = [
+
+    ]
 
 
-class ClientViewSetTests(ViewSetBaseTests, TestCase):
-    def setUp(self):
-        self.endpoint = 'clients/'
-        self.serializer = ClientSerializer
-        self.model = Client
-        self.new_data = {'name': 'Piotr Dabrowski',
-                         'country': 'Poland',
-                         'city': 'Krakow',
-                         'post_code': '12-345',
-                         'adress': 'Piotra 1/4',
-                         'is_company': 'false'}
-        self.update_datas = [{'name': 'Heiko Niemiec'}]
-        self.detail_view = ClientViewSet.as_view(actions=self.view_actions)
-        self.view = ClientViewSet.as_view(actions=self.detail_view_actions)
+class ClientViewSetTests(ViewSetTestsMixin, TestCase):
+    model = Client
+    endpoint = 'clients/'
+    view = ClientViewSet
+    serializer = ClientSerializer
+    post_datas = [
+        {
+            'name': 'Piotr Dabrowski',
+            'country': 'Poland',
+            'city': 'Krakow',
+            'post_code': '12-345',
+            'adress': 'Piotra 1/4',
+            'is_company': 'false'
+        },
+
+    ]
+    update_datas = [
+        {
+            'name': 'Heiko Niemiec'
+        },
+    ]
+    post_invalid_datas = [
+
+    ]
+    update_invalid_datas = [
+
+    ]
 
 
 class CompanyOrderInfoAPIViewTests(TestCase):
     def setUp(self):
         self.endpoint = 'order_info/'
         init_test_db()
-        self.api = TestAPI()
+        self.api = TestAPI(token=get_token())
         self.view = CompanyOrderInfoAPIView.as_view()
 
     def test_get_data(self):
@@ -82,7 +117,7 @@ class CompanyOrderInfoDetailAPIViewTests(TestCase):
     def setUp(self):
         self.endpoint = 'order_info/'
         init_test_db()
-        self.api = TestAPI()
+        self.api = TestAPI(token=get_token())
         self.view = CompanyOrderInfoDetailAPIView.as_view()
 
     def test_get_data(self):
@@ -102,7 +137,7 @@ class SendedBoardRecordAPIViewTests(TestCase):
     def setUp(self):
         self.endpoint = 'add_sended_board/'
         init_test_db()
-        self.api = TestAPI()
+        self.api = TestAPI(token=get_token())
         self.view = SendedBoardRecordAPIView.as_view()
 
     def test_post_valid_board_to_valid_order(self):

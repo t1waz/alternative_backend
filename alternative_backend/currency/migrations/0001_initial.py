@@ -12,14 +12,15 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Station',
+            name='Currency',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=50)),
-                ('description', models.CharField(max_length=200)),
+                ('symbol', models.CharField(choices=[('PLN', 'PLN'), ('USD', 'USD'), ('EUR', 'EUR')], max_length=500)),
+                ('price', models.FloatField(blank=True, null=True)),
             ],
             options={
-                'db_table': 'station',
+                'db_table': 'currency',
             },
         ),
     ]

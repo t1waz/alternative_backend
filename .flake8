@@ -8,6 +8,7 @@ per-file-ignores =
     events/migrations/*: E501
     orders/migrations/*: E501
     stations/migrations/*: E501
+    materials/migrations/*: E501
+    currency/migrations/*: E501
     boards/migrations/*: E501
     settings/*: F403, F401
-    materials/migrations/*: E501

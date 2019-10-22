@@ -1,55 +1,67 @@
 from django.test import TestCase
-from common.tests import (
-    ViewSetBaseTests,
-)
 from materials.views import (
-	MaterialCategoryViewSet,
-	MaterialViewSet,
+    MaterialCategoryViewSet,
+    MaterialViewSet,
 )
 from materials.serializers import (
-	MaterialCategorySerializer,
-	MaterialSerializer,
+    MaterialCategorySerializer,
+    MaterialSerializer,
 )
 from materials.models import (
-	MaterialCategory,
-	Material,
+    MaterialCategory,
+    Material,
+)
+from common.utils import (
+    ViewSetTestsMixin,
 )
 
 
-class MaterialCategoryViewSetTests(ViewSetBaseTests, TestCase):
-    def setUp(self):
-        self.endpoint = 'material_categories/'
-        self.serializer = MaterialCategorySerializer
-        self.model = MaterialCategory
-        self.new_data = {
-        	'name': 'water like materials',
-        	'description': 'test description'
+class MaterialCategoryViewSetTests(ViewSetTestsMixin, TestCase):
+    model = MaterialCategory
+    endpoint = 'material_categories/'
+    view = MaterialCategoryViewSet
+    serializer = MaterialCategorySerializer
+    post_datas = [
+        {
+            'name': 'water like materials',
+            'description': 'test description'
+        },
+    ]
+    update_datas = [
+        {
+            'name': 'melon like materials'
         }
-        self.update_datas = [
-        	{
-        		'name': 'melon like materials'
-        	}
-        ]
-        self.detail_view = MaterialCategoryViewSet.as_view(actions=self.view_actions)
-        self.view = MaterialCategoryViewSet.as_view(actions=self.detail_view_actions)
+    ]
+    post_invalid_datas = [
+
+    ]
+    update_invalid_datas = [
+
+    ]
 
 
-class MaterialViewSetTests(ViewSetBaseTests, TestCase):
-	def setUp(self):
-		self.endpoint = 'materials/'
-		self.serializer = MaterialSerializer
-		self.model = Material
-		self.new_data = {
-			'description': 'test description',
-			'price': 1,
-			'name': 'test name',
-			'unit': 'pcs',
-			'category': 'WOOD'
-		}
-		self.update_datas = [
-			{
-				'description': 'test description 2'
-			}
-		]
-		self.detail_view = MaterialViewSet.as_view(actions=self.view_actions)
-		self.view = MaterialViewSet.as_view(actions=self.detail_view_actions)
+class MaterialViewSetTests(ViewSetTestsMixin, TestCase):
+    model = Material
+    endpoint = 'materials/'
+    view = MaterialViewSet
+    serializer = MaterialSerializer
+    post_datas = [
+        {
+            'description': 'test description',
+            'price': 1,
+            'name': 'test name',
+            'unit': 'pcs',
+            'category': 'WOOD'
+        },
+    ]
+    update_datas = [
+        {
+            'description': 'test description 2'
+        },
+    ]
+    post_invalid_datas = [
+
+    ]
+    update_invalid_datas = [
+
+    ]

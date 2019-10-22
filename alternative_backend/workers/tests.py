@@ -1,10 +1,11 @@
 from django.test import TestCase
 from workers.models import Worker
 from workers.serializers import WorkerSerializer
-from common.tests import (
-    ViewSetBaseTests,
-    TestAPI,
+from common.utils import (
+    ViewSetTestsMixin,
     init_test_db,
+    get_token,
+    TestAPI,
 )
 from workers.views import (
     WorkerViewSet,
@@ -12,24 +13,36 @@ from workers.views import (
 )
 
 
-class WorkerViewSetTests(ViewSetBaseTests, TestCase):
-    def setUp(self):
-        self.endpoint = 'workers/'
-        self.serializer = WorkerSerializer
-        self.model = Worker
-        self.pk_key = 111111111111
-        self.new_data = {'username': 'Justa', 
-                         'barcode': 111111112222}
-        self.update_datas = [{'username': 'Justa two'}]
-        self.detail_view = WorkerViewSet.as_view(actions=self.view_actions)
-        self.view = WorkerViewSet.as_view(actions=self.detail_view_actions)
+class WorkerViewSetTests(ViewSetTestsMixin, TestCase):
+    model = Worker
+    endpoint = 'workers/'
+    view = WorkerViewSet
+    serializer = WorkerSerializer
+    key_search = {'pk': '111111111111'}
+    post_datas = [
+        {
+            'username': 'Justa', 
+            'barcode': 111111112222
+        },
+    ]
+    update_datas = [
+        {
+            'username': 'Justa two'
+        },
+    ]
+    post_invalid_datas = [
+
+    ]
+    update_invalid_datas = [
+
+    ]
 
 
 class NewWorkerScanAPIViewTests(TestCase):
     def setUp(self):
         self.endpoint = 'add_worker_scan/'
         init_test_db()
-        self.api = TestAPI()
+        self.api = TestAPI(token=get_token())
         self.view = NewWorkerScanAPIView.as_view()
 
     def test_post_valid_worker_scan(self):
