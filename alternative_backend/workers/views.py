@@ -1,6 +1,7 @@
 from workers.models import Worker
 from common.auth import BaseAccess
 from rest_framework import viewsets
+from common.auth import TokenService
 from rest_framework.views import APIView
 from workers.services import WorkerService
 from rest_framework.response import Response
@@ -20,6 +21,12 @@ class WorkerLoginAPIView(APIView):
                             status=404)
 
         return Response({'token': token})
+
+
+class WorkerTokenValidate(APIView):
+    def post(self, request, format=None):
+        is_valid = TokenService().validate_token(token=request.data.get('token'))
+        return Response({'valid': is_valid})
 
 
 class WorkerViewSet(viewsets.ModelViewSet):

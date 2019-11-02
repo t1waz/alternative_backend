@@ -4,6 +4,7 @@ from workers.views import (
 	WorkerViewSet,
 	NewWorkerScanAPIView,
 	WorkerLoginAPIView,
+	WorkerTokenValidate,
 )
 
 
@@ -14,4 +15,5 @@ app_router.register(r'workers', WorkerViewSet, basename='workers')
 urlpatterns = [
 	path(r'add_worker_scan/', NewWorkerScanAPIView.as_view()),
 	path(r'login/', WorkerLoginAPIView.as_view()),
+	path(r'validate_token/', WorkerTokenValidate.as_view()),
 ] + app_router.urls
