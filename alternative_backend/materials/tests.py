@@ -51,7 +51,8 @@ class MaterialViewSetTests(ViewSetTestsMixin, TestCase):
             'price': 1,
             'name': 'test name',
             'unit': 'pcs',
-            'category': 'WOOD'
+            'category': 'WOOD',
+            'currency': 'USD',
         },
     ]
     update_datas = [

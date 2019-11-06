@@ -10,6 +10,9 @@ class MaterialCategory(models.Model):
     def __str__(self):
         return "{} {}".format(self.id, self.name)
 
+    class Meta:
+        db_table = "material_category"
+
 
 class Material(models.Model):
     description = models.CharField(max_length=500)
@@ -25,6 +28,9 @@ class Material(models.Model):
 
     def __str__(self):
         return "{} {}".format(self.category, self.name)
+
+    class Meta:
+        db_table = "material"
 
 
 class MaterialPriceHistory(models.Model):
@@ -42,3 +48,9 @@ class MaterialPriceHistory(models.Model):
     material = models.ForeignKey('Material',
                                  on_delete=models.CASCADE,
                                  related_name='history_material')
+
+    def __str__(self):
+        return "{} {} {}".format(self.material.name, self.price, self.currency.symbol)
+
+    class Meta:
+        db_table = "material_price_history"

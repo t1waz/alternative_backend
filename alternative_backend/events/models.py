@@ -13,7 +13,9 @@ class Event(models.Model):
                                   on_delete=models.CASCADE)
 
     def __str__(self):
-        return "{} {}".format(self.person, self.operation.name)
+        return "{} {}".format(self.person.name, 
+                              self.operation.name,
+                              self.timestamp)
 
     class Meta:
         db_table = "event"

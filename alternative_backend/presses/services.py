@@ -30,7 +30,8 @@ class PressService:
     def get_open_mold_history_records(self, press):
         try:
             return MoldHistory.objects.get(press=press,
-                                           finished__isnull=True)
+                                           finished__isnull=True,
+                                           started__isnull=False)
         except MoldHistory.DoesNotExist:
             return None
         except:  # TODO

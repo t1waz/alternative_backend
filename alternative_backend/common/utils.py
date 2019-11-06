@@ -1,7 +1,6 @@
 import json
 from copy import deepcopy
 from django.http import JsonResponse
-from workers.views import WorkerLoginAPIView
 from django.core.management import call_command
 from rest_framework.test import APIRequestFactory
 
@@ -28,6 +27,7 @@ def init_test_db():
 
 
 def get_token():
+    from workers.views import WorkerLoginAPIView
     view = WorkerLoginAPIView.as_view()
     data = {
         "username": "Szymon Smialek",

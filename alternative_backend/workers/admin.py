@@ -1,9 +1,9 @@
 from django.contrib import admin
 from workers.models import (
     Worker,
-    WorkerScan
+    WorkerWorkHistory,
 )
 
 
 admin.site.register(Worker)
-admin.site.register(WorkerScan)
+admin.site.register(WorkerWorkHistory)

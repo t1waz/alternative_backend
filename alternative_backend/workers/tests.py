@@ -9,7 +9,7 @@ from common.utils import (
 )
 from workers.views import (
     WorkerViewSet,
-    NewWorkerScanAPIView,
+    WorkerWorkHistoryAPIView,
 )
 
 
@@ -38,16 +38,15 @@ class WorkerViewSetTests(ViewSetTestsMixin, TestCase):
     ]
 
 
-class NewWorkerScanAPIViewTests(TestCase):
+class WorkerWorkHistoryAPIViewTests(TestCase):
     def setUp(self):
         self.endpoint = 'add_worker_scan/'
         init_test_db()
         self.api = TestAPI(token=get_token())
-        self.view = NewWorkerScanAPIView.as_view()
+        self.view = WorkerWorkHistoryAPIView.as_view()
 
     def test_post_valid_worker_scan(self):
-        valid_worker_scan = {'worker_barcode': 111111111111,
-                             'started': True}
+        valid_worker_scan = {'worker': 111111111111}
         request = self.api.post_request(self.endpoint, valid_worker_scan)
         response = self.view(request)
 
@@ -55,28 +54,27 @@ class NewWorkerScanAPIViewTests(TestCase):
 
     def test_post_invalid_worker(self):
         invalid_worker_barcodes = [111111111112, 11111111111, 'aaa', 3.14]
-        invalid_states = ['aaa', 11, None, 2.15]
-        invalid_worker_scan = {'worker_barcode': 111111111111,
-                               'started': True}
+        invalid_worker_scan = {'worker': 111111111111}
+        invalid_names = [11, 'aa', 3.13]
+
         for invalid_barcode in invalid_worker_barcodes:
-            invalid_worker_scan['worker_barcode'] = invalid_barcode
+            invalid_worker_scan['worker'] = invalid_barcode
             request = self.api.post_request(self.endpoint, invalid_worker_scan)
             response = self.view(request)
 
             assert response.status_code == 400
 
-        for invalid_state in invalid_states:
-            invalid_worker_scan['started'] = invalid_state
+        for invalid_barcode in invalid_worker_barcodes:
+            invalid_worker_scan['worker'] = invalid_barcode
+            invalid_worker_scan['aa'] = invalid_barcode
             request = self.api.post_request(self.endpoint, invalid_worker_scan)
             response = self.view(request)
 
             assert response.status_code == 400
 
-        for invalid_worker_barcode in invalid_worker_barcodes:
-            for invalid_state in invalid_states:
-                invalid_worker_scan['worker_barcode'] = invalid_worker_barcode
-                invalid_worker_scan['stated'] = invalid_state
-                request = self.api.post_request(self.endpoint, invalid_worker_scan)
-                response = self.view(request)
+        for invalid_name in invalid_names:
+            invalid_worker_scan[invalid_name] = 111111111111
+            request = self.api.post_request(self.endpoint, invalid_worker_scan)
+            response = self.view(request)
 
-                assert response.status_code == 400
+            assert response.status_code == 400

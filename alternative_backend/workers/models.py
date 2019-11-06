@@ -22,25 +22,29 @@ class Worker(models.Model):
         return surname
 
     def __str__(self):
-        return '{} {}'.format(self.username, self.barcode)
+        return '{}'.format(self.username)
 
     class Meta:
         db_table = 'workers'
 
 
-class WorkerScan(models.Model):
-    worker_barcode = models.ForeignKey('Worker',
-                                       on_delete=models.CASCADE)
-    timestamp = models.DateTimeField(auto_now_add=True)
-    started = models.BooleanField()
-    year = models.IntegerField()
-    month = models.IntegerField()
-    week = models.IntegerField()
-    day_name = models.CharField(max_length=80)
-    seconds = models.BigIntegerField()
+class WorkerWorkHistory(models.Model):
+    worker = models.ForeignKey('Worker',
+                               on_delete=models.CASCADE)
+    started = models.ForeignKey('events.event',
+                                on_delete=models.CASCADE,
+                                related_name='history_work_started')
+    finished = models.ForeignKey('events.event',
+                                 on_delete=models.CASCADE,
+                                 related_name='history_work_finished',
+                                 null=True,
+                                 blank=True)
+    work_time = models.BigIntegerField(null=True,
+                                       blank=True)
 
     def __str__(self):
-        return '{}: {}'.format(self.worker_barcode, self.timestamp)
+        return '{}: {}'.format(self.worker, 
+                               self.started.timestamp)
 
     class Meta:
         db_table = 'worker_scan'

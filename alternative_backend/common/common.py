@@ -1,6 +1,10 @@
 from django.core.exceptions import ValidationError
 
 
+def seconds_between_timestamps(start_timestamp, finish_timestamp):
+    return (finish_timestamp - start_timestamp).total_seconds()
+
+
 class SimpleValidator:
     def set_context(self, serializer):
         self.fields = serializer.Meta.fields

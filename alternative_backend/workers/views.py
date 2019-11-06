@@ -1,13 +1,18 @@
 from workers.models import Worker
-from common.auth import BaseAccess
-from rest_framework import viewsets
-from common.auth import TokenService
 from rest_framework.views import APIView
 from workers.services import WorkerService
 from rest_framework.response import Response
+from common.auth import (
+    BaseAccess,
+    TokenService,
+)
+from rest_framework import (
+    viewsets,
+    generics,
+)
 from workers.serializers import (
     WorkerSerializer,
-    WorkerScanSerializer,
+    WorkerWorkHistorySerializer,
 )
 
 
@@ -35,22 +40,16 @@ class WorkerViewSet(viewsets.ModelViewSet):
     permission_classes = [BaseAccess]
 
 
-class NewWorkerScanAPIView(APIView):
-    """
-    request data structure: 
-                            {
-                                "worker_barcode": barcode:int,
-                                "started": true/false is started:boolean
-                            } 
-    comment key is not required
-    """
-    permission_classes = (BaseAccess,)
+class WorkerWorkHistoryAPIView(generics.CreateAPIView):
+    def post(self, request, *args, **kwargs):
+        status_code = 400
+        status = {
+            'status': False
+        }
+        worker_stamp = WorkerWorkHistorySerializer(data=request.data)
+        if worker_stamp.is_valid():
+            worker_stamp.create(worker_stamp.validated_data)
+            status['status'] = True
+            status_code = 200
 
-    def post(self, request, format=None):
-        new_worker_scan = WorkerScanSerializer(data=request.data)
-        if new_worker_scan.is_valid():
-            new_worker_scan.save()
-            response = "added worker barcode: {}".format(new_worker_scan.data['worker_barcode'])
-        else:
-            response = "worker barcode meta data not is_valid"
-        return Response(response)
+        return Response(status, status=status_code)
