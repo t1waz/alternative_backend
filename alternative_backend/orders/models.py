@@ -19,6 +19,8 @@ class Client(models.Model):
 
 class Order(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
+    boards = models.ManyToManyField('orders.orderrecord',
+                                    related_name='records')
     client = models.ForeignKey('Client',
                                on_delete=models.CASCADE)
     completed = models.BooleanField(default=False,
@@ -28,42 +30,43 @@ class Order(models.Model):
     active_orders = ActiveOrderManager()
 
     def __str__(self):
-        return "{} {}".format(self.id, self.client)
+        return "{} {}".format(self.id, self.client.name)
 
     class Meta:
         db_table = 'order'
 
 
 class SendedBoard(models.Model):
+    timestamp = models.DateTimeField(auto_now_add=True)
     board = models.ForeignKey('boards.board',
                               on_delete=models.CASCADE,
                               related_name='send_boards')
     order = models.ForeignKey('Order',
                               on_delete=models.CASCADE)
-    timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return "{} {}".format(self.board, self.order)
+        return "{} {}".format(self.board.model.name, self.order.id)
 
     class Meta:
         db_table = 'sended_board'
 
 
 class OrderRecord(models.Model):
+    quantity = models.IntegerField()
     order = models.ForeignKey('Order',
                               on_delete=models.CASCADE,
-                              related_name='boards')
+                              related_name='records')
     board_model = models.ForeignKey('boards.boardmodel',
                                     on_delete=models.CASCADE)
-    quantity = models.IntegerField()
 
     @property
     def order_position(self):
         position = {self.board_model.name: self.quantity}
+
         return position
 
     def __str__(self):
-        return "{} {} {}".format(self. order, self.board_model, self.quantity)
+        return "{} {} {}".format(self.order.id, self.board_model.name, self.quantity)
 
     class Meta:
         db_table = 'order_record'

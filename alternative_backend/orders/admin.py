@@ -7,7 +7,18 @@ from orders.models import (
 )
 
 
+class OrderRecordInline(admin.TabularInline):
+    model = OrderRecord
+    extra = 1
+
+
+class OrderAdmin(admin.ModelAdmin):
+    inlines = (OrderRecordInline,)
+    exclude = ('boards',)
+
+
 admin.site.register(Client)
-admin.site.register(Order)
-admin.site.register(OrderRecord)
 admin.site.register(SendedBoard)
+admin.site.register(OrderRecord)
+admin.site.register(Order,
+                    OrderAdmin)

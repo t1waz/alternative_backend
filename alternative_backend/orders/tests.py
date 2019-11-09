@@ -30,10 +30,12 @@ class OrderViewSetTests(ViewSetTestsMixin, TestCase):
     post_datas = [
         {
             'client': 'Lukasz Tomkiel',
-            'boards': 
+            'records': [
                 {
-                    'Fantail': 2
+                    "board_model": "Fantail",
+                    "quantity": 2
                 }
+            ]
         },
     ]
     update_datas = [
@@ -41,10 +43,12 @@ class OrderViewSetTests(ViewSetTestsMixin, TestCase):
             'client': 'Heiko'
         }, 
         {
-            'boards': 
+            'records': [
                 {
-                    'Fantail': 3
+                    "board_model": "Fantail",
+                    "quantity": 22
                 }
+            ]
         },
     ]
     post_invalid_datas = [

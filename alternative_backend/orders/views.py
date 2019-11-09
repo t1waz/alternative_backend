@@ -23,9 +23,6 @@ class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     permission_classes = [BaseAccess]
 
-    def get_serializer_context(self):
-        return {"boards": self.request.data.get('boards', {})}
-
 
 class ClientViewSet(viewsets.ModelViewSet):
     serializer_class = ClientSerializer

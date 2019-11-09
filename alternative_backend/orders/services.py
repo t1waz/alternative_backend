@@ -9,25 +9,21 @@ from boards.models import (
     Board,
 )
 from orders.models import (
-    OrderRecord, 
-    Order, 
+    OrderRecord,
     SendedBoard,
 )
 
 
 class OrderService:
-
     @transaction.atomic
-    def update_order_records(self, order_id, order_records):
-        order = Order.objects.get(id=order_id)
+    def update_order_records(self, order, order_records):
         OrderRecord.objects.filter(order=order).delete()
         records = []
-        for board, quantity in order_records.items():
+        for order_record in order_records:
             record = OrderRecord(order=order,
-                                 board_model=BoardModel.objects.get(name=board),
-                                 quantity=quantity)
+                                 board_model=order_record['board_model'],
+                                 quantity=order_record['quantity'])
             records.append(record)
-
         try:
             OrderRecord.objects.bulk_create(records)
         except:    # TODO

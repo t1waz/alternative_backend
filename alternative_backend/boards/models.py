@@ -15,11 +15,14 @@ class BoardCompany(models.Model):
 
 
 class BoardModel(models.Model):
-    name = models.CharField(max_length=50,
-                            unique=True)
     description = models.CharField(max_length=200)
     year = models.IntegerField()
     code = models.IntegerField(unique=True)
+    name = models.CharField(max_length=50,
+                            unique=True)
+    materials = models.ManyToManyField('materials.material',
+                                       through='boards.boardmodelmaterial',
+                                       verbose_name='model_materials')
     company = models.ForeignKey('boards.boardcompany',
                                 on_delete=models.CASCADE)
 
@@ -32,12 +35,12 @@ class BoardModel(models.Model):
 
 class Board(models.Model):
     barcode = models.BigIntegerField(unique=True)
+    second_category = models.BooleanField(default=False)
+    press_time = models.IntegerField(default=0)
     model = models.ForeignKey('boards.boardmodel',
                               on_delete=models.CASCADE)
     company = models.ForeignKey('boards.boardcompany',
                                 on_delete=models.CASCADE)
-    second_category = models.BooleanField(default=False)
-    press_time = models.IntegerField(default=0)
 
     def __str__(self):
         return "{}".format(self.barcode)
@@ -47,11 +50,11 @@ class Board(models.Model):
 
 
 class BoardScan(models.Model):
+    timestamp = models.DateTimeField(auto_now_add=True)
     barcode = models.ForeignKey('boards.board',
                                 on_delete=models.CASCADE)
     worker = models.ForeignKey('workers.Worker',
                                on_delete=models.CASCADE)
-    timestamp = models.DateTimeField(auto_now_add=True)
     station = models.ForeignKey('stations.Station',
                                 on_delete=models.CASCADE)
     comment = models.CharField(max_length=100,
