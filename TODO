@@ -9,3 +9,5 @@ command to start new app:
 - add tests for board components
 - better exception handling
 - better architecture for common dir
+- handle crypto key
+- test for board composition

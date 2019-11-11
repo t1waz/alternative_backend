@@ -159,4 +159,9 @@ PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 STATIC_ROOT = os.path.join('/', 'static')
 
+CRYPTO_KEY = b'sziAlG_7nlDASeKdYTGAU5jnh0xYHoI-F_OfnpX9XHo='
+
 BARCODE_LENGHT = 12
+
+# token valid time in seconds
+TOKEN_VALID_TIME = 8640
