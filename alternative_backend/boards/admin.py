@@ -5,6 +5,7 @@ from boards.models import (
     Board,
     BoardScan,
     BoardModelMaterial,
+    BoardModelLayout,
 )
 
 
@@ -21,5 +22,6 @@ admin.site.register(BoardCompany)
 admin.site.register(Board)
 admin.site.register(BoardScan)
 admin.site.register(BoardModelMaterial)
+admin.site.register(BoardModelLayout)
 admin.site.register(BoardModel,
                     BoardModelAdmin)

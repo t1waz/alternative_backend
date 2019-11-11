@@ -26,12 +26,40 @@
         - db
         - django-service
 
+    django-celery:
+      <<: *django
+      command: celery -A alternative_backend worker -l info
+      depends_on:
+        - db
+        - django-service
+        - redis
+        - django-app
+
+    django-celery-beat:
+      <<: *django
+      command: celery -A alternative_backend beat -l info --pidfile=
+      depends_on:
+        - db
+        - django-service
+        - redis
+        - django-app
+
     db:
       image: postgres:latest
       volumes:
         - db_data_production:/var/lib/postgresql/data
       env_file:
         - .envs/production/postgres.env
+
+    redis:
+      build:
+        context: .
+        dockerfile: compose/production/redis/Dockerfile
+      command: redis-server /config/redis.conf
+      depends_on:
+        - db
+      sysctls:
+        net.core.somaxconn: '511'
 
     nginx:
       build:
@@ -43,5 +71,3 @@
         - 80:80
       depends_on:
         - django-app
-
-

@@ -27,10 +27,15 @@ def validate_barcode(**kwargs):
     if len(str(barcode)) > settings.BARCODE_LENGHT:
         raise ValidationError('barcode: {} is too long'.format(barcode))
 
-    if not BoardService().get_barcode_company(barcode=barcode):
+    if not BoardService().get_company_from_barcode(barcode=barcode):
         raise ValidationError('not valid company in barcode'.format(barcode))
     if not BoardService().get_model_from_barcode(barcode=barcode):
         raise ValidationError('not valid board model in barcode'.format(barcode))
+
+
+def validate_board_model_component_data(**kwargs):
+    if any((True for key in ('material', 'quantity') if key not in kwargs.keys())):
+        raise ValidationError('incorrect data for update')
 
 
 class BoardCompanyValidation(SimpleValidator):
@@ -44,3 +49,7 @@ class BoardModelValidation(SimpleValidator):
 
 class BoardValidation(SimpleValidator):
     validators = (validate_barcode,)
+
+
+class BoardModelMaterialValidation(SimpleValidator):
+    validators = (validate_board_model_component_data,)

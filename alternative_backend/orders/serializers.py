@@ -30,24 +30,24 @@ class OrderRecordSerializer(serializers.ModelSerializer):
 
 
 class RecordSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = OrderRecord
-        fields = ('board_model', 'quantity')
-
     board_model = serializers.SlugRelatedField(many=False,
                                            queryset=BoardModel.objects.all(),
                                            slug_field='name')
 
+    class Meta:
+        model = OrderRecord
+        fields = ('board_model', 'quantity')
+
 
 class SendedBoardSerializer(serializers.ModelSerializer):
+    board = serializers.SlugRelatedField(many=False,
+                                         queryset=Board.objects.all(),
+                                         slug_field='barcode')
+
     class Meta:
         model = SendedBoard
         fields = ('id', 'board', 'order')
         validators = [SendedBoardValidation()]
-
-    board = serializers.SlugRelatedField(many=False,
-                                         queryset=Board.objects.all(),
-                                         slug_field='barcode')
 
 
 class DeleteSendedSerializer(SendedBoardSerializer):
@@ -58,11 +58,6 @@ class DeleteSendedSerializer(SendedBoardSerializer):
 
 
 class OrderSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Order
-        fields = ('id', 'client', 'timestamp', 'completed', 'records', 'sended')
-        validators = [OrderValidation()]
-
     sended = serializers.SerializerMethodField('sended_boards')
     records = RecordSerializer(many=True,
                                read_only=False)
@@ -91,3 +86,8 @@ class OrderSerializer(serializers.ModelSerializer):
                                                 order_records=records_to_update)
 
         return super().update(instance, validated_data)
+
+    class Meta:
+        model = Order
+        fields = ('id', 'client', 'timestamp', 'completed', 'records', 'sended')
+        validators = [OrderValidation()]

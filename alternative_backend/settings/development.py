@@ -14,8 +14,3 @@ NOSE_ARGS = [
     '--with-coverage',
     '--cover-package=workers,boards,stations,orders,presses,events,materials',
 ]
-
-CRYPTO_KEY = b'sziAlG_7nlDASeKdYTGAU5jnh0xYHoI-F_OfnpX9XHo='
-
-# token valid time in seconds
-TOKEN_VALID_TIME = 8640
