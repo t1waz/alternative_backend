@@ -34,6 +34,12 @@ class BoardModelViewSet(viewsets.ModelViewSet):
     serializer_class = BoardModelSerializer
 
 
+class BoardScanAPIView(generics.CreateAPIView):
+    permission_classes = (BaseAccess, )
+    queryset = BoardScan.objects.all()
+    serializer_class = BoardScanSerializer
+
+
 class BoardViewSet(viewsets.ModelViewSet):
     permission_classes = (BaseAccess, )
     queryset = Board.objects.all()
@@ -48,19 +54,6 @@ class BoardViewSet(viewsets.ModelViewSet):
             return BoardCreateSerializer
         elif self.action == 'partial_update':
             return BoardUpdateSerializer
-
-
-class BoardScanAPIView(generics.CreateAPIView):
-    permission_classes = (BaseAccess, )
-    queryset = BoardScan.objects.all()
-    serializer_class = BoardScanSerializer
-
-
-class BoardModelCompositionAPIView(generics.RetrieveAPIView):
-    permission_classes = (BaseAccess, )
-    queryset = BoardModel.objects.all()
-    serializer_class = BoardModelMaterialsSerializer
-    lookup_field = 'pk'
 
 
 class ProductionAPIView(APIView):
@@ -97,3 +90,11 @@ class StockDetailAPIView(APIView):
         response = BoardService().get_stock_for(company_code=code)
 
         return Response(response)
+
+
+class BoardModelCompositionAPIView(generics.RetrieveAPIView,
+                                   generics.UpdateAPIView):
+    permission_classes = (BaseAccess, )
+    queryset = BoardModel.objects.all()
+    serializer_class = BoardModelMaterialsSerializer
+    lookup_field = 'pk'

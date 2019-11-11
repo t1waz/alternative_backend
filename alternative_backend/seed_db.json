@@ -24,13 +24,73 @@
 				"name": "Bastl Boards",
 				"code": 2 }
 },
+{
+	"model": "boards.boardgraphic",
+	"pk": 1,
+	"fields": {	"year": 2018,
+				"description": "Haunted Woods",
+				"artist": "Sebastian Skrobol",
+				"name": "Haunted Woods Erget"
+	}
+},
+{
+	"model": "boards.boardgraphic",
+	"pk": 2,
+	"fields": {	"year": 2018,
+				"description": "Haunted Woods",
+				"artist": "Sebastian Skrobol",
+				"name": "Haunted Woods Fantail"
+	}
+},
+{
+	"model": "boards.boardgraphic",
+	"pk": 3,
+	"fields": {	"year": 2017,
+				"description": "german artist",
+				"artist": "Def Van Brown",
+				"name": "candy Discofox"
+	}
+},
+{
+	"model": "boards.boardmodellayout", 
+	"pk": 1, 
+	"fields": {	"top_graphic": null, 
+				"bottom_graphic": 1, 
+				"top_material": 7,
+				"bottom_material": 7}
+}, 
+{
+	"model": "boards.boardmodellayout", 
+	"pk": 2, 
+	"fields": {	"top_graphic": null, 
+				"bottom_graphic": 3, 
+				"top_material": 2, 
+				"bottom_material": 7}
+}, 
+{
+	"model": "boards.boardmodellayout", 
+	"pk": 3, 
+	"fields": {	"top_graphic": null,
+				"bottom_graphic": null, 
+				"top_material": 2,
+				"bottom_material": 7}
+}, 
+{
+	"model": "boards.boardmodellayout",
+	"pk": 4,
+	"fields": {	"top_graphic": null,
+				"bottom_graphic": null,
+				"top_material": 6,
+				"bottom_material": 6}
+},
 {	"model": "boards.boardmodel", 
 	"pk": 1,
 	"fields": {	"name": "Fantail", 
 				"description": "deska downhillowa", 
 				"year": 2018, 
-				"code": 80, 
-				"company": 1 }
+				"code": 80,
+				"company": 1,
+				"layout": 1  }
 },
 {	"model": "boards.boardmodel", 
 	"pk": 2,
@@ -38,7 +98,8 @@
 				"description": "deska allaround", 
 				"year": 2018, 
 				"code": 70, 
-				"company": 1 }
+				"company": 1,
+				"layout": 2 }
 },
 {	"model": "boards.boardmodel", 
 	"pk": 3, 
@@ -46,15 +107,17 @@
 				"description": "deska do zabawy", 
 				"year": 2018, 
 				"code": 10, 
-				"company": 2 }
+				"company": 2,
+				"layout": 3 }
 },
 {	"model": "boards.boardmodel", 
 	"pk": 4, 
 	"fields": {	"name": "Bolero", 
-				"description": "deska dla niemcura (jebanca)", 
+				"description": "deska dla niemcura (jebanca)",
 				"year": 2018, 
 				"code": 30, 
-				"company": 2 }
+				"company": 2,
+				"layout": 4 }
 },
 {	"model": "boards.board", 
 	"pk": 1, 
@@ -62,7 +125,8 @@
 				"model": 3,
 				"company":2,
 				"second_category": false,
-				"press_time": 0 }
+				"press_time": 0,
+				"layout": null }
 },
 {	"model": "boards.board", 
 	"pk": 2, 
@@ -70,7 +134,8 @@
 				"model": 4,
 				"company":2,
 				"second_category": false,
-				"press_time": 0 }
+				"press_time": 0,
+				"layout": null }
 }, 
 {	"model": "boards.board", 
 	"pk": 3, 
@@ -78,7 +143,8 @@
 				"model": 2,
 				"company":1,
 				"second_category": false,
-				"press_time": 0 }
+				"press_time": 0,
+				"layout": null }
 }, 
 {	"model": "boards.board", 
 	"pk": 4, 
@@ -86,7 +152,8 @@
 				"model": 2,
 				"company":1,
 				"second_category": false,
-				"press_time": 0 }
+				"press_time": 0,
+				"layout": null }
 }, 
 {	"model": "boards.board", 
 	"pk": 5, 
@@ -94,7 +161,8 @@
 				"model": 1,
 				"company":1,
 				"second_category": false,
-				"press_time": 0 }
+				"press_time": 0,
+				"layout": null }
 }, 
 {	"model": "boards.board", 
 	"pk": 6, 
@@ -102,7 +170,8 @@
 				"model": 1,
 				"company":1,
 				"second_category": false,
-				"press_time": 0 }
+				"press_time": 0,
+				"layout": null }
 },
 {	"model": "boards.board",
 	"pk":7,
@@ -110,7 +179,8 @@
 				"model": 1,
 				"company": 1,
 				"second_category": false,
-				"press_time": 0}
+				"press_time": 0,
+				"layout": null }
 },
 {	"model": "boards.board", 
 	"pk": 8, 
@@ -118,7 +188,8 @@
 				"model": 1, 
 				"company": 1, 
 				"second_category": false, 
-				"press_time": 0}
+				"press_time": 0,
+				"layout": null }
 },
 {	"model": "boards.board", 
 	"pk": 9, 
@@ -126,7 +197,8 @@
 				"model": 1, 
 				"company": 1, 
 				"second_category": false, 
-				"press_time": 0}
+				"press_time": 0,
+				"layout": null }
 },
 {	"model": "stations.station", 
 	"pk": 1, 
@@ -440,6 +512,12 @@
 				"description": "wood like materials"}
 },
 {
+	"model": "materials.materialcategory", 
+	"pk": 3, 
+	"fields": {	"description": "graphic materials",
+				"name": "GRAPHIC"}
+},
+{
 	"model": "materials.material",
 	"pk": 1,
 	"fields": {	"description": "core for Fantail dimensions 1000x300",
@@ -497,7 +575,17 @@
 				"currency": 2,
 				"name": "biaxial 600",
 				"unit": "m2",
-				"category": 1}
+				"category": 2}
+},
+{
+	"model": "materials.material", 
+	"pk": 7,
+	"fields": {	"description": "isosport topsheet", 
+				"price": 1.3, 
+				"currency": 1, 
+				"name": "topsheet PBT", 
+				"unit": "m2", 
+				"category": 3}
 },
 {
 	"model": "boards.boardmodelmaterial",
