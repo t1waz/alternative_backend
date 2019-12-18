@@ -8,16 +8,13 @@ class MaterialCategory(models.Model):
                             unique=True)
 
     def __str__(self):
-        return "{} {}".format(self.id, self.name)
-
-    class Meta:
-        db_table = "material_category"
+        return f'{self.id} {self.name}'
 
 
 class Material(models.Model):
     description = models.CharField(max_length=500)
     price = models.FloatField()
-    currency = models.ForeignKey('currency.currency',
+    currency = models.ForeignKey('currency.Currency',
                                  on_delete=models.CASCADE)
     name = models.CharField(max_length=50,
                             unique=True)
@@ -27,20 +24,17 @@ class Material(models.Model):
                                  on_delete=models.CASCADE)
 
     def __str__(self):
-        return "{} {}".format(self.category, self.name)
-
-    class Meta:
-        db_table = "material"
+        return f'{self.category} {self.name}'
 
 
 class MaterialPriceHistory(models.Model):
     price = models.FloatField()
-    currency = models.ForeignKey('currency.currency',
+    currency = models.ForeignKey('currency.Currency',
                                  on_delete=models.CASCADE)
-    started = models.ForeignKey('events.event',
+    started = models.ForeignKey('events.Event',
                                 on_delete=models.CASCADE,
                                 related_name='history_material_price_started')
-    finished = models.ForeignKey('events.event',
+    finished = models.ForeignKey('events.Event',
                                  on_delete=models.CASCADE,
                                  related_name='history_material_price_finished',
                                  null=True,
@@ -50,7 +44,4 @@ class MaterialPriceHistory(models.Model):
                                  related_name='history_material')
 
     def __str__(self):
-        return "{} {} {}".format(self.material.name, self.price, self.currency.symbol)
-
-    class Meta:
-        db_table = "material_price_history"
+        return f'{self.material.name} {self.price} {self.currency.symbol}'

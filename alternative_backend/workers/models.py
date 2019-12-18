@@ -22,19 +22,16 @@ class Worker(models.Model):
         return surname
 
     def __str__(self):
-        return '{}'.format(self.username)
-
-    class Meta:
-        db_table = 'workers'
+        return f'{self.username}'
 
 
 class WorkerWorkHistory(models.Model):
     worker = models.ForeignKey('Worker',
                                on_delete=models.CASCADE)
-    started = models.ForeignKey('events.event',
+    started = models.ForeignKey('events.Event',
                                 on_delete=models.CASCADE,
                                 related_name='history_work_started')
-    finished = models.ForeignKey('events.event',
+    finished = models.ForeignKey('events.Event',
                                  on_delete=models.CASCADE,
                                  related_name='history_work_finished',
                                  null=True,
@@ -43,8 +40,4 @@ class WorkerWorkHistory(models.Model):
                                        blank=True)
 
     def __str__(self):
-        return '{}: {}'.format(self.worker, 
-                               self.started.timestamp)
-
-    class Meta:
-        db_table = 'worker_scan'
+        return f'{self.worker}: {self.started.timestamp}'

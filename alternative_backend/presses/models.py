@@ -5,30 +5,27 @@ class MoldHistory(models.Model):
     press = models.ForeignKey('Press',
                               on_delete=models.CASCADE,
                               related_name='history_press')
-    mold = models.ForeignKey('boards.boardmodel',
+    mold = models.ForeignKey('boards.BoardModel',
                              on_delete=models.CASCADE,
                              related_name='history_mold',
                              blank=True,
                              null=True)
-    started = models.ForeignKey('events.event',
+    started = models.ForeignKey('events.Event',
                                 on_delete=models.CASCADE,
                                 related_name='history_mold_started')
-    finished = models.ForeignKey('events.event',
+    finished = models.ForeignKey('events.Event',
                                  on_delete=models.CASCADE,
                                  related_name='history_mold_finished',
                                  null=True,
                                  blank=True)
 
     def __str__(self):
-        return "{} {}".format(self.press, self.mold)
-
-    class Meta:
-        db_table = "mold_history"
+        return f'{self.press.name} {self.mold.name}'
 
 
 class Press(models.Model):
     press_time = models.IntegerField()
-    mold = models.ForeignKey('boards.boardmodel',
+    mold = models.ForeignKey('boards.BoardModel',
                              on_delete=models.CASCADE,
                              blank=True,
                              null=True)
@@ -36,7 +33,6 @@ class Press(models.Model):
                             unique=True)
 
     def __str__(self):
-        return "{} {}".format(self.name, self.press_time)
+        return f'{self.name} {self.press_time}'
 
-    class Meta:
-        db_table = "press"
+

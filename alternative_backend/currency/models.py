@@ -10,7 +10,5 @@ class Currency(models.Model):
                               blank=True)
 
     def __str__(self):
-        return "{} {}".format(self.name, self.symbol)
+        return f'{self.name} {self.symbol}'
 
-    class Meta:
-        db_table = "currency"

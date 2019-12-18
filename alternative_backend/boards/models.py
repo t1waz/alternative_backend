@@ -10,9 +10,6 @@ class BoardCompany(models.Model):
     def __str__(self):
         return f'{self.id} {self.name}'
 
-    class Meta:
-        db_table = 'board_company'
-
 
 class BoardGraphic(models.Model):
     description = models.CharField(max_length=200)
@@ -23,9 +20,6 @@ class BoardGraphic(models.Model):
 
     def __str__(self):
         return f'{self.name} {self.year}'
-
-    class Meta:
-        db_table = 'board_graphic'
 
 
 class BoardModelLayout(models.Model):
@@ -54,9 +48,6 @@ class BoardModelLayout(models.Model):
     def __str__(self):
         return f'{self.id}'
 
-    class Meta:
-        db_table = 'board_model_layout'
-
 
 class BoardModel(models.Model):
     description = models.CharField(max_length=200)
@@ -75,9 +66,6 @@ class BoardModel(models.Model):
     def __str__(self):
         return f'{self.code} {self.company} {self.year} {self.name}'
 
-    class Meta:
-        db_table = 'board_model'
-
 
 class Board(models.Model):
     barcode = models.BigIntegerField(unique=True)
@@ -95,9 +83,6 @@ class Board(models.Model):
     def __str__(self):
         return f'{self.barcode}'
 
-    class Meta:
-        db_table = 'board'
-
 
 class BoardScan(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
@@ -112,9 +97,6 @@ class BoardScan(models.Model):
 
     def __str__(self):
         return f'{self.barcode} {self.worker} {self.timestamp}'
-
-    class Meta:
-        db_table = 'board_scan'
 
 
 class BoardModelMaterial(models.Model):

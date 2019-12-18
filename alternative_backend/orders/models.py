@@ -11,15 +11,12 @@ class Client(models.Model):
     is_company = models.BooleanField()
 
     def __str__(self):
-        return "{} {}".format(self.name, self.country)
-
-    class Meta:
-        db_table = 'client'
+        return f'{self.name} {self.country}'
 
 
 class Order(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
-    boards = models.ManyToManyField('orders.orderrecord',
+    boards = models.ManyToManyField('orders.OrderRecord',
                                     related_name='records')
     client = models.ForeignKey('Client',
                                on_delete=models.CASCADE)
@@ -30,25 +27,19 @@ class Order(models.Model):
     active_orders = ActiveOrderManager()
 
     def __str__(self):
-        return "{} {}".format(self.id, self.client.name)
-
-    class Meta:
-        db_table = 'order'
+        return f'{self.id} {self.client.name}'
 
 
 class SendedBoard(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
-    board = models.ForeignKey('boards.board',
+    board = models.ForeignKey('boards.Board',
                               on_delete=models.CASCADE,
                               related_name='send_boards')
     order = models.ForeignKey('Order',
                               on_delete=models.CASCADE)
 
     def __str__(self):
-        return "{} {}".format(self.board.model.name, self.order.id)
-
-    class Meta:
-        db_table = 'sended_board'
+        return f'{self.board.model.name} {self.order.id}'
 
 
 class OrderRecord(models.Model):
@@ -56,7 +47,7 @@ class OrderRecord(models.Model):
     order = models.ForeignKey('Order',
                               on_delete=models.CASCADE,
                               related_name='records')
-    board_model = models.ForeignKey('boards.boardmodel',
+    board_model = models.ForeignKey('boards.BoardModel',
                                     on_delete=models.CASCADE)
 
     @property
@@ -66,7 +57,5 @@ class OrderRecord(models.Model):
         return position
 
     def __str__(self):
-        return "{} {} {}".format(self.order.id, self.board_model.name, self.quantity)
+        return f'{self.order.id} {self.board_model.name} {self.quantity}'
 
-    class Meta:
-        db_table = 'order_record'
