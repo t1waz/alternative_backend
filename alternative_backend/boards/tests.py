@@ -86,7 +86,14 @@ class BoardModelViewTests(ViewSetTestsMixin, TestCase):
             'description': 'one of the most popular boards',
             'year': 2018,
             'code': 35,
-            'company': 1
+            'company': 1,
+            'layout_material_quantity': 1.2,
+            'layout': {
+                'top_graphic': 'Haunted Woods Fantail',
+                'bottom_graphic': 'Haunted Woods Erget',
+                'top_material': 'topsheet PBT',
+                'bottom_material': 'topsheet PBT'
+            }
         },
 
     ]
@@ -101,28 +108,56 @@ class BoardModelViewTests(ViewSetTestsMixin, TestCase):
             'description': 'one of the most popular boards',
             'year': 2018,
             'code': 35,
-            'company': 1
+            'company': 1,
+            'layout_material_quantity': 1.2,
+            'layout': {
+                'top_graphic': 'Haunted Woods Fantail',
+                'bottom_graphic': 'Haunted Woods Erget',
+                'top_material': 'topsheet PBT',
+                'bottom_material': 'topsheet PBT'
+            }
         },
         {
             'name': 'Erget_3',
             'description': 'one of the most popular boards',
             'year': 20181,
             'code': 35,
-            'company': 1
+            'company': 1,
+            'layout_material_quantity': 1.2,
+            'layout': {
+                'top_graphic': 'Haunted Woods Fantail',
+                'bottom_graphic': 'Haunted Woods Erget',
+                'top_material': 'topsheet PBT',
+                'bottom_material': 'topsheet PBT',
+            }
         },
         {
             'name': 'Erget_4',
             'description': 'one of the most popular boards',
             'year': 2018,
             'code': 351,
-            'company': 1
+            'company': 1,
+            'layout_material_quantity': 1.2,
+            'layout': {
+                'top_graphic': 'Haunted Woods Fantail',
+                'bottom_graphic': 'Haunted Woods Erget',
+                'top_material': 'topsheet PBT',
+                'bottom_material': 'topsheet PBT',
+            }
         },
         {
             'name': 'Erget_5',
             'description': 'one of the most popular boards',
             'year': 2018,
             'code': 35,
-            'company': 12
+            'company': 12,
+            'layout_material_quantity': 1.2,
+            'layout': {
+                'top_graphic': 'Haunted Woods Fantail',
+                'bottom_graphic': 'Haunted Woods Erget',
+                'top_material': 'topsheet PBT',
+                'bottom_material': 'topsheet PBT',
+            }
         },
         {
             'name': 'Erget_6',
@@ -131,7 +166,14 @@ class BoardModelViewTests(ViewSetTestsMixin, TestCase):
             ddddddddddddddddddddddddddddasdasdasdasdasda',
             'year': 2018,
             'code': 35,
-            'company': 12
+            'company': 12,
+            'layout_material_quantity': 1.2,
+            'layout': {
+                'top_graphic': 'Haunted Woods Fantail',
+                'bottom_graphic': 'Haunted Woods Erget',
+                'top_material': 'topsheet PBT',
+                'bottom_material': 'topsheet PBT',
+            }
         },
         {
             'name': 'Erget',
@@ -140,9 +182,28 @@ class BoardModelViewTests(ViewSetTestsMixin, TestCase):
             ddddddddddddddddddddddddddasdasdasdasdasda',
             'year': 2018123,
             'code': 351,
-            'company': 124
+            'company': 124,
+            'layout_material_quantity': 1.2,
+            'layout': {
+                'top_graphic': 'Haunted Woods Fantail',
+                'bottom_graphic': 'Haunted Woods Erget',
+                'top_material': 'topsheet PBT',
+                'bottom_material': 'topsheet PBT',
+            }
         },
-
+        {
+            'name': 'Erget_2',
+            'description': 'one of the most popular boards',
+            'year': 2018,
+            'code': 35,
+            'company': 1,
+            'layout': {
+                'top_graphic': 'Haunted Woods Fantail',
+                'bottom_graphic': 'Haunted Woods Erget',
+                'top_material': 'topsheet PBT',
+                'bottom_material': 'topsheet PBT',
+            }
+        }
     ]
     update_invalid_datas = [
 

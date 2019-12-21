@@ -52,40 +52,36 @@
 	}
 },
 {
-	"model": "boards.boardmodellayout", 
+	"model": "boards.layout", 
 	"pk": 1, 
 	"fields": {	"top_graphic": null, 
 				"bottom_graphic": 1, 
 				"top_material": 7,
-				"bottom_material": 7,
-				"material_quantity": 1.2}
+				"bottom_material": 7}
 }, 
 {
-	"model": "boards.boardmodellayout", 
+	"model": "boards.layout", 
 	"pk": 2, 
 	"fields": {	"top_graphic": null, 
 				"bottom_graphic": 3, 
 				"top_material": 2, 
-				"bottom_material": 7,
-				"material_quantity": 1.4}
+				"bottom_material": 7}
 }, 
 {
-	"model": "boards.boardmodellayout", 
+	"model": "boards.layout", 
 	"pk": 3, 
 	"fields": {	"top_graphic": null,
 				"bottom_graphic": null, 
 				"top_material": 2,
-				"bottom_material": 7,
-				"material_quantity": 1.15}
+				"bottom_material": 7}
 }, 
 {
-	"model": "boards.boardmodellayout",
+	"model": "boards.layout",
 	"pk": 4,
 	"fields": {	"top_graphic": null,
 				"bottom_graphic": null,
 				"top_material": 6,
-				"bottom_material": 6,
-				"material_quantity": 1.6}
+				"bottom_material": 6}
 },
 {	"model": "boards.boardmodel", 
 	"pk": 1,
@@ -94,7 +90,8 @@
 				"year": 2018, 
 				"code": 80,
 				"company": 1,
-				"layout": 1  }
+				"layout": 1,
+				"layout_material_quantity": 1.2	}
 },
 {	"model": "boards.boardmodel", 
 	"pk": 2,
@@ -103,7 +100,8 @@
 				"year": 2018, 
 				"code": 70, 
 				"company": 1,
-				"layout": 2 }
+				"layout": 2,
+				"layout_material_quantity": 1.6 }
 },
 {	"model": "boards.boardmodel", 
 	"pk": 3, 
@@ -112,7 +110,8 @@
 				"year": 2018, 
 				"code": 10, 
 				"company": 2,
-				"layout": 3 }
+				"layout": 3,
+				"layout_material_quantity": 2.2 }
 },
 {	"model": "boards.boardmodel", 
 	"pk": 4, 
@@ -121,7 +120,8 @@
 				"year": 2018, 
 				"code": 30, 
 				"company": 2,
-				"layout": 4 }
+				"layout": 4,
+				"layout_material_quantity": 3.1 }
 },
 {	"model": "boards.board", 
 	"pk": 1, 
@@ -207,18 +207,21 @@
 {	"model": "stations.station", 
 	"pk": 1, 
 	"fields": {	"name": "PREPARE",
-				"description": "stacja przygotowawcza" }
+				"description": "stacja przygotowawcza",
+				"production_step": 1 }
 },
 {	"model": "stations.station", 
 	"pk": 2, 
 	"fields": {	"name": "PRESS",
-				"description": "stacja prasujaca" }
+				"description": "stacja prasujaca",
+				"production_step": 2 }
 },
 {
 	"model": "stations.station",
 	"pk": 3,
 	"fields": {	"name": "CUT",
-				"description": "stacja CNC"	}
+				"description": "stacja CNC",
+				"production_step": 3	}
 },
 {	"model": "boards.boardscan", 
 	"pk": 1, 
@@ -425,43 +428,50 @@
 	"pk": 1, 
 	"fields": {	"order": 1, 
 				"board_model": 1, 
-				"quantity": 12 }
+				"quantity": 12,
+				"layout": null  }
 }, 
 {	"model": "orders.orderrecord", 
 	"pk": 2, 
 	"fields": {	"order": 2, 
 				"board_model": 2, 
-				"quantity": 14 }
+				"quantity": 14,
+				"layout": null }
 }, 
 {	"model": "orders.orderrecord", 
 	"pk": 3, 
 	"fields": {	"order": 2, 
 				"board_model": 1, 
-				"quantity": 50 }
+				"quantity": 50,
+				"layout": null }
 },
 {	"model": "orders.orderrecord", 
 	"pk": 4, 
 	"fields": {	"order": 3, 
 				"board_model": 3, 
-				"quantity": 28 }
+				"quantity": 28,
+				"layout": null }
 },
 {	"model": "orders.orderrecord", 
 	"pk": 5, 
 	"fields": {	"order": 3, 
 				"board_model": 3, 
-				"quantity": 12 }
+				"quantity": 12,
+				"layout": null }
 },
 {	"model": "orders.orderrecord", 
 	"pk": 6, 
 	"fields": {	"order": 3, 
 				"board_model": 4, 
-				"quantity": 5 }
+				"quantity": 5,
+				"layout": null }
 },
 {	"model": "orders.orderrecord", 
 	"pk": 7, 
 	"fields": {	"order": 4, 
 				"board_model": 1, 
-				"quantity": 1 }
+				"quantity": 1,
+				"layout": null }
 },
 {	"model": "orders.sendedboard", 
 	"pk": 1, 

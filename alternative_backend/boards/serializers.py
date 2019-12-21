@@ -4,24 +4,19 @@ from rest_framework import serializers
 from boards.services import BoardService
 from rest_framework.validators import UniqueTogetherValidator
 from materials.models import Material
-from boards.fields import (
-    TopGraphicField,
-    BottomGraphicField,
-    TopMaterialField,
-    BottomMaterialField,
-)
 from boards.models import (
-    BoardCompany,
-    BoardModel,
     Board,
+    Layout,
     BoardScan,
-    BoardModelMaterial,
+    BoardModel,
+    BoardCompany,
     BoardGraphic,
+    BoardModelMaterial,
 )
 from boards.validators import (
-    BoardCompanyValidation,
-    BoardModelValidation,
     BoardValidation,
+    BoardModelValidation,
+    BoardCompanyValidation,
     BoardModelMaterialValidation,
 )
 
@@ -64,17 +59,45 @@ class BoardModelMaterialsSerializer(serializers.ModelSerializer):
         return instance
 
 
-class BoardModelSerializer(serializers.ModelSerializer):
-    production_price_pln = serializers.SerializerMethodField()
+class BoardModelLayoutSerializer(serializers.ModelSerializer):
+    top_graphic = serializers.SlugRelatedField(many=False,
+                                               queryset=BoardGraphic.objects.all(),
+                                               slug_field='name',
+                                               allow_null=True)
+    bottom_graphic = serializers.SlugRelatedField(many=False,
+                                                  queryset=BoardGraphic.objects.all(),
+                                                  slug_field='name',
+                                                  allow_null=True)
+    top_material = serializers.SlugRelatedField(many=False,
+                                                queryset=Material.objects.all(),
+                                                slug_field='name',
+                                                allow_null=True)
+    bottom_material = serializers.SlugRelatedField(many=False,
+                                                   queryset=Material.objects.all(),
+                                                   slug_field='name',
+                                                   allow_null=True)
 
-    def get_production_price_pln(self, obj):
+    class Meta:
+        model = Layout
+        fields = ('top_graphic', 'bottom_graphic', 
+                  'top_material', 'bottom_material',)
+
+
+class BoardModelSerializer(serializers.ModelSerializer):
+    layout = BoardModelLayoutSerializer(many=False)
+    production_price = serializers.SerializerMethodField()
+
+    def get_production_price(self, obj):
         return round(BoardService().get_price_for_model(model=obj), 2)
+
+    def create(self, validated_data):
+        return BoardService().create_new_model(**validated_data)
 
     class Meta:
         model = BoardModel
         validators = [BoardModelValidation()]
-        fields = ('id', 'description', 'year', 'company', 
-                  'name', 'code', 'production_price_pln')
+        fields = ('id', 'description', 'year', 'company', 'layout_material_quantity',
+                  'name', 'code', 'layout', 'production_price')
 
 
 class BoardUpdateSerializer(serializers.ModelSerializer):
@@ -121,14 +144,9 @@ class BoardDetailViewSerializer(BoardListSerializer):
 
 
 class BoardCreateSerializer(serializers.ModelSerializer):
-    top_graphic = TopGraphicField(source='*',
-                                  required=False)
-    bottom_graphic = BottomGraphicField(source='*',
-                                        required=False)
-    top_material = TopMaterialField(source='*',
-                                    required=False)
-    bottom_material = BottomMaterialField(source='*',
-                                          required=False)
+    layout = BoardModelLayoutSerializer(many=False,
+                                        required=False,
+                                        allow_null=True)
 
     def create(self, validated_data):
         return BoardService().create_new_board(**validated_data)
@@ -136,10 +154,7 @@ class BoardCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Board
         validators = [BoardValidation()]
-        fields = ('barcode', 'top_graphic', 'bottom_graphic', 
-                  'top_material', 'bottom_material')
-        non_required_fields = ('top_graphic', 'bottom_graphic', 
-                               'top_material', 'bottom_material')
+        fields = ('barcode', 'layout')
 
 
 class BoardScanSerializer(serializers.ModelSerializer):

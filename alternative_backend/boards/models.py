@@ -22,8 +22,7 @@ class BoardGraphic(models.Model):
         return f'{self.name} {self.year}'
 
 
-class BoardModelLayout(models.Model):
-    material_quantity = models.FloatField()
+class Layout(models.Model):
     top_graphic = models.ForeignKey('boards.BoardGraphic',
                                     on_delete=models.CASCADE,
                                     related_name='default_top_graphics',
@@ -53,6 +52,7 @@ class BoardModel(models.Model):
     description = models.CharField(max_length=200)
     year = models.IntegerField()
     code = models.IntegerField(unique=True)
+    layout_material_quantity = models.FloatField()
     name = models.CharField(max_length=50,
                             unique=True)
     materials = models.ManyToManyField('materials.Material',
@@ -60,7 +60,7 @@ class BoardModel(models.Model):
                                        verbose_name='model_materials')
     company = models.ForeignKey('boards.BoardCompany',
                                 on_delete=models.CASCADE)
-    layout = models.ForeignKey('boards.BoardModelLayout',
+    layout = models.ForeignKey('boards.Layout',
                                on_delete=models.CASCADE)
 
     def __str__(self):
@@ -75,7 +75,7 @@ class Board(models.Model):
                               on_delete=models.CASCADE)
     company = models.ForeignKey('boards.BoardCompany',
                                 on_delete=models.CASCADE)
-    layout = models.ForeignKey('boards.BoardModelLayout',
+    layout = models.ForeignKey('boards.Layout',
                                on_delete=models.CASCADE,
                                null=True,
                                blank=True)

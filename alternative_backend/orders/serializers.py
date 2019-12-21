@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from orders.services import OrderService
+from boards.serializers import BoardModelLayoutSerializer
 from orders.validators import (
     SendedBoardValidation,
     DeleteSendedValidation,
@@ -23,20 +24,17 @@ class ClientSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'country', 'city', 'post_code', 'adress', 'is_company')
 
 
-class OrderRecordSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = OrderRecord
-        fields = ('id', 'order', 'board_model', 'quantity', 'order_position')
-
-
 class RecordSerializer(serializers.ModelSerializer):
+    layout = BoardModelLayoutSerializer(many=False,
+                                        required=False,
+                                        allow_null=True)
     board_model = serializers.SlugRelatedField(many=False,
                                            queryset=BoardModel.objects.all(),
                                            slug_field='name')
 
     class Meta:
         model = OrderRecord
-        fields = ('board_model', 'quantity')
+        fields = ('board_model', 'quantity', 'layout')
 
 
 class SendedBoardSerializer(serializers.ModelSerializer):
@@ -70,22 +68,11 @@ class OrderSerializer(serializers.ModelSerializer):
                 OrderService().get_sended_boards(order_id=obj.id)]
 
     def create(self, validated_data):
-        order_records = validated_data.pop('records')
-        order = Order.objects.create(**validated_data)
-
-        OrderService().update_order_records(order=order,
-                                            order_records=order_records)
-
-        return order
+        return OrderService().create_order(validated_data)
 
     def update(self, instance, validated_data):
-        records_to_update = validated_data.pop('records', None)
-
-        if records_to_update:
-            OrderService().update_order_records(order=instance,
-                                                order_records=records_to_update)
-
-        return super().update(instance, validated_data)
+        return OrderService().update_order(instance=instance,
+                                           validated_data=validated_data)
 
     class Meta:
         model = Order

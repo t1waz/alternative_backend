@@ -32,11 +32,12 @@ def validate_delete_order_quantity(**kwargs):
 
 
 def validate_board_models(**kwargs):
-    pass    # TODO
+    if not kwargs.get('records'):
+        raise ValidationError("Empty order positions") 
 
 
 def validate_board_models_quantity(**kwargs):
-    pass    # TODO
+    pass
 
 
 class SendedBoardValidation(SimpleValidator):

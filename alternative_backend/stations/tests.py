@@ -15,7 +15,8 @@ class StationViewSetTests(ViewSetTestsMixin, TestCase):
     post_datas = [
         {
             'name': 'LAST ONE STATION', 
-            'description': 'test description'
+            'description': 'test description',
+            'production_step': 4
         },
     ]
     update_datas = [

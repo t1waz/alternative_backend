@@ -1,33 +1,69 @@
 from django.db.models import Sum
 from django.db import transaction
 from stations.models import Station
+from boards.services import BoardService
 from common.exceptions import ServiceException
 from boards.models import (
+    Board,
+    BoardScan,
     BoardModel,
     BoardCompany,
-    BoardScan,
-    Board,
 )
 from orders.models import (
+    Order,
     OrderRecord,
     SendedBoard,
 )
 
 
 class OrderService:
-    @transaction.atomic
-    def update_order_records(self, order, order_records):
-        OrderRecord.objects.filter(order=order).delete()
+    def create_records(self, order, data):
         records = []
-        for order_record in order_records:
-            record = OrderRecord(order=order,
-                                 board_model=order_record['board_model'],
-                                 quantity=order_record['quantity'])
-            records.append(record)
+        for record in data:
+            layout = None
+            if 'layout' in record:
+                layout = BoardService().get_layout(**record['layout'])
+
+            records.append(OrderRecord(order=order,
+                                       board_model=record.get('board_model'),
+                                       quantity=record.get('quantity'),
+                                       layout=layout))
+
         try:
             OrderRecord.objects.bulk_create(records)
         except:    # TODO
-            raise ServiceException('cannot update')
+            raise ServiceException('cannot create order records')
+
+    @transaction.atomic
+    def create_order(self, validated_data):
+        order_records_data = validated_data.pop('records', [])
+
+        try:
+            order = Order.objects.create(**validated_data)
+        except:    # TODO
+            raise ServiceException('cannot create order')
+
+        self.create_records(order=order,
+                            data=order_records_data)
+
+        return order
+
+    @transaction.atomic
+    def update_order(self, instance, validated_data):
+        order_records_data = validated_data.pop('records', [])
+        if order_records_data:
+            instance.records.all().delete()
+            self.create_records(order=instance,
+                                data=order_records_data)
+
+        try:
+            for attribute, value in validated_data.items():
+                setattr(instance, attribute, value)
+            instance.save()
+        except:    # TODO
+            raise ServiceException('cannot update order record - invalid order data')
+
+        return instance
 
     def return_order_info(self, company_code):
         order_dict = dict()

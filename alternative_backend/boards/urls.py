@@ -28,7 +28,7 @@ app_router.register(r'boards',
 urlpatterns = [
     path(r'add_scan/', BoardScanAPIView.as_view()),
     path(r'production/', ProductionAPIView.as_view()),
-    path(r'production/<int:company>', ProductionDetailAPIView.as_view()),
+    path(r'production/<int:company>/', ProductionDetailAPIView.as_view()),
     path(r'stock/', StockAPIView.as_view()),
     path(r'stock/<int:code>', StockDetailAPIView.as_view()),
     path(r'board_models/<int:pk>/components/', BoardModelCompositionAPIView.as_view()),

@@ -37,6 +37,21 @@ class OrderViewSetTests(ViewSetTestsMixin, TestCase):
                 }
             ]
         },
+        {
+            'client': 'Lukasz Tomkiel',
+            'records': [
+                {
+                    'board_model': 'Erget',
+                    'quantity': 1,
+                    'layout': {
+                        'top_graphic': 'Haunted Woods Fantail',
+                        'bottom_graphic': 'Haunted Woods Erget',
+                        'top_material': 'topsheet PBT',
+                        'bottom_material': 'topsheet PBT'
+                    }
+                }
+            ]
+        }
     ]
     update_datas = [
         {

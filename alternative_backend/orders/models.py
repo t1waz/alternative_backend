@@ -49,6 +49,10 @@ class OrderRecord(models.Model):
                               related_name='records')
     board_model = models.ForeignKey('boards.BoardModel',
                                     on_delete=models.CASCADE)
+    layout = models.ForeignKey('boards.layout',
+                               on_delete=models.CASCADE,
+                               null=True,
+                               blank=True)
 
     @property
     def order_position(self):
@@ -58,4 +62,3 @@ class OrderRecord(models.Model):
 
     def __str__(self):
         return f'{self.order.id} {self.board_model.name} {self.quantity}'
-

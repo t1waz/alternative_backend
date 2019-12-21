@@ -56,6 +56,9 @@ Edit /etc/default/grub to add transparent_hugepage=never to the GRUB_CMDLINE_LIN
 
 	GRUB_CMDLINE_LINUX_DEFAULT="transparent_hugepage=never quiet splash"
 
+Install docker-compose:
+
+	apt-get install docker-compose
 
 Run:
 

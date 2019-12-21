@@ -1,56 +1,53 @@
-from django.db.models import Q
-from collections import Counter
 from django.db import transaction
 from stations.models import Station
 from orders.models import SendedBoard
 from common.exceptions import ServiceException
 from boards.models import (
     Board,
+    Layout,
     BoardScan,
     BoardModel,
     BoardGraphic,
     BoardCompany,
     BoardModelMaterial,
-    BoardModelLayout,
 )
 
 
 class BoardService:
+    LAYOUT_VALUES = ['layout__top_material__price', 
+                     'layout__top_material__currency__price', 'layout__bottom_material__price', 
+                     'layout__bottom_material__currency__price', 'layout__top_material',
+                     'layout__bottom_material']
+
     def get_company_from_barcode(self, barcode):
-        return BoardCompany.objects.filter(code=str(barcode)[4:6]).first() or None
+        return BoardCompany.objects.filter(code=str(barcode)[4:6]).first()
 
     def get_model_from_barcode(self, barcode):
-        try:
-            return BoardModel.objects.filter(code=str(barcode)[2:4],
-                                             company__code=str(barcode)[4:6]).first() or None
-        except: 
-            return None
-
-    def get_model_from_name(self, model_name):
-        return BoardModel.objects.filter(name=model_name).first() or None
-
-    def get_model_from_pk(self, model_pk):
-        return BoardModel.objects.filter(id=model_pk).first() or None
+        return BoardModel.objects.filter(code=str(barcode)[2:4],
+                                         company__code=str(barcode)[4:6]).first()
 
     def get_layout(self, **kwargs):
         try:
-            layout, is_created = BoardModelLayout.objects.get_or_create(**kwargs)
+            layout, is_created = Layout.objects.get_or_create(**kwargs)
         except:  # TODO
             raise ServiceException('layout data incorrect')
 
         return layout
 
     @transaction.atomic
-    def add_missing_scans(self, last_scan: dict) -> None:
+    def add_missing_scans(self, last_scan):
         missing_board_scans = []
         station = last_scan.get('station')
         barcode = last_scan.get('barcode')
         prev_stations = Station.objects.filter(
             id__in=range(station.id - 1, 0, -1)).values_list('id', flat=True)
+        exists_scans = {station: barcode for station, barcode in 
+                        BoardScan.objects.filter(barcode=barcode,
+                                                 station_id__in=prev_stations).values_list(
+                                                 'station__id', 'barcode__barcode')}
 
         for station in prev_stations:
-            if not BoardScan.objects.filter(barcode=barcode,
-                                            station_id=station).exists():
+            if not exists_scans.get(station):
                 missing_board_scans.append(BoardScan(barcode=barcode,
                                                      worker=last_scan.get('worker'),
                                                      station_id=station,
@@ -62,13 +59,15 @@ class BoardService:
             raise ServiceException('cannot create missing scan')
 
     @transaction.atomic
-    def create_new_board(self, barcode, **kwargs):
+    def create_new_board(self, **kwargs):
+        layout_data = kwargs.pop('layout', None)
+        barcode = kwargs.get('barcode')
         model = self.get_model_from_barcode(barcode=barcode)
 
-        if all(value is None for value in kwargs.values()):
-            layout = model.layout
+        if layout_data:
+            layout = self.get_layout(**layout_data)
         else:
-            layout = BoardService().get_layout(**kwargs)
+            layout = model.layout
 
         try:
             new_board = Board.objects.create(barcode=barcode,
@@ -81,22 +80,42 @@ class BoardService:
 
         return new_board
 
-    def get_production_for(self, company_code: str) -> dict:
-        company = BoardCompany.objects.get(code=company_code)
-        stations = list(Station.objects.all().values_list('name', flat=True))
-        scans = BoardScan.objects.filter(barcode__company=company).select_related(
-            'barcode', 'station').order_by('station_id')
-        boards_model = [board['name'] for board in BoardModel.objects.filter(
-                        company__code=company_code).values('name')]
-        production = {}
-        for i, station in enumerate(stations[:-1]):
-            production[stations[i + 1]] = \
-                Counter([s.barcode.model.name for s in scans if s.station.name == station]) - \
-                Counter([s.barcode.model.name for s in scans if s.station.name == stations[i + 1]])
-            # Adding zero values to nice data presentation.
-            for model in boards_model:
-                if model not in production[stations[i + 1]].keys():
-                    production[stations[i + 1]][model] = 0                                          
+    @transaction.atomic
+    def create_new_model(self, **kwargs):
+        layout_data = kwargs.pop('layout')
+        kwargs['layout'] = BoardService().get_layout(**layout_data)
+        try:
+            new_model = BoardModel.objects.create(**kwargs)
+        except Exception as e:    # TODO
+            raise ServiceException('cannot create new model', e)
+
+        return new_model
+
+    def get_production_for(self, company_code):
+        scan_data = {}
+        barcode_model = {}
+        company_models = BoardModel.objects.filter(company__code=company_code).values_list(
+                                                                            'name', flat=True)
+        production = {station_name: {model: 0 for model in company_models} for 
+                      station_name, step in Station.objects.all().values_list(
+                        'name', 'production_step') if step != 1}
+        station_step_names = {int(step): name for step, name in Station.objects.all().values_list(
+            'production_step', 'name')}
+        last_production_station = Station.objects.all().values_list(
+            'production_step', flat=True).order_by('production_step').last()
+        data = BoardScan.objects.filter(barcode__company__code=company_code).select_related(
+            'barcode', 'station').values_list('barcode__barcode', 'barcode__model__name', 
+                                              'station__production_step')
+        for barcode, model, station_step in data:
+            scan_data[barcode] = max(scan_data.get(barcode, 0), station_step)
+            barcode_model[barcode] = model
+
+        for barcode, step in scan_data.items():
+            if step != last_production_station:
+                station_name = station_step_names[step + 1]
+                current_step_data = production[station_name] 
+                current_step_data[barcode_model[barcode]] += 1
+                production[station_name] = current_step_data
 
         return production
 
@@ -126,19 +145,14 @@ class BoardService:
                 BoardModelMaterial.objects.filter(model__name=model_name).values_list(
                     'material__name', 'quantity')}
 
-    def get_model_production_price(self, model_name: str) -> dict:
-        return sum(qty * material_price for (qty, material_price) in 
-                BoardModelMaterial.objects.filter(model__name=model_name).values_list(
-                        'quantity', 'material__price'))
-
     def create_board_model(self, validated_data: dict) -> None:
         return BoardModel.objects.create(**validated_data)
 
     @transaction.atomic
     def create_components(self, model: BoardModel, components: dict):
         new_components = [BoardModelMaterial(quantity=component.get('quantity'),
-                                             model=model,
-                                             material=component.get('material')) for 
+                                             material=component.get('material'),
+                                             model=model) for 
                           component in components]
         try:
             BoardModelMaterial.objects.bulk_create(new_components)
@@ -148,42 +162,50 @@ class BoardService:
     @transaction.atomic
     def update_components(self, model: BoardModel, components: dict):
         model.components.all().delete()
-
         self.create_components(model=model,
                                components=components)
 
-    def get_board_model_components(self, board_model_pk):
-        return BoardModelMaterial.objects.filter(model__id=board_model_pk)
+    def get_layout_initial_data_for_model(self, model):
+        return BoardModel.objects.filter(id=model.id).values_list(
+                *self.LAYOUT_VALUES).first()
 
-    def get_layout_price(self, board):
-        values = ['layout__material_quantity', 'layout__top_material__price', 
-                  'layout__top_material__currency__price', 'layout__bottom_material__price', 
-                  'layout__bottom_material__currency__price', 'layout__top_material',
-                  'layout__bottom_material']
-
+    def get_layout_initial_data_for_board(self, board):
         if not board.layout:
-            raw_data = BoardModel.objects.filter(id=board.model.id).values_list(*values).first()
+            return self.get_layout_initial_data_for_model(board.model)
         else:
-            raw_data = board.layout.values_list(*values).first()
+            return board.layout.values_list(*self.LAYOUT_VALUES).first()
 
-        if raw_data[5]:
-            top_price = raw_data[1] * raw_data[2]
+    def get_layout_price(self, initial_data, model):
+        if initial_data[4]:
+            top_price = initial_data[0] * initial_data[1]
         else:
             top_price = 0
 
-        if raw_data[6]:
-            bottom_price = raw_data[3] * raw_data[4]
+        if initial_data[5]:
+            bottom_price = initial_data[2] * initial_data[3]
         else:
             bottom_price = 0
 
-        return raw_data[0] * (top_price + bottom_price)
+        return model.layout_material_quantity * (top_price + bottom_price)
+
+    def get_components_price(self, model):
+        return sum(quantity * price * currency for (quantity, price, currency) in
+                   model.components.all().values_list(
+                   'quantity', 'material__price', 'material__currency__price'))
+
+    def get_price_for_model(self, model):
+        data = self.get_layout_initial_data_for_model(model=model)
+        layout_price = self.get_layout_price(initial_data=data,
+                                             model=model)
+
+        return self.get_components_price(model=model) + layout_price
 
     def get_price_for_board(self, board):
-        layout_price = self.get_layout_price(board=board)
+        data = self.get_layout_initial_data_for_board(board=board)
+        layout_price = self.get_layout_price(initial_data=data,
+                                             model=board.model)
 
-        return sum(quantity * price * currency for (quantity, price, currency) in
-                   board.model.components.all().values_list(
-                   'quantity', 'material__price', 'material__currency__price')) + layout_price
+        return self.get_components_price(model=board.model) + layout_price
 
     def get_board_production_history(self, barcode):
         return [f'{station} : {timestamp}' for (station, timestamp) in
@@ -191,11 +213,8 @@ class BoardService:
                     barcode=barcode).values_list('station__name', 'timestamp')]
 
     def get_board_customer(self, barcode):
-        try:
-            return SendedBoard.objects.select_related('order').filter(
-                board=barcode).values_list('order__client__name', flat=True).first() or ''
-        except:
-            return None
+        return SendedBoard.objects.select_related('order').filter(
+            board=barcode).values_list('order__client__name', flat=True).first() or ''
 
     def get_graphic_from_name(self, name):
         return BoardGraphic.objects.filter(name=name).first() or None
