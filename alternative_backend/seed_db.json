@@ -602,6 +602,25 @@
 				"category": 3}
 },
 {
+	"model": "materials.materialdelivery",
+	"pk": 1,
+	"fields": {	"timestamp": "2019-12-24T22:03:38.651Z", 
+				"worker": 222222222222}
+}, 
+{	"model": "materials.materialdeliveryposition", 
+	"pk": 1,
+	"fields": {	"quantity": 12.0,
+				"delivery": 1,
+				"material": 2}
+}, 
+{
+	"model": "materials.materialdeliveryposition",
+	"pk": 2, 
+	"fields": {	"quantity": 3.0, 
+				"delivery": 1,
+				"material": 3}
+},  
+{
 	"model": "boards.boardmodelmaterial",
 	"pk": 1,
 	"fields": {	"quantity": 1,

@@ -11,3 +11,4 @@ command to start new app:
 - better architecture for common dir
 - handle crypto key
 - test for board composition
+- add tests for material delivery

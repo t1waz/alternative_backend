@@ -27,6 +27,27 @@ class Material(models.Model):
         return f'{self.category} {self.name}'
 
 
+class MaterialDelivery(models.Model):
+    timestamp = models.DateTimeField(auto_now_add=True)
+    worker = models.ForeignKey('workers.Worker',
+                               on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.worker.username} {self.timestamp}'
+
+
+class MaterialDeliveryPosition(models.Model):
+    quantity = models.FloatField()
+    delivery = models.ForeignKey('materials.MaterialDelivery',
+                                on_delete=models.CASCADE,
+                                related_name='positions')
+    material = models.ForeignKey('materials.Material',
+                                 on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.material.name} {self.quantity}'
+
+
 class MaterialPriceHistory(models.Model):
     price = models.FloatField()
     currency = models.ForeignKey('currency.Currency',
