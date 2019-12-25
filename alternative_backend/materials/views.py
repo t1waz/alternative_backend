@@ -4,7 +4,6 @@ from materials.models import (
     Material,
     MaterialDelivery,
     MaterialCategory,
-    MaterialDeliveryPosition,
 )
 from materials.serializers import (
     MaterialSerializer,

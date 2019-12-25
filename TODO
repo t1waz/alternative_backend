@@ -3,12 +3,5 @@ command to start new app:
 
     docker-compose -f docker-compose-dev.yml run django-app python manage.py startapp <app_name>
 
-- test for press history
-- better tests
-- add detailed test for materials (invalid cases)
-- add tests for board components
 - better exception handling
-- better architecture for common dir
-- handle crypto key
-- test for board composition
 - add tests for material delivery

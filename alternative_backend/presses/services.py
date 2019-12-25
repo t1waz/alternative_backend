@@ -16,9 +16,9 @@ class PressService:
         except:
             raise ServiceException('incorrect input data')
 
-    def start_mold_history_record(self, press, mold, event=None, **kwargs):
+    def start_mold_history_record(self, press, mold, worker, event=None):
         if not event:
-            event = EventService().create_event(worker=kwargs.get('worker'),
+            event = EventService().create_event(worker=worker,
                                                 operation_name='changing mold')
         try:
             MoldHistory.objects.create(press=press,
@@ -46,7 +46,8 @@ class PressService:
                                                 operation_name='changing mold')
             self.start_mold_history_record(press=press,
                                            mold=mold,
-                                           event=event)
+                                           event=event,
+                                           worker=worker)
             if open_record:
                 open_record.finished = event
                 open_record.save()

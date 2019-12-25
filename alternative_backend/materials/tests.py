@@ -1,17 +1,15 @@
 from django.test import TestCase
 from materials.views import (
-    MaterialCategoryViewSet,
     MaterialViewSet,
-    MaterialDeliveryViewSet,
+    MaterialCategoryViewSet,
 )
 from materials.serializers import (
-    MaterialCategorySerializer,
     MaterialSerializer,
-    
+    MaterialCategorySerializer,
 )
 from materials.models import (
-    MaterialCategory,
     Material,
+    MaterialCategory,
 )
 from common.utils import (
     ViewSetTestsMixin,
@@ -35,7 +33,12 @@ class MaterialCategoryViewSetTests(ViewSetTestsMixin, TestCase):
         }
     ]
     post_invalid_datas = [
-
+        {
+            'name': 'water like materials',
+        },
+        {
+            'description': 'test description'
+        }
     ]
     update_invalid_datas = [
 
@@ -61,12 +64,105 @@ class MaterialViewSetTests(ViewSetTestsMixin, TestCase):
         {
             'description': 'test description 2'
         },
+        {
+            'price': 2
+        },
+        {
+            'name': 'new test name'
+        },
     ]
     post_invalid_datas = [
+        {
+            'description': 'test description',
+            'price': 1,
+            'name': 'test name',
+            'unit': 'pcs',
+            'category': 'WOOD',
+        },
+        {
+            'description': 'test description',
+            'price': 1,
+            'name': 'test name',
+            'unit': 'pcs',
+            'currency': 'USD',
+        },
+        {
+            'description': 'test description',
+            'price': 1,
+            'name': 'test name',
+            'category': 'WOOD',
+            'currency': 'USD',
+        },
+        {
+            'description': 'test description',
+            'price': 1,
+            'unit': 'pcs',
+            'category': 'WOOD',
+            'currency': 'USD',
+        },
+        {
+            'description': 'test description',
+            'name': 'test name',
+            'unit': 'pcs',
+            'category': 'WOOD',
+            'currency': 'USD',
+        },
+        {
+            'price': 1,
+            'name': 'test name',
+            'unit': 'pcs',
+            'category': 'WOOD',
+            'currency': 'USD',
+        },
+        {
+            'description': 'test description',
+            'price': 'a',
+            'name': 'test name',
+            'unit': 'pcs',
+            'category': 'WOOD',
+            'currency': 'USD',
+        },
+        {
+            'description': 'test description',
+            'price': 1,
+            'name': 'test name',
+            'unit': 'random',
+            'category': 'WOOD',
+            'currency': 'USD',
+        },
+        {
+            'description': 'test description',
+            'price': 1,
+            'name': 'test name',
+            'unit': 'pcs',
+            'category': 1.2,
+            'currency': 'USD',
+        },
+        {
+            'description': 'test description',
+            'price': 1,
+            'name': 'test name',
+            'unit': 'pcs',
+            'category': 'WOOD',
+            'currency': 2.1,
+        },
 
     ]
     update_invalid_datas = [
-
+        {
+            'pk': 1,
+            'price': 'aaaa',
+        },
+        {
+            'pk': 1,
+            'unit': 'none',
+        },
+        {
+            'pk': 1,
+            'category': 'none',
+        },
+        {
+            'pk': 1,
+            'currency': 'none',
+        },
     ]
-
-

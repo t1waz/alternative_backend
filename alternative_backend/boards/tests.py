@@ -15,6 +15,7 @@ from boards.models import (
     BoardScan,
 )
 from boards.views import (
+    BoardViewSet,
     StockAPIView,
     BoardScanAPIView,
     BoardModelViewSet,
@@ -22,7 +23,7 @@ from boards.views import (
     StockDetailAPIView,
     BoardCompanyViewSet,
     ProductionDetailAPIView,
-    BoardViewSet,
+    BoardModelCompositionAPIView,
 )
 from boards.serializers import (
     BoardModelSerializer,
@@ -429,3 +430,69 @@ class StockDetailAPIViewTests(TestCase):
 
         assert response.status_code == 200
         assert response.data == valid_response
+
+
+class BoardModelComponentsTests(TestCase):
+    def setUp(self):
+        self.endpoint = 'board_models/1/components'
+        init_test_db()
+        self.api = TestAPI(token=get_token())
+        self.view = BoardModelCompositionAPIView.as_view()
+
+    def test_get_data(self):
+        valid_response = {
+            "components": [
+                {
+                    "material": "wood core",
+                    "quantity": 1
+                },
+                {
+                    "material": "biaxial 300",
+                    "quantity": 0.5
+                },
+                {
+                    "material": "biaxial 600",
+                    "quantity": 0.3
+                }
+            ]
+        }
+        request = self.api.get_request(self.endpoint)
+        response = self.view(request, pk=1)
+
+        assert response.status_code == 200
+        assert response.data == valid_response
+
+    def test_post_data(self):
+        data = {}
+        request = self.api.post_request(self.endpoint, data)
+        response = self.view(request, pk=1)
+
+        assert response.status_code != 201
+
+    def test_update_data(self):
+        data = {
+            "components": [
+                {
+                    "material": "wood core",
+                    "quantity": 100
+                }
+            ]
+        }
+        request = self.api.patch_request(self.endpoint, data)
+        response = self.view(request, pk=1)
+
+        assert response.status_code == 200
+
+    def test_invalid_update_data(self):
+        data = {
+            "components": [
+                {
+                    "material": "wood core not existing",
+                    "quantity": 100
+                }
+            ]
+        }
+        request = self.api.patch_request(self.endpoint, data)
+        response = self.view(request, pk=1)
+
+        assert response.status_code != 201

@@ -3,6 +3,7 @@ from copy import deepcopy
 from django.http import JsonResponse
 from django.core.management import call_command
 from rest_framework.test import APIRequestFactory
+from common.middlewares import IdentyProviderMiddleware
 
 
 HEADERS = {
@@ -44,21 +45,34 @@ class TestAPI:
         self.factory = APIRequestFactory()
         self.headers = deepcopy(HEADERS)
         self.headers['HTTP_ACCESS_TOKEN'] = token
+        self.identy_provider = IdentyProviderMiddleware()
 
     def get_request(self, endpoint):
-        return self.factory.get('{}'.format(endpoint), **self.headers)
+        response = self.factory.get('{}'.format(endpoint), **self.headers)
+        self.identy_provider(response)
+
+        return response
 
     def post_request(self, endpoint, data):
-        return self.factory.post('{}'.format(endpoint), data, **self.headers)
+        response = self.factory.post('{}'.format(endpoint), data, **self.headers)
+        self.identy_provider(response)
+
+        return response
 
     def delete_request(self, endpoint, data=None):
         if not data:
-            return self.factory.delete('{}'.format(endpoint), **self.headers)
+            response = self.factory.delete('{}'.format(endpoint), **self.headers)
         else:
-            return self.factory.delete('{}'.format(endpoint), data, **self.headers)
+            response = self.factory.delete('{}'.format(endpoint), data, **self.headers)
+        self.identy_provider(response)
+
+        return response
 
     def patch_request(self, endpoint, data):
-        return self.factory.patch('{}'.format(endpoint), data, **self.headers)
+        response = self.factory.patch('{}'.format(endpoint), data, **self.headers)
+        self.identy_provider(response)
+
+        return response
 
 
 class ViewSetTestsMixin:
@@ -105,7 +119,6 @@ class ViewSetTestsMixin:
         for invalid_data in self.post_invalid_datas:
             request = self.api.post_request(self.endpoint, invalid_data)
             response = self.view(request)
-
             assert response.status_code != 201
 
     def test_update(self):
@@ -121,7 +134,7 @@ class ViewSetTestsMixin:
             request = self.api.patch_request(self.endpoint, invalid_data)
             response = self.view(request, pk=pk)
 
-            assert response.status_code == 201
+            assert response.status_code != 201
 
     def test_delete(self):
         request = self.api.delete_request(self.endpoint)

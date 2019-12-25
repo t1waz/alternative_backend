@@ -1,5 +1,6 @@
-from common.exceptions import ServiceException
+from django.db import transaction
 from workers.models import Worker
+from common.exceptions import ServiceException
 from events.models import (
     Event,
     Operation,
@@ -7,10 +8,10 @@ from events.models import (
 
 
 class EventService:
+    @transaction.atomic
     def create_event(self, worker: Worker, operation_name: str) -> Event:
-        operation, created = Operation.objects.get_or_create(name=operation_name)
-
         try:
+            operation, created = Operation.objects.get_or_create(name=operation_name)
             return Event.objects.create(person=worker,
                                         operation=operation)
         except:  # TODO

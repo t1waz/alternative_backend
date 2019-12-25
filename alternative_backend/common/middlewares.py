@@ -13,6 +13,9 @@ class IdentyProviderMiddleware(MiddlewareMixin):
             encrypted_token = TokenService().decrypt_token(token=token)
 
             if encrypted_token:
-                worker_username = TokenService().get_worker_username(token=encrypted_token)
-                worker = WorkerService().get_worker_from_username(username=worker_username) 
+                username = TokenService().get_worker_username(token=encrypted_token)
+                worker = WorkerService().get_worker_from_username(username=username)
                 request.user = worker or AnonymousUser
+
+        if not self.get_response:
+            return request

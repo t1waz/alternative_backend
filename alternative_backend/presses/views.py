@@ -1,7 +1,6 @@
 from presses.models import Press
 from common.auth import BaseAccess
 from rest_framework import viewsets
-# from workers.services import WorkerService
 from presses.serializers import (
     PressSerializer,
 )

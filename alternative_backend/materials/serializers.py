@@ -4,7 +4,6 @@ from materials.models import Material
 from rest_framework import serializers
 from materials.services import MaterialService
 from materials.models import (
-    Material,
     MaterialDelivery,
     MaterialCategory,
     MaterialDeliveryPosition,
@@ -44,6 +43,7 @@ class MaterialDeliveryPositionSerializer(serializers.ModelSerializer):
     material = serializers.SlugRelatedField(many=False,
                                             queryset=Material.objects.all(),
                                             slug_field='name')
+
     class Meta:
         model = MaterialDeliveryPosition
         fields = ('id', 'quantity', 'material')
@@ -57,7 +57,6 @@ class MaterialDeliveryDetailedSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         return MaterialService().create_material_delivery(validated_data=validated_data)
-
 
     def update(self, instance, validated_data):
         MaterialService().update_material_delivery(instance=instance,

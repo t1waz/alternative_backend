@@ -18,7 +18,13 @@ class TokenService:
         except (InvalidToken, ValueError, AttributeError):
             return None
 
-    def get_worker_username(self, token):
+    def get_worker_username(self, token, decrypted=True):
+        if not decrypted:
+            token = self.decrypt_token(token)
+
+        if not token:
+            return None
+
         return token[10:]
 
     def generate_new_token(self, worker_name):

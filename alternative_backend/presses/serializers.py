@@ -29,7 +29,6 @@ class PressSerializer(serializers.ModelSerializer):
 
         if new_mold:
             worker = self.context['worker']
-            print('asd', worker)
 
             PressService().handle_history(press=instance,
                                           mold=validated_data['mold'],
