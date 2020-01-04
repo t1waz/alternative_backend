@@ -1,5 +1,5 @@
 from orders.services import OrderService
-from common.common import SimpleValidator
+from common.utils import SimpleValidator
 from django.core.exceptions import ValidationError
 
 

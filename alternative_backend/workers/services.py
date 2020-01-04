@@ -1,8 +1,7 @@
-import common.auth as auth
 from django.db import transaction
 from events.services import EventService
 from common.exceptions import ServiceException
-from common.common import seconds_between_timestamps
+from common.helpers import seconds_between_timestamps
 from workers.models import (
     Worker,
     WorkerWorkHistory,
@@ -14,48 +13,24 @@ class WorkerService:
         return Worker.objects.filter(username=username).exists()
 
     def get_worker_from_username_and_password(self, username, password):
-        try:
-            return Worker.objects.get(username=username,
-                                      password=password)
-        except Worker.DoesNotExist:
-            return None
-        except:
-            raise ServiceException('cannot return token - internal error')
+        return Worker.objects.filter(username=username,
+                                     password=password).first() or None
 
     def get_worker_from_barcode(self, barcode):
-        try:
-            return Worker.objects.get(barcode=barcode)
-        except (Worker.DoesNotExist, ValueError):
-            return None
+        return Worker.objects.filter(barcode=barcode).first() or None
 
     def get_worker_from_username(self, username):
-        try:
-            return Worker.objects.get(username=username)
-        except (Worker.DoesNotExist, ValueError):
-            return None
-
-    @transaction.atomic
-    def get_token(self, username, password):
-        token = None
-        worker = self.get_worker_from_username_and_password(username=username,
-                                                            password=password)
-
-        if worker:
-            token = auth.TokenService().generate_new_token(worker_name=username)
-            worker.token = token
-            worker.save()
-
-        return token
+        return Worker.objects.filter(username=username).first() or None
 
     def start_worker_history_record(self, worker, event=None):
         if not event:
             event = EventService().create_event(worker=worker,
                                                 operation_name='work start')
-        # try:
-        return WorkerWorkHistory.objects.create(worker=worker,
-                                                started=event)
-        # except:  # TODO
-        #     raise ServiceException('internal error - cannot create started mold record')
+        try:
+            return WorkerWorkHistory.objects.create(worker=worker,
+                                                    started=event)
+        except:  # TODO
+            raise ServiceException('internal error - cannot create started mold record')
 
     def get_open_worker_history_record(self):
         try:

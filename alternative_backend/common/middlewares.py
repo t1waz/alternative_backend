@@ -1,4 +1,4 @@
-from common.auth import TokenService
+from alternative_backend.services import TokenService
 from workers.services import WorkerService
 from django.utils.deprecation import MiddlewareMixin
 from django.contrib.auth.models import AnonymousUser

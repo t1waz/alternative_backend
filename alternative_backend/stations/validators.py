@@ -1,5 +1,5 @@
 from stations.models import Station
-from common.common import SimpleValidator
+from common.utils import SimpleValidator
 from django.core.exceptions import ValidationError
 
 
