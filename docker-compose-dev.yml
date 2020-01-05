@@ -19,6 +19,7 @@
         - static_development:/static
       depends_on:
         - db
+        - redis
 
     django-app:
       <<: *django
@@ -27,6 +28,7 @@
       - "80:80"
       depends_on:
         - db
+        - redis
         - django-service
 
     django-celery:
@@ -34,18 +36,18 @@
       command: celery -A alternative_backend worker -l debug
       depends_on:
         - db
-        - django-service
         - redis
         - django-app
+        - django-service
 
     django-celery-beat:
       <<: *django
       command: celery -A alternative_backend beat -l debug --pidfile=
       depends_on:
         - db
-        - django-service
         - redis
         - django-app
+        - django-service
 
     db:
       image: postgres:latest

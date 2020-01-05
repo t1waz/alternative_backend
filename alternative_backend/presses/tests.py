@@ -1,6 +1,9 @@
-from django.test import TestCase
 from presses.views import PressViewSet
 from presses.serializers import PressSerializer
+from django.test import (
+    TestCase,
+    override_settings,
+)
 from presses.models import (
     Press,
     MoldHistory,
@@ -10,6 +13,7 @@ from common.utils import (
 )
 
 
+@override_settings(MAX_NUMBER_OF_TOKENS=10000)
 class PressViewSetTests(ViewSetTestsMixin, TestCase):
     model = Press
     endpoint = 'presses/'

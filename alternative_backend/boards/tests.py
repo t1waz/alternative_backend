@@ -1,7 +1,10 @@
 import copy
-from django.test import TestCase
 from workers.models import Worker
 from stations.models import Station
+from django.test import (
+    TestCase,
+    override_settings,
+)
 from common.utils import (
     ViewSetTestsMixin,
     init_test_db,
@@ -33,6 +36,7 @@ from boards.serializers import (
 )
 
 
+@override_settings(MAX_NUMBER_OF_TOKENS=10000)
 class BoardCompanyViewTests(ViewSetTestsMixin, TestCase):
     model = BoardCompany
     endpoint = 'companies/'
@@ -76,6 +80,7 @@ class BoardCompanyViewTests(ViewSetTestsMixin, TestCase):
     ]
 
 
+@override_settings(MAX_NUMBER_OF_TOKENS=10000)
 class BoardModelViewTests(ViewSetTestsMixin, TestCase):
     model = BoardModel
     endpoint = 'board_models/'
@@ -211,6 +216,7 @@ class BoardModelViewTests(ViewSetTestsMixin, TestCase):
     ]
 
 
+@override_settings(MAX_NUMBER_OF_TOKENS=10000)
 class BoardViewSetTests(ViewSetTestsMixin, TestCase):
     model = Board
     endpoint = 'boards/'
@@ -263,6 +269,7 @@ class BoardViewSetTests(ViewSetTestsMixin, TestCase):
     ]
 
 
+@override_settings(MAX_NUMBER_OF_TOKENS=10000)
 class BoardScanAPIViewTests(TestCase):
     def setUp(self):
         self.endpoint = 'add_scan/'
@@ -335,6 +342,7 @@ class BoardScanAPIViewTests(TestCase):
         assert response.status_code == 400
 
 
+@override_settings(MAX_NUMBER_OF_TOKENS=10000)
 class ProductionAPIViewTests(TestCase):
     def setUp(self):
         self.endpoint = 'production/'
@@ -367,6 +375,7 @@ class ProductionAPIViewTests(TestCase):
         assert response.data == valid_response
 
 
+@override_settings(MAX_NUMBER_OF_TOKENS=10000)
 class ProductionDetailAPIViewTests(TestCase):
     def setUp(self):
         self.endpoint = 'production/'
@@ -390,6 +399,7 @@ class ProductionDetailAPIViewTests(TestCase):
         assert response.data == valid_response
 
 
+@override_settings(MAX_NUMBER_OF_TOKENS=10000)
 class StockAPIViewTests(TestCase):
     def setUp(self):
         self.endpoint = 'stock/'
@@ -413,6 +423,7 @@ class StockAPIViewTests(TestCase):
         assert response.data == valid_response
 
 
+@override_settings(MAX_NUMBER_OF_TOKENS=10000)
 class StockDetailAPIViewTests(TestCase):
     def setUp(self):
         self.endpoint = 'stock/'
@@ -432,6 +443,7 @@ class StockDetailAPIViewTests(TestCase):
         assert response.data == valid_response
 
 
+@override_settings(MAX_NUMBER_OF_TOKENS=10000)
 class BoardModelComponentsTests(TestCase):
     def setUp(self):
         self.endpoint = 'board_models/1/components'

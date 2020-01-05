@@ -1,4 +1,8 @@
-from django.test import TestCase
+from common.utils import ViewSetTestsMixin
+from django.test import (
+    TestCase,
+    override_settings,
+)
 from materials.views import (
     MaterialViewSet,
     MaterialCategoryViewSet,
@@ -11,11 +15,9 @@ from materials.models import (
     Material,
     MaterialCategory,
 )
-from common.utils import (
-    ViewSetTestsMixin,
-)
 
 
+@override_settings(MAX_NUMBER_OF_TOKENS=10000)
 class MaterialCategoryViewSetTests(ViewSetTestsMixin, TestCase):
     model = MaterialCategory
     endpoint = 'material_categories/'
@@ -45,6 +47,7 @@ class MaterialCategoryViewSetTests(ViewSetTestsMixin, TestCase):
     ]
 
 
+@override_settings(MAX_NUMBER_OF_TOKENS=10000)
 class MaterialViewSetTests(ViewSetTestsMixin, TestCase):
     model = Material
     endpoint = 'materials/'

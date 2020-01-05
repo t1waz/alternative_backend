@@ -9,10 +9,7 @@ from workers.models import (
 
 
 class WorkerService:
-    def is_worker_for_username(self, username):
-        return Worker.objects.filter(username=username).exists()
-
-    def get_worker_from_username_and_password(self, username, password):
+    def get_worker(self, username, password):
         return Worker.objects.filter(username=username,
                                      password=password).first() or None
 

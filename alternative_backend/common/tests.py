@@ -1,12 +1,16 @@
 from common.auth import BaseAccess
-from django.test import TestCase
 from unittest.mock import MagicMock
+from django.test import (
+    TestCase,
+    override_settings,
+)
 from common.utils import (
     init_test_db,
     get_token,
 )
 
 
+@override_settings(MAX_NUMBER_OF_TOKENS=10000)
 class AuthTestTestCases(TestCase):
     @classmethod
     def setUpTestData(cls):

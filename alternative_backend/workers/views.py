@@ -3,6 +3,7 @@ from common.auth import BaseAccess
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from alternative_backend.services import TokenService
+from workers.services import WorkerService
 from rest_framework import (
     viewsets,
     generics,
@@ -15,12 +16,18 @@ from workers.serializers import (
 
 class WorkerLoginAPIView(APIView):
     def post(self, request, format=None):
-        token = TokenService().get_token_for_user(username=request.data.get('username'),
-                                                  password=request.data.get('password'))
-
-        if not token:
+        token = None
+        worker = WorkerService().get_worker(username=request.data.get('username'),
+                                            password=request.data.get('password'))
+        if not worker:
             return Response('invalid login data',
                             status=404)
+
+        token = TokenService().generate_new_token(username=worker.username)
+
+        if not token:
+            return Response('too many tokens',
+                            status=429)
 
         return Response({'token': token})
 

@@ -1,6 +1,9 @@
-from django.test import TestCase
 from workers.models import Worker
 from workers.serializers import WorkerSerializer
+from django.test import (
+    TestCase,
+    override_settings,
+)
 from common.utils import (
     ViewSetTestsMixin,
     init_test_db,
@@ -13,6 +16,7 @@ from workers.views import (
 )
 
 
+@override_settings(MAX_NUMBER_OF_TOKENS=10000)
 class WorkerViewSetTests(ViewSetTestsMixin, TestCase):
     model = Worker
     endpoint = 'workers/'
@@ -38,6 +42,7 @@ class WorkerViewSetTests(ViewSetTestsMixin, TestCase):
     ]
 
 
+@override_settings(MAX_NUMBER_OF_TOKENS=10000)
 class WorkerWorkHistoryAPIViewTests(TestCase):
     def setUp(self):
         self.endpoint = 'add_worker_scan/'

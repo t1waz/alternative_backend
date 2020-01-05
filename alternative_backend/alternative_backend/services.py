@@ -1,7 +1,26 @@
+import uuid
+import redis
 from time import time
 from django.conf import settings
 from workers.services import WorkerService
 from cryptography.fernet import Fernet, InvalidToken
+
+
+class RedisMemoryService:
+    def __init__(self):
+        self.redis_db = redis.Redis(host=settings.REDIS_HOST_NAME,
+                                    port=settings.REDIS_PORT,
+                                    db=settings.REDIS_DB_NUMBER)
+
+    def set_value(self, key, value):
+        self.redis_db.set(key, value)
+
+    def get_value(self, key):
+        data = self.redis_db.get(key) or ''
+        if data:
+            data = data.decode()
+
+        return data
 
 
 class TokenService:
@@ -24,13 +43,24 @@ class TokenService:
         if not token:
             return None
 
-        return token[10:]
+        return token.split(':')[0]
 
-    def generate_new_token(self, worker_name):
-        current_seconds = str(int(time())).encode()
-        worker = worker_name.encode()
+    def get_encrypted_data(self, data):
+        return self.crypto_worker.encrypt(data.encode()).decode()
 
-        return self.crypto_worker.encrypt(current_seconds + worker).decode()
+    def generate_new_token(self, username):
+        user_flag = uuid.uuid4().hex
+        current_flags = RedisMemoryService().get_value(key=username) or user_flag
+
+        if len(current_flags.split(':')) >= settings.MAX_NUMBER_OF_TOKENS:
+            return None
+        else:
+            current_flags = f'{current_flags}:{user_flag}'
+
+        RedisMemoryService().set_value(key=username,
+                                       value=current_flags.encode())
+
+        return self.get_encrypted_data(f'{username}:{user_flag}')
 
     def validate_token(self, token):
         decrypted_token = self.decrypt_token(token)
@@ -39,20 +69,14 @@ class TokenService:
             return False
 
         current_seconds = int(time())
-        last_seconds = int(decrypted_token[:10])
+        last_seconds = self.crypto_worker.extract_timestamp(token.encode())
+
         if current_seconds - last_seconds > settings.TOKEN_VALID_TIME:
             return False
 
-        if WorkerService().is_worker_for_username(username=decrypted_token[10:]):
+        username, flag = decrypted_token.split(':')
+        flags = RedisMemoryService().get_value(username).split(':')
+        if flag in flags:
             return True
 
         return False
-
-    def get_token_for_user(self, username, password):
-        token = None
-        worker = WorkerService().get_worker_from_username_and_password(username=username,
-        															   password=password)
-        if worker:
-            token = self.generate_new_token(worker_name=username)
-
-        return token

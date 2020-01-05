@@ -1,4 +1,7 @@
-from django.test import TestCase
+from django.test import (
+    TestCase,
+    override_settings,
+)
 from orders.models import (
     Order,
     Client
@@ -22,6 +25,7 @@ from orders.views import (
 )
 
 
+@override_settings(MAX_NUMBER_OF_TOKENS=10000)
 class OrderViewSetTests(ViewSetTestsMixin, TestCase):
     model = Order
     endpoint = 'orders/'
@@ -74,6 +78,7 @@ class OrderViewSetTests(ViewSetTestsMixin, TestCase):
     ]
 
 
+@override_settings(MAX_NUMBER_OF_TOKENS=10000)
 class ClientViewSetTests(ViewSetTestsMixin, TestCase):
     model = Client
     endpoint = 'clients/'
@@ -103,6 +108,7 @@ class ClientViewSetTests(ViewSetTestsMixin, TestCase):
     ]
 
 
+@override_settings(MAX_NUMBER_OF_TOKENS=10000)
 class CompanyOrderInfoAPIViewTests(TestCase):
     def setUp(self):
         self.endpoint = 'order_info/'
@@ -132,6 +138,7 @@ class CompanyOrderInfoAPIViewTests(TestCase):
         assert response.data == valid_response
 
 
+@override_settings(MAX_NUMBER_OF_TOKENS=10000)
 class CompanyOrderInfoDetailAPIViewTests(TestCase):
     def setUp(self):
         self.endpoint = 'order_info/'
@@ -152,6 +159,7 @@ class CompanyOrderInfoDetailAPIViewTests(TestCase):
         assert response.data == valid_response
 
 
+@override_settings(MAX_NUMBER_OF_TOKENS=10000)
 class SendedBoardRecordAPIViewTests(TestCase):
     def setUp(self):
         self.endpoint = 'add_sended_board/'

@@ -18,12 +18,14 @@
         - static_production:/static
       depends_on:
         - db
+        - redis
 
     django-app:
       <<: *django
       command: bash /manage/run.sh
       depends_on:
         - db
+        - redis
         - django-service
 
     django-celery:
@@ -31,8 +33,8 @@
       command: celery -A alternative_backend worker -l info
       depends_on:
         - db
-        - django-service
         - redis
+        - django-service
         - django-app
 
     django-celery-beat:
@@ -40,8 +42,8 @@
       command: celery -A alternative_backend beat -l info --pidfile=
       depends_on:
         - db
-        - django-service
         - redis
+        - django-service
         - django-app
 
     db:

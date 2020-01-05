@@ -69,6 +69,10 @@ DATABASES = {
     }
 }
 
+REDIS_HOST_NAME = 'redis'
+REDIS_PORT = 6379
+REDIS_DB_NUMBER = 0
+
 CELERY_BROKER_URL = 'redis://redis:6379'
 CELERY_RESULT_BACKEND = 'redis://redis:6379'
 CELERY_ACCEPT_CONTENT = ['application/json']
@@ -140,3 +144,5 @@ BARCODE_LENGHT = 12
 
 # token valid time in seconds
 TOKEN_VALID_TIME = 8640
+
+MAX_NUMBER_OF_TOKENS = 10

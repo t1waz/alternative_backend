@@ -1,44 +1,13 @@
 import json
 from copy import deepcopy
+from common import constants
 from django.http import JsonResponse
-from django.core.management import call_command
 from rest_framework.test import APIRequestFactory
 from django.core.exceptions import ValidationError
-
-
-
-HEADERS = {
-    'CONTENT_TYPE': 'application/json',
-    'format': 'json'
-}
-
-DETAIL_VIEW_ACTIONS = {
-    'get': 'retrieve'
-}
-
-VIEW_ACTIONS = {
-    'get': 'list',
-    'post': 'create',
-    'delete': 'destroy',
-    'patch': 'partial_update'
-}
-
-
-def init_test_db():
-    call_command('loaddata', 'seed_db.json', verbosity=1)
-
-
-def get_token():
-    from workers.views import WorkerLoginAPIView
-    view = WorkerLoginAPIView.as_view()
-    data = {
-        "username": "Szymon Smialek",
-        "password": "bbb"
-    }
-    request = APIRequestFactory().post('login/', data, **HEADERS)
-    response = view(request)
-
-    return response.data['token']
+from common.helpers import (
+    init_test_db,
+    get_token,
+)
 
 
 class SimpleValidator:
@@ -69,7 +38,7 @@ class TestAPI:
         from common.middlewares import IdentyProviderMiddleware
 
         self.factory = APIRequestFactory()
-        self.headers = deepcopy(HEADERS)
+        self.headers = deepcopy(constants.HEADERS)
         self.headers['HTTP_ACCESS_TOKEN'] = token
         self.identy_provider = IdentyProviderMiddleware()
 
@@ -104,8 +73,8 @@ class TestAPI:
 class ViewSetTestsMixin:
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.detail_view = self.view.as_view(actions=DETAIL_VIEW_ACTIONS)
-        self.view = self.view.as_view(actions=VIEW_ACTIONS)
+        self.detail_view = self.view.as_view(actions=constants.DETAIL_VIEW_ACTIONS)
+        self.view = self.view.as_view(actions=constants.VIEW_ACTIONS)
         if not hasattr(self, 'detail_serializer'):
             self.detail_serializer = self.serializer
 
