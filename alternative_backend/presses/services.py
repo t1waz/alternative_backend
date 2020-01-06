@@ -1,21 +1,10 @@
 from django.db import transaction
 from events.services import EventService
 from common.exceptions import ServiceException
-from presses.models import (
-    Press,
-    MoldHistory,
-)
+from presses.models import MoldHistory
 
 
 class PressService:
-    def get_press_from_name(self, name):
-        try:
-            return Press.objects.get(name=name)
-        except Press.DoesNotExist:
-            return None
-        except:
-            raise ServiceException('incorrect input data')
-
     def start_mold_history_record(self, press, mold, worker, event=None):
         if not event:
             event = EventService().create_event(worker=worker,

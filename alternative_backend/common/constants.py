@@ -13,4 +13,3 @@ VIEW_ACTIONS = {
     'delete': 'destroy',
     'patch': 'partial_update'
 }
-

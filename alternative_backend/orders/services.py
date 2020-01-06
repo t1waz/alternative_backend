@@ -79,30 +79,21 @@ class OrderService:
         return order_dict
 
     def return_order_info_for_all_companies(self):
-        companies_list = list()
-        for company in BoardCompany.objects.all():
-            orders = self.return_order_info(company_code=company.code)
-            companies_list.append({company.name: orders})
-
-        return companies_list
+        return [{name: self.return_order_info(company_code=code)} for name, code in
+                BoardCompany.objects.all().values_list('name', 'code')]
 
     def is_production_finish_for_board(self, barcode):
-        last_station_id = list(Station.objects.all().values_list('id', flat=True))[-1]
+        last_station_id = Station.objects.all().values_list(
+            'id', flat=True).order_by('production_step').last()
 
         return BoardScan.objects.filter(barcode__barcode=barcode,
                                         station__id=last_station_id).exists()
 
     def board_exist(self, barcode):
-        try:
-            return Board.objects.filter(barcode=barcode).exists()
-        except:    # TODO
-            raise ServiceException('cannot check')
+        return Board.objects.filter(barcode=barcode).exists()
 
     def is_board_already_sended(self, board):
-        try:
-            return SendedBoard.objects.filter(board=board).exists()
-        except:  # TODO
-            raise ServiceException('incorrect data')
+        return SendedBoard.objects.filter(board=board).exists()
 
     def get_order_quantity(self, board, order_id):
         try:

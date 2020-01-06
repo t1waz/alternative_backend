@@ -35,6 +35,7 @@ class CompanyOrderInfoAPIView(APIView):
 
     def get(self, request, format=None):
         response = OrderService().return_order_info_for_all_companies()
+
         return Response(response)
 
 
@@ -43,6 +44,7 @@ class CompanyOrderInfoDetailAPIView(APIView):
 
     def get(self, request, code, format=None):
         response = OrderService().return_order_info(company_code=code)
+
         return Response(response)
 
 

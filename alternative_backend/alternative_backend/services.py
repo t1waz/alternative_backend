@@ -2,7 +2,6 @@ import uuid
 import redis
 from time import time
 from django.conf import settings
-from workers.services import WorkerService
 from cryptography.fernet import Fernet, InvalidToken
 
 

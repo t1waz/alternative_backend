@@ -11,13 +11,13 @@ from workers.models import (
 class WorkerService:
     def get_worker(self, username, password):
         return Worker.objects.filter(username=username,
-                                     password=password).first() or None
+                                     password=password).first()
 
     def get_worker_from_barcode(self, barcode):
-        return Worker.objects.filter(barcode=barcode).first() or None
+        return Worker.objects.filter(barcode=barcode).first()
 
     def get_worker_from_username(self, username):
-        return Worker.objects.filter(username=username).first() or None
+        return Worker.objects.filter(username=username).first()
 
     def start_worker_history_record(self, worker, event=None):
         if not event:
@@ -30,13 +30,9 @@ class WorkerService:
             raise ServiceException('internal error - cannot create started mold record')
 
     def get_open_worker_history_record(self):
-        try:
-            return WorkerWorkHistory.objects.select_related('started').get(finished__isnull=True,
-                                                                           started__isnull=False)
-        except WorkerWorkHistory.DoesNotExist:
-            return None
-        except:  # TODO
-            raise ServiceException('internal error - cannot find previous worker work record')
+        return WorkerWorkHistory.objects.select_related(
+                                    'started').filter(finished__isnull=True,
+                                                      started__isnull=False).first()
 
     @transaction.atomic
     def handle_worker_work_history(self, worker):

@@ -5,3 +5,4 @@ command to start new app:
 
 - better exception handling
 - add tests for material delivery
+- add test for currency resource
