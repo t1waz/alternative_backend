@@ -57,7 +57,7 @@
       build:
         context: .
         dockerfile: compose/production/redis/Dockerfile
-      command: redis-server /config/redis.conf
+      command: sh -c "redis-server /config/redis.conf && redis-cli flushall"
       depends_on:
         - db
       sysctls:

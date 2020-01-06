@@ -32,6 +32,15 @@ class WorkerLoginAPIView(APIView):
         return Response({'token': token})
 
 
+class WorkerLogoutAPIView(APIView):
+    permission_classes = (BaseAccess,)
+
+    def get(self, request, format=None):
+        TokenService().revoke_user_tokens(username=request.user.username)
+
+        return Response('logout completed')
+
+
 class WorkerTokenValidate(APIView):
     def post(self, request, format=None):
         is_valid = TokenService().validate_token(token=request.data.get('token'))
@@ -45,6 +54,8 @@ class WorkerViewSet(viewsets.ModelViewSet):
 
 
 class WorkerWorkHistoryAPIView(generics.CreateAPIView):
+    permission_classes = (BaseAccess,)
+
     def post(self, request, *args, **kwargs):
         status_code = 400
         status = {

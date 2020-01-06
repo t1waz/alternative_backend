@@ -79,3 +79,7 @@ class TokenService:
             return True
 
         return False
+
+    def revoke_user_tokens(self, username):
+        RedisMemoryService().set_value(key=username,
+                                       value='')

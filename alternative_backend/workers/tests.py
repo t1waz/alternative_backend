@@ -1,4 +1,6 @@
 from workers.models import Worker
+from boards.views import BoardViewSet
+from common.constants import VIEW_ACTIONS
 from workers.serializers import WorkerSerializer
 from django.test import (
     TestCase,
@@ -12,6 +14,7 @@ from common.utils import (
 )
 from workers.views import (
     WorkerViewSet,
+    WorkerLogoutAPIView,
     WorkerWorkHistoryAPIView,
 )
 
@@ -83,3 +86,27 @@ class WorkerWorkHistoryAPIViewTests(TestCase):
             response = self.view(request)
 
             assert response.status_code == 400
+
+
+@override_settings(MAX_NUMBER_OF_TOKENS=10000)
+class LogoutTestCase(TestCase):
+    def setUp(self):
+        self.endpoint = 'logout/'
+        init_test_db()
+        self.api = TestAPI(token=get_token())
+        self.view = WorkerLogoutAPIView.as_view()
+
+    def test_logout_user(self):
+        boards_view = BoardViewSet.as_view(actions=VIEW_ACTIONS)
+        request = self.api.get_request('boards/')
+        response = boards_view(request)
+
+        assert response.status_code == 200
+
+        request = self.api.get_request(self.endpoint)
+        response = self.view(request)
+
+        request = self.api.get_request('boards/')
+        response = boards_view(request)
+
+        assert response.status_code != 200
