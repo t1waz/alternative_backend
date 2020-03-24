@@ -8,7 +8,7 @@ def seconds_between_timestamps(start_timestamp, finish_timestamp):
 
 
 def init_test_db():
-    call_command('loaddata', 'seed_db.json', verbosity=1)
+    call_command('loaddata', '/manage/seed_db.json', verbosity=1)
 
 
 def get_token():

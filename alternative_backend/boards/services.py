@@ -1,7 +1,5 @@
 from django.db import transaction
-from stations.models import Station
-from orders.models import SendedBoard
-from common.exceptions import ServiceException
+
 from boards.models import (
     Board,
     Layout,
@@ -11,6 +9,9 @@ from boards.models import (
     BoardCompany,
     BoardModelMaterial,
 )
+from common.exceptions import ServiceException
+from orders.models import SendedBoard
+from stations.models import Station
 
 
 class BoardService:

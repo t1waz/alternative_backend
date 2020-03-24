@@ -1,8 +1,9 @@
 import uuid
+import time
+
 import redis
-from time import time
-from django.conf import settings
 from cryptography.fernet import Fernet, InvalidToken
+from django.conf import settings
 
 
 class RedisMemoryService:
@@ -26,7 +27,13 @@ class TokenService:
     def __init__(self):
         self.crypto_worker = Fernet(settings.CRYPTO_KEY)
 
-    def generate_secret_key(self):
+    @staticmethod
+    def revoke_user_tokens(username):
+        RedisMemoryService().set_value(key=username,
+                                       value='')
+
+    @staticmethod
+    def generate_secret_key():
         return Fernet.generate_key()
 
     def decrypt_token(self, token):
@@ -67,7 +74,7 @@ class TokenService:
         if not decrypted_token:
             return False
 
-        current_seconds = int(time())
+        current_seconds = int(time.time())
         last_seconds = self.crypto_worker.extract_timestamp(token.encode())
 
         if current_seconds - last_seconds > settings.TOKEN_VALID_TIME:
@@ -79,7 +86,3 @@ class TokenService:
             return True
 
         return False
-
-    def revoke_user_tokens(self, username):
-        RedisMemoryService().set_value(key=username,
-                                       value='')

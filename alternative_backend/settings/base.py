@@ -88,10 +88,12 @@ CELERY_BEAT_SCHEDULE = {
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'common.middlewares.IdentityProviderMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'common.middlewares.IdentyProviderMiddleware',
 ]
 
 ROOT_URLCONF = 'alternative_backend.urls'

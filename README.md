@@ -7,50 +7,11 @@ App purpose's to serve backend service for Alternative Longboards company.
 How to setup
 ------------
 
-Create .envs resources:
-
-	$ mkdir .envs
-
-	$ mkdir .envs/development
-
-	$ mkdir .envs/production
-
-	$ touch .envs/development/django.env
-
-	$ touch .envs/development/postgres.env
-
-	$ touch .envs/production/django.env
-
-	$ touch .envs/production/postgres.env
-
-
-Fill .envs with data:
-
-	django.envs:
-
-		SETTINGS_PATH=settings.development or settings.production
-
-		SECRET_KEY=<YOUR_SECRET_KEY> (default:ox3fv+&j(rl@4*_k5_nddjs3#4@+#-y-el)m&2!c7nz0@h-34h) only for .envs/production/django.envs
-
-	postgres.envs:
-
-		POSTGRES_DB=<YOUR_VALUE> (default: postgres)
-
-		POSTGRES_USER=<YOUR_VALUE> (default: postgres)
-
-		POSTGRES_PASSWORD=<YOUR_VALUE> (default: not_very_secret_password)
-
-		POSTGRES_HOST=<YOUR_VALUE> (default: db)
-
-		POSTGRES_PORT=<YOUR_VALUE> (default: 5432)
-
-
 Run
 
 	$ sudo echo "vm.overcommit_memory = 1" >> /etc/sysctl.conf
 
 	$ sudo sysctl vm.overcommit_memory=1
-
 
 Edit /etc/default/grub to add transparent_hugepage=never to the GRUB_CMDLINE_LINUX_DEFAULT option:
 
@@ -64,14 +25,11 @@ Run:
 
 	$ sudo update-grub
 
-
 Reboot system
-
 
 Run command from docker-compose.yml dir:
 
 	$ chmod +x scripts/setup_project.sh
-
 
 Setup project:
 

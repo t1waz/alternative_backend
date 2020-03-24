@@ -4,7 +4,7 @@ from django.contrib.auth.models import AnonymousUser
 from alternative_backend.services import TokenService
 
 
-class IdentyProviderMiddleware(MiddlewareMixin):
+class IdentityProviderMiddleware(MiddlewareMixin):
     def process_request(self, request):
         if not request.META.get('HTTP_COOKIE'):
             setattr(request, '_dont_enforce_csrf_checks', True)

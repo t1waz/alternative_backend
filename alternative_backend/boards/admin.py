@@ -1,4 +1,5 @@
 from django.contrib import admin
+
 from boards.models import (
     BoardCompany,
     BoardModel,

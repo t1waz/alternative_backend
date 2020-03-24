@@ -10,9 +10,14 @@
       build:
         context: .
         dockerfile: compose/development/backend/Dockerfile
-      env_file:
-        - .envs/development/django.env
-        - .envs/development/postgres.env
+      environment:
+        - SETTINGS_PATH=settings.development
+        - SECRET_KEY=ox3fv+&j(rl@4*_k5_nddjs3#4@+#-y-el)m&2!c7nz0@h-34h
+        - POSTGRES_DB=postgres
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=not_very_secret_password
+        - POSTGRES_HOST=db
+        - POSTGRES_PORT=5432
       command: bash /manage/build.sh
       volumes:
         - ./alternative_backend:/app
@@ -25,7 +30,7 @@
       <<: *django
       command: bash /manage/run.sh
       ports:
-      - "80:80"
+      - "80:9000"
       depends_on:
         - db
         - redis
@@ -53,8 +58,12 @@
       image: postgres:latest
       volumes:
         - db_data_development:/var/lib/postgresql/data
-      env_file:
-        - .envs/development/postgres.env
+      environment:
+        - POSTGRES_DB=postgres
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=not_very_secret_password
+        - POSTGRES_HOST=db
+        - POSTGRES_PORT=5432
 
     redis:
       build:

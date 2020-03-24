@@ -8,6 +8,8 @@ RUN mkdir /entrypoint
 
 COPY ./requirements.txt /app
 
+COPY ./seed_db.json /manage
+
 COPY ./compose/development/backend/run.sh /manage
 RUN chmod +x /manage/run.sh
 

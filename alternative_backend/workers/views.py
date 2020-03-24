@@ -36,7 +36,7 @@ class WorkerLogoutAPIView(APIView):
     permission_classes = (BaseAccess,)
 
     def get(self, request, format=None):
-        TokenService().revoke_user_tokens(username=request.user.username)
+        TokenService.revoke_user_tokens(username=request.user.username)
 
         return Response('logout completed')
 

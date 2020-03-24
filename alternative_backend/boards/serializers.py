@@ -1,9 +1,6 @@
-from workers.models import Worker
-from stations.models import Station
 from rest_framework import serializers
-from boards.services import BoardService
 from rest_framework.validators import UniqueTogetherValidator
-from materials.models import Material
+
 from boards.models import (
     Board,
     Layout,
@@ -13,12 +10,16 @@ from boards.models import (
     BoardGraphic,
     BoardModelMaterial,
 )
+from boards.services import BoardService
 from boards.validators import (
     BoardValidation,
     BoardModelValidation,
     BoardCompanyValidation,
     BoardModelMaterialValidation,
 )
+from materials.models import Material
+from stations.models import Station
+from workers.models import Worker
 
 
 class BoardCompanySerializer(serializers.ModelSerializer):

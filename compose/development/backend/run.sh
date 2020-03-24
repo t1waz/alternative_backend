@@ -1,3 +1,3 @@
 #bin/bash
 
-python /app/manage.py runserver 0.0.0.0:80
+python /app/manage.py runserver 0.0.0.0:9000

@@ -1,9 +1,11 @@
 import json
 from copy import deepcopy
-from common import constants
+
+from django.core.exceptions import ValidationError
 from django.http import JsonResponse
 from rest_framework.test import APIRequestFactory
-from django.core.exceptions import ValidationError
+
+from common import constants
 from common.helpers import (
     init_test_db,
     get_token,
@@ -35,12 +37,12 @@ class SimpleValidator:
 
 class TestAPI:
     def __init__(self, token):
-        from common.middlewares import IdentyProviderMiddleware
+        from common.middlewares import IdentityProviderMiddleware
 
         self.factory = APIRequestFactory()
         self.headers = deepcopy(constants.HEADERS)
         self.headers['HTTP_ACCESS_TOKEN'] = token
-        self.identy_provider = IdentyProviderMiddleware()
+        self.identy_provider = IdentityProviderMiddleware()
 
     def get_request(self, endpoint):
         response = self.factory.get('{}'.format(endpoint), **self.headers)
