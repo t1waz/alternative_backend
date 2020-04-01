@@ -1,21 +1,22 @@
-from rest_framework import mixins
-from common.auth import BaseAccess
 from rest_framework import generics
+from rest_framework import mixins
 from rest_framework import viewsets
-from orders.services import OrderService
-from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from common.auth import BaseAccess
 from orders.models import (
-    Order, 
+    Order,
     Client,
-    SendedBoard, 
+    SendedBoard,
 )
 from orders.serializers import (
     OrderSerializer,
-    SendedBoardSerializer,
     ClientSerializer,
+    SendedBoardSerializer,
     DeleteSendedSerializer,
 )
+from orders.services import OrderService
 
 
 class OrderViewSet(viewsets.ModelViewSet):

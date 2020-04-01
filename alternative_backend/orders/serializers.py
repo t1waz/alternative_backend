@@ -1,20 +1,21 @@
 from rest_framework import serializers
-from orders.services import OrderService
-from boards.serializers import BoardModelLayoutSerializer
-from orders.validators import (
-    SendedBoardValidation,
-    DeleteSendedValidation,
-    OrderValidation,
-)
+
 from boards.models import (
     Board,
     BoardModel,
 )
+from boards.serializers import BoardModelLayoutSerializer
 from orders.models import (
-    Client,
     Order,
+    Client,
     OrderRecord,
     SendedBoard
+)
+from orders.services import OrderService
+from orders.validators import (
+    OrderValidation,
+    SendedBoardValidation,
+    DeleteSendedValidation,
 )
 
 

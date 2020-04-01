@@ -1,17 +1,18 @@
-from workers.models import Worker
-from boards.views import BoardViewSet
-from common.constants import VIEW_ACTIONS
-from workers.serializers import WorkerSerializer
 from django.test import (
     TestCase,
     override_settings,
 )
+
+from boards.views import BoardViewSet
+from common.constants import VIEW_ACTIONS
 from common.utils import (
     ViewSetTestsMixin,
     init_test_db,
     get_token,
     TestAPI,
 )
+from workers.models import Worker
+from workers.serializers import WorkerSerializer
 from workers.views import (
     WorkerViewSet,
     WorkerLogoutAPIView,

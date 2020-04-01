@@ -1,6 +1,7 @@
-from presses.models import Press
-from boards.models import BoardModel
 from rest_framework import serializers
+
+from boards.models import BoardModel
+from presses.models import Press
 from presses.services import PressService
 
 

@@ -1,6 +1,7 @@
-from common import constants
 from django.core.management import call_command
 from rest_framework.test import APIRequestFactory
+
+from common import constants
 
 
 def seconds_between_timestamps(start_timestamp, finish_timestamp):

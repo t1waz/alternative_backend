@@ -1,13 +1,14 @@
-from workers.models import Worker
+from rest_framework import serializers
+
 from currency.models import Currency
 from materials.models import Material
-from rest_framework import serializers
-from materials.services import MaterialService
 from materials.models import (
     MaterialDelivery,
     MaterialCategory,
     MaterialDeliveryPosition,
 )
+from materials.services import MaterialService
+from workers.models import Worker
 
 
 class MaterialCategorySerializer(serializers.ModelSerializer):

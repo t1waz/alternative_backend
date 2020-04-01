@@ -127,7 +127,7 @@ class ViewSetTestsMixin:
 
     def test_update_invalid(self):
         for invalid_data in self.update_invalid_datas:
-            pk = invalid_data['pk']
+            pk = invalid_data.pop('pk')
             request = self.api.patch_request(self.endpoint, invalid_data)
             response = self.view(request, pk=pk)
 

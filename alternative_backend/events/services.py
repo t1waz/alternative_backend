@@ -1,10 +1,11 @@
 from django.db import transaction
-from workers.models import Worker
+
 from common.exceptions import ServiceException
 from events.models import (
     Event,
     Operation,
 )
+from workers.models import Worker
 
 
 class EventService:

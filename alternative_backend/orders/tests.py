@@ -2,15 +2,16 @@ from django.test import (
     TestCase,
     override_settings,
 )
-from orders.models import (
-    Order,
-    Client
-)
+
 from common.utils import (
     ViewSetTestsMixin,
     init_test_db,
     get_token,
     TestAPI,
+)
+from orders.models import (
+    Order,
+    Client
 )
 from orders.serializers import (
     OrderSerializer,

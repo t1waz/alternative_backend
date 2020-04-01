@@ -1,12 +1,14 @@
-from common.auth import BaseAccess
 from unittest.mock import MagicMock
+
 from django.test import (
     TestCase,
     override_settings,
 )
+
+from common.auth import BaseAccess
 from common.utils import (
-    init_test_db,
     get_token,
+    init_test_db,
 )
 
 

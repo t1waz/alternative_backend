@@ -1,21 +1,23 @@
 import copy
-from workers.models import Worker
-from stations.models import Station
+
 from django.test import (
     TestCase,
     override_settings,
 )
-from common.utils import (
-    ViewSetTestsMixin,
-    init_test_db,
-    get_token,
-    TestAPI,
-)
+
 from boards.models import (
     Board,
+    BoardScan,
     BoardModel,
     BoardCompany,
-    BoardScan,
+    BoardGraphic,
+)
+from boards.serializers import (
+    BoardListSerializer,
+    BoardModelSerializer,
+    BoardCompanySerializer,
+    BoardGraphicSerializer,
+    BoardDetailViewSerializer,
 )
 from boards.views import (
     BoardViewSet,
@@ -26,14 +28,16 @@ from boards.views import (
     StockDetailAPIView,
     BoardCompanyViewSet,
     ProductionDetailAPIView,
-    BoardModelCompositionAPIView,
+    BoardGraphicViewSet,
 )
-from boards.serializers import (
-    BoardModelSerializer,
-    BoardCompanySerializer,
-    BoardListSerializer,
-    BoardDetailViewSerializer,
+from common.utils import (
+    TestAPI,
+    get_token,
+    init_test_db,
+    ViewSetTestsMixin,
 )
+from stations.models import Station
+from workers.models import Worker
 
 
 @override_settings(MAX_NUMBER_OF_TOKENS=10000)
@@ -81,6 +85,69 @@ class BoardCompanyViewTests(ViewSetTestsMixin, TestCase):
 
 
 @override_settings(MAX_NUMBER_OF_TOKENS=10000)
+class BoardGraphicViewTests(ViewSetTestsMixin, TestCase):
+    model = BoardGraphic
+    endpoint = 'board_graphics/'
+    view = BoardGraphicViewSet
+    serializer = BoardGraphicSerializer
+    post_datas = [
+        {
+            "description": "test description",
+            "artist": "test artist",
+            "year": 2000,
+            "name": "test name"
+        }
+    ]
+    post_invalid_datas = [
+        {
+            "description": 12,
+            "artist": "test artist",
+        }
+    ]
+    update_datas = [
+        {
+            "description": "test description 2",
+        },
+        {
+            "artist": "test artist 2",
+        },
+        {
+            "year": 2020,
+        },
+        {
+            "name": "test name 2"
+        },
+        {
+            "year": 2000,
+            "name": "test name"
+        }
+    ]
+    update_invalid_datas = [
+        {
+            "pk": 1,
+            "description": 32,
+        },
+        {
+            "pk": 1,
+            "artist": 4,
+        },
+        {
+            "pk": 1,
+            "year": "2020",
+        },
+        {
+            "pk": 1,
+            "name": 4.5
+        },
+        {
+            "pk": 1,
+            "year": "23",
+            "name": 4.0
+        }
+    ]
+
+
+@override_settings(MAX_NUMBER_OF_TOKENS=10000)
 class BoardModelViewTests(ViewSetTestsMixin, TestCase):
     model = BoardModel
     endpoint = 'board_models/'
@@ -99,7 +166,21 @@ class BoardModelViewTests(ViewSetTestsMixin, TestCase):
                 'bottom_graphic': 'Haunted Woods Erget',
                 'top_material': 'topsheet PBT',
                 'bottom_material': 'topsheet PBT'
-            }
+            },
+            "components": [
+                {
+                    "material": "wood core",
+                    "quantity": 1
+                },
+                {
+                    "material": "biaxial 300",
+                    "quantity": 0.5
+                },
+                {
+                    "material": "biaxial 600",
+                    "quantity": 0.3
+                }
+            ]
         },
 
     ]
@@ -107,6 +188,14 @@ class BoardModelViewTests(ViewSetTestsMixin, TestCase):
         {
             'description': 'new description'
         },
+        {
+            "components": [
+                {
+                    "material": "wood core",
+                    "quantity": 100
+                }
+            ]
+        }
     ]
     post_invalid_datas = [
         {
@@ -212,7 +301,15 @@ class BoardModelViewTests(ViewSetTestsMixin, TestCase):
         }
     ]
     update_invalid_datas = [
-
+        {
+            "pk": 1,
+            "components": [
+                {
+                    "material": "wood core not existing",
+                    "quantity": 100
+                }
+            ]
+        }
     ]
 
 
@@ -441,70 +538,3 @@ class StockDetailAPIViewTests(TestCase):
 
         assert response.status_code == 200
         assert response.data == valid_response
-
-
-@override_settings(MAX_NUMBER_OF_TOKENS=10000)
-class BoardModelComponentsTests(TestCase):
-    def setUp(self):
-        self.endpoint = 'board_models/1/components'
-        init_test_db()
-        self.api = TestAPI(token=get_token())
-        self.view = BoardModelCompositionAPIView.as_view()
-
-    def test_get_data(self):
-        valid_response = {
-            "components": [
-                {
-                    "material": "wood core",
-                    "quantity": 1
-                },
-                {
-                    "material": "biaxial 300",
-                    "quantity": 0.5
-                },
-                {
-                    "material": "biaxial 600",
-                    "quantity": 0.3
-                }
-            ]
-        }
-        request = self.api.get_request(self.endpoint)
-        response = self.view(request, pk=1)
-
-        assert response.status_code == 200
-        assert response.data == valid_response
-
-    def test_post_data(self):
-        data = {}
-        request = self.api.post_request(self.endpoint, data)
-        response = self.view(request, pk=1)
-
-        assert response.status_code != 201
-
-    def test_update_data(self):
-        data = {
-            "components": [
-                {
-                    "material": "wood core",
-                    "quantity": 100
-                }
-            ]
-        }
-        request = self.api.patch_request(self.endpoint, data)
-        response = self.view(request, pk=1)
-
-        assert response.status_code == 200
-
-    def test_invalid_update_data(self):
-        data = {
-            "components": [
-                {
-                    "material": "wood core not existing",
-                    "quantity": 100
-                }
-            ]
-        }
-        request = self.api.patch_request(self.endpoint, data)
-        response = self.view(request, pk=1)
-
-        assert response.status_code != 201

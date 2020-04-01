@@ -1,6 +1,7 @@
-from presses.models import Press
-from common.auth import BaseAccess
 from rest_framework import viewsets
+
+from common.auth import BaseAccess
+from presses.models import Press
 from presses.serializers import (
     PressSerializer,
 )

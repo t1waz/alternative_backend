@@ -1,8 +1,9 @@
 from django.urls import path
 from rest_framework.routers import DefaultRouter
+
 from orders.views import (
-    ClientViewSet,
     OrderViewSet,
+    ClientViewSet,
     CompanyOrderInfoAPIView,
     CompanyOrderInfoDetailAPIView,
     SendedBoardRecordAPIView,
@@ -11,12 +12,8 @@ from orders.views import (
 
 app_router = DefaultRouter()
 
-app_router.register(r'clients', 
-                    ClientViewSet, 
-                    basename='clients')
-app_router.register(r'orders', 
-                    OrderViewSet, 
-                    basename='orders')
+app_router.register(r'clients', ClientViewSet, basename='clients')
+app_router.register(r'orders', OrderViewSet, basename='orders')
 
 
 urlpatterns = [

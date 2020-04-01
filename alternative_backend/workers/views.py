@@ -1,17 +1,18 @@
-from workers.models import Worker
-from common.auth import BaseAccess
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from alternative_backend.services import TokenService
-from workers.services import WorkerService
 from rest_framework import (
     viewsets,
     generics,
 )
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from alternative_backend.services import TokenService
+from common.auth import BaseAccess
+from workers.models import Worker
 from workers.serializers import (
     WorkerSerializer,
     WorkerWorkHistorySerializer,
 )
+from workers.services import WorkerService
 
 
 class WorkerLoginAPIView(APIView):

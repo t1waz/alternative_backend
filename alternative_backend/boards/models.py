@@ -107,5 +107,8 @@ class BoardModelMaterial(models.Model):
     material = models.ForeignKey('materials.Material',
                                  on_delete=models.CASCADE)    
 
+    class Meta:
+        unique_together = ('material', 'model')
+
     def __str__(self):
         return f'{self.material.name} {self.model.name}'

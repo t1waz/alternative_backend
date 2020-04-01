@@ -1,5 +1,6 @@
-from stations.models import Station
 from rest_framework import serializers
+
+from stations.models import Station
 from stations.validators import StationValidation
 
 

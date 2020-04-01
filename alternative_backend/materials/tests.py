@@ -1,19 +1,20 @@
-from common.utils import ViewSetTestsMixin
 from django.test import (
     TestCase,
     override_settings,
 )
-from materials.views import (
-    MaterialViewSet,
-    MaterialCategoryViewSet,
+
+from common.utils import ViewSetTestsMixin
+from materials.models import (
+    Material,
+    MaterialCategory,
 )
 from materials.serializers import (
     MaterialSerializer,
     MaterialCategorySerializer,
 )
-from materials.models import (
-    Material,
-    MaterialCategory,
+from materials.views import (
+    MaterialViewSet,
+    MaterialCategoryViewSet,
 )
 
 

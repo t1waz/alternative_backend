@@ -1,16 +1,17 @@
-from presses.views import PressViewSet
-from presses.serializers import PressSerializer
 from django.test import (
     TestCase,
     override_settings,
+)
+
+from common.utils import (
+    ViewSetTestsMixin,
 )
 from presses.models import (
     Press,
     MoldHistory,
 )
-from common.utils import (
-    ViewSetTestsMixin,
-)
+from presses.serializers import PressSerializer
+from presses.views import PressViewSet
 
 
 @override_settings(MAX_NUMBER_OF_TOKENS=10000)

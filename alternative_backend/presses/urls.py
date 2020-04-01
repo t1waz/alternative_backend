@@ -1,5 +1,6 @@
-from presses.views import PressViewSet
 from rest_framework.routers import DefaultRouter
+
+from presses.views import PressViewSet
 
 
 app_router = DefaultRouter()

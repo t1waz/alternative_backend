@@ -1,7 +1,8 @@
 from django.db import transaction
-from events.services import EventService
+
 from common.exceptions import ServiceException
 from common.helpers import seconds_between_timestamps
+from events.services import EventService
 from workers.models import (
     Worker,
     WorkerWorkHistory,

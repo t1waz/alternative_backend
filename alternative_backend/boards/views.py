@@ -1,31 +1,40 @@
-from common.auth import BaseAccess
 from rest_framework import generics
 from rest_framework import viewsets
-from rest_framework.views import APIView
-from boards.services import BoardService
 from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from boards.models import (
+    Board,
     BoardCompany,
     BoardModel,
     BoardScan,
-    Board,
+    BoardGraphic,
+
 )
 from boards.serializers import (
-    BoardScanSerializer,
-    BoardCompanySerializer,
-    BoardModelSerializer,
     BoardListSerializer,
-    BoardDetailViewSerializer,
+    BoardScanSerializer,
+    BoardModelSerializer,
     BoardCreateSerializer,
     BoardUpdateSerializer,
-    BoardModelMaterialsSerializer,
+    BoardGraphicSerializer,
+    BoardCompanySerializer,
+    BoardDetailViewSerializer,
 )
+from boards.services import BoardService
+from common.auth import BaseAccess
 
 
 class BoardCompanyViewSet(viewsets.ModelViewSet):
     permission_classes = (BaseAccess, )
     queryset = BoardCompany.objects.all()
     serializer_class = BoardCompanySerializer
+
+
+class BoardGraphicViewSet(viewsets.ModelViewSet):
+    permission_classes = (BaseAccess, )
+    queryset = BoardGraphic.objects.all()
+    serializer_class = BoardGraphicSerializer
 
 
 class BoardModelViewSet(viewsets.ModelViewSet):
@@ -90,11 +99,3 @@ class StockDetailAPIView(APIView):
         response = BoardService().get_stock_for(company_code=code)
 
         return Response(response)
-
-
-class BoardModelCompositionAPIView(generics.RetrieveAPIView,
-                                   generics.UpdateAPIView):
-    permission_classes = (BaseAccess, )
-    queryset = BoardModel.objects.all()
-    serializer_class = BoardModelMaterialsSerializer
-    lookup_field = 'pk'

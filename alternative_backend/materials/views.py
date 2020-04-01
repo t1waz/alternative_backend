@@ -1,4 +1,7 @@
 from rest_framework import viewsets
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from common.auth import BaseAccess
 from materials.models import (
     Material,
@@ -11,6 +14,7 @@ from materials.serializers import (
     MaterialCategorySerializer,
     MaterialDeliveryDetailedSerializer,
 )
+from materials.services import MaterialService
 
 
 class MaterialCategoryViewSet(viewsets.ModelViewSet):
@@ -34,3 +38,12 @@ class MaterialDeliveryViewSet(viewsets.ModelViewSet):
             return MaterialDeliverySerializer
         else:
             return MaterialDeliveryDetailedSerializer
+
+
+class MaterialStock(APIView):
+    permission_classes = (BaseAccess,)
+
+    def get(self, request, format=None):
+        response = MaterialService().get_material_stock_info()
+
+        return Response(response)

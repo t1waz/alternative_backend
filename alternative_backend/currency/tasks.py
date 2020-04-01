@@ -1,6 +1,7 @@
 from celery import shared_task
-from currency.services import PriceService
 from celery.signals import celeryd_after_setup
+
+from currency.services import PriceService
 
 
 @shared_task

@@ -1,11 +1,12 @@
 import requests
 from django.db import transaction
-from currency.models import Currency
+
 from common.exceptions import ServiceException
 from currency.constans import (
-    POLAND_SYMBOL,
     HEADERS,
+    POLAND_SYMBOL,
 )
+from currency.models import Currency
 
 
 class PriceService:

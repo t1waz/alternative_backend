@@ -1,5 +1,6 @@
-from common.auth import BaseAccess
 from rest_framework import viewsets
+
+from common.auth import BaseAccess
 from stations.models import Station
 from stations.serializers import StationSerializer
 

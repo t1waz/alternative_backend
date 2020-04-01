@@ -1,3 +1,9 @@
+from django.db.models import Count, Sum
+
+from boards.models import (
+    BoardScan,
+    BoardModelMaterial
+)
 from materials.models import (
     Material,
     MaterialDelivery,
@@ -36,3 +42,24 @@ class MaterialService:
             setattr(instance, attribute, value)
 
         instance.save()
+
+    def get_material_stock_info(self):
+        materials = {material: value for material, value in
+                     MaterialDeliveryPosition.objects.all().values_list(
+                         'material__name').annotate(quantity_sum=Sum('quantity'))}
+
+        model_materials_data = BoardModelMaterial.objects.all().values_list(
+            'model__name', 'material__name').annotate(quantity_sum=Sum('quantity'))
+
+        manufactured_models_count = {model_name: model_count for model_name, model_count in
+                                     BoardScan.objects.all().values_list(
+                                         'barcode__model__name').annotate(
+                                         barcode_count=Count('barcode'))}
+
+        for data in model_materials_data:
+            if data[1] in materials.keys():
+                materials[data[1]] -= data[2] * manufactured_models_count[data[0]]
+                if materials[data[1]] < 0:
+                    materials[data[1]] = 0
+
+        return materials

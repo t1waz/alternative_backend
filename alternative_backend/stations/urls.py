@@ -1,4 +1,5 @@
 from rest_framework.routers import DefaultRouter
+
 from stations.views import (
 	StationViewSet,
 )
@@ -6,9 +7,7 @@ from stations.views import (
 
 app_router = DefaultRouter()
 
-app_router.register(r'stations', 
-					StationViewSet, 
-					basename='stations')
+app_router.register(r'stations', StationViewSet, basename='stations')
 
 urlpatterns = [
 

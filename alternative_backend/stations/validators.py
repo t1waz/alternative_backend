@@ -1,6 +1,7 @@
-from stations.models import Station
-from common.utils import SimpleValidator
 from django.core.exceptions import ValidationError
+
+from common.utils import SimpleValidator
+from stations.models import Station
 
 
 def validate_production_step(**kwargs):

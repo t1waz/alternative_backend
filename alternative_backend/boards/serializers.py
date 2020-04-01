@@ -32,7 +32,7 @@ class BoardCompanySerializer(serializers.ModelSerializer):
 class BoardGraphicSerializer(serializers.ModelSerializer):
     class Meta:
         model = BoardGraphic
-        fields = ('name')
+        fields = ('name', 'year', 'artist', 'description')
 
 
 class BoardModelMaterialSerializer(serializers.ModelSerializer):
@@ -44,20 +44,6 @@ class BoardModelMaterialSerializer(serializers.ModelSerializer):
         model = BoardModelMaterial
         fields = ('material', 'quantity')
         validators = [BoardModelMaterialValidation()]
-
-
-class BoardModelMaterialsSerializer(serializers.ModelSerializer):
-    components = BoardModelMaterialSerializer(many=True)
-
-    class Meta:
-        model = BoardModel
-        fields = ('components',)
-
-    def update(self, instance, validated_data):
-        BoardService().update_components(model=instance,
-                                         components=validated_data['components'])
-
-        return instance
 
 
 class BoardModelLayoutSerializer(serializers.ModelSerializer):
@@ -86,19 +72,35 @@ class BoardModelLayoutSerializer(serializers.ModelSerializer):
 
 class BoardModelSerializer(serializers.ModelSerializer):
     layout = BoardModelLayoutSerializer(many=False)
+    components = BoardModelMaterialSerializer(many=True)
     production_price = serializers.SerializerMethodField()
 
     def get_production_price(self, obj):
         return round(BoardService().get_price_for_model(model=obj), 2)
 
     def create(self, validated_data):
-        return BoardService().create_new_model(**validated_data)
+        components = validated_data.pop('components')
+        model = BoardService().create_new_model(**validated_data)
+        BoardService().update_components(model=model,
+                                         components=components)
+
+        return model
+
+    def update(self, instance, validated_data):
+        components = validated_data.pop('components', None)
+        super().update(instance, validated_data)
+
+        if components:
+            BoardService().update_components(model=instance,
+                                             components=components)
+
+        return instance
 
     class Meta:
         model = BoardModel
         validators = [BoardModelValidation()]
         fields = ('id', 'description', 'year', 'company', 'layout_material_quantity',
-                  'name', 'code', 'layout', 'production_price')
+                  'name', 'code', 'layout', 'production_price', 'components')
 
 
 class BoardUpdateSerializer(serializers.ModelSerializer):

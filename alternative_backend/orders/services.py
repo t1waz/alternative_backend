@@ -1,19 +1,20 @@
-from django.db.models import Sum
 from django.db import transaction
-from stations.models import Station
-from boards.services import BoardService
-from common.exceptions import ServiceException
+from django.db.models import Sum
+
 from boards.models import (
     Board,
     BoardScan,
     BoardModel,
     BoardCompany,
 )
+from boards.services import BoardService
+from common.exceptions import ServiceException
 from orders.models import (
     Order,
     OrderRecord,
     SendedBoard,
 )
+from stations.models import Station
 
 
 class OrderService:

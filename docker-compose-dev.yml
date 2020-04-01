@@ -18,6 +18,7 @@
         - POSTGRES_PASSWORD=not_very_secret_password
         - POSTGRES_HOST=db
         - POSTGRES_PORT=5432
+        - PYTHONUNBUFFERED=1
       command: bash /manage/build.sh
       volumes:
         - ./alternative_backend:/app

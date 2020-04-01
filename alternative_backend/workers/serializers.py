@@ -1,10 +1,11 @@
 from rest_framework import serializers
-from workers.services import WorkerService
 from rest_framework.validators import UniqueTogetherValidator
+
 from workers.models import (
     Worker,
     WorkerWorkHistory,
 )
+from workers.services import WorkerService
 
 
 class WorkerSerializer(serializers.ModelSerializer):

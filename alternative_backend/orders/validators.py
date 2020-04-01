@@ -1,6 +1,7 @@
-from orders.services import OrderService
-from common.utils import SimpleValidator
 from django.core.exceptions import ValidationError
+
+from common.utils import SimpleValidator
+from orders.services import OrderService
 
 
 def validate_is_already_sended(**kwargs):
