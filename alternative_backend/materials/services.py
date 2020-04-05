@@ -15,7 +15,7 @@ class MaterialService:
     def get_material_from_name(self, material_name):
         return Material.objects.filter(name=material_name).first() or None
 
-    def create_delivery_positions(delivery, positions):
+    def create_delivery_positions(self, delivery, positions):
         for position in positions:
             position['delivery'] = delivery
             MaterialDeliveryPosition.objects.create(**position)
